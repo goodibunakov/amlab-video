@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">amlab video</string>
-    <string name="youtube_apikey"> </string>
-    <string name="googleplay_url"> </string>
+    <string name="youtube_apikey">AIzaSyB_KfCQAz95unt7aKdXmsXerRWwsiTgxjY</string>
+    <string name="googleplay_url">https://play.google.com/store/apps/details?id=ru.goodibunakov.amlabvideo</string>
 
     <string-array name="channel_names">
         <item>New Video</item>
@@ -92,6 +92,8 @@
     <string name="message">Вы можете скачать приложение "Видеоуроки Start Android" для Android в </string>
 
     <string name="new_videos">Новые видеоуроки</string>
+    <string name="splash_slogan">video</string>
+    <string name="splash_logo">amlab</string>
 
 
 </resources>

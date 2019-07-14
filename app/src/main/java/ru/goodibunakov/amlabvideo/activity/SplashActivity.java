@@ -42,6 +42,7 @@ public class SplashActivity extends AppCompatActivity implements interfaces.Asyn
     public void taskFinished() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.open_next, R.anim.close_main);
     }
 
     public static class Loading extends AsyncTask<Void, Void, Void> {
