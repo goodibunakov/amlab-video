@@ -24,13 +24,13 @@
     </string-array>
 
     <!--<string-array name="channel_id">-->
-        <!--<item>UC_adZIRDiLC3eLIq24HBmRA</item>-->
-        <!--<item>2</item>-->
-        <!--<item>2</item>-->
-        <!--<item>2</item>-->
-        <!--<item>2</item>-->
-        <!--<item>2</item>-->
-        <!--<item>2</item>-->
+    <!--<item>UC_adZIRDiLC3eLIq24HBmRA</item>-->
+    <!--<item>2</item>-->
+    <!--<item>2</item>-->
+    <!--<item>2</item>-->
+    <!--<item>2</item>-->
+    <!--<item>2</item>-->
+    <!--<item>2</item>-->
     <!--</string-array>-->
 
     <string-array name="channel_id">
@@ -94,6 +94,9 @@
     <string name="new_videos">Новые видеоуроки</string>
     <string name="splash_slogan">video</string>
     <string name="splash_logo">amlab</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

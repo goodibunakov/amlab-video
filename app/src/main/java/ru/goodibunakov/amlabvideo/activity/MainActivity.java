@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.youtube.player.YouTubePlayer;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -19,8 +20,11 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.goodibunakov.amlabvideo.R;
+import ru.goodibunakov.amlabvideo.fragments.ChannelVideoFragment;
+import ru.goodibunakov.amlabvideo.fragments.VideoFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnFullscreenListener,
+        ChannelVideoFragment.OnVideoSelectedListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -28,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout layoutList;
 
     private Drawer drawer;
+    private View decorView;
+
+    private static final int LANDSCAPE_VIDEO_PADDING_DP = 5;
+    private static final int RECOVERY_DIALOG_REQUEST = 1;
+    private VideoFragment videoFragment;
+    private boolean isFullscreen;
 
     private String[] channelNames;
     private String[] channelId;
@@ -75,14 +85,24 @@ public class MainActivity extends AppCompatActivity {
                         .withIdentifier(channelId.length - 1)
                         .withSelectable(false)
                 )
-.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-    @Override
-    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-        return false;
-    }
-})
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        return false;
+                    }
+                })
                 .withShowDrawerOnFirstLaunch(true)
                 .build();
+
+    }
+
+    @Override
+    public void onFullscreen(boolean b) {
+
+    }
+
+    @Override
+    public void onVideoSelected(String ID) {
 
     }
 }

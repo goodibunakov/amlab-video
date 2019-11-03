@@ -46,12 +46,12 @@ public class Utils {
     public static final String OBJECT_ITEMS_CONTENT_DETAIL = "contentDetails";
     public static final String OBJECT_ITEMS_SNIPPET = "snippet";
     public static final String OBJECT_ITEMS_SNIPPET_THUMBNAILS = "thumbnails";
-    public static final String OBJECT_ITEMS_SNIPPET_RESOURCEID = "resourceId";
+    public static final String OBJECT_ITEMS_SNIPPET_RESOURCE_ID = "resourceId";
     public static final String OBJECT_ITEMS_SNIPPET_THUMBNAILS_MEDIUM = "medium";
 
     public static final String KEY_VIDEO_ID = "videoId";
     public static final String KEY_TITLE = "title";
-    public static final String KEY_PUBLISHEDAT = "publishedAt";
+    public static final String KEY_PUBLISHED_AT = "publishedAt";
     public static final String KEY_URL_THUMBNAILS = "url";
     public static final String KEY_DURATION = "duration";
 

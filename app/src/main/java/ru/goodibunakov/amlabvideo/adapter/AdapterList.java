@@ -120,7 +120,7 @@ public class AdapterList extends UltimateViewAdapter<AdapterList.ViewHolder> {
         void bind(final HashMap<String, String> item) {
             txtTitle.setText(item.get(Utils.KEY_TITLE));
             txtDuration.setText(item.get(Utils.KEY_DURATION));
-            txtPublished.setText(item.get(Utils.KEY_PUBLISHEDAT));
+            txtPublished.setText(item.get(Utils.KEY_PUBLISHED_AT));
 
             Glide
                     .with(ivThumbnail.getContext())

@@ -18,7 +18,8 @@
             android:id="@+id/imgThumbnail"
             android:layout_width="@dimen/thumbnail_width"
             android:layout_height="@dimen/thumbnail_height"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/txtDuration"
