@@ -1,4 +1,4 @@
-package ru.goodibunakov.amlabvideo.fragments;
+package ru.goodibunakov.amlabvideo.presentation.fragments;
 
 
 import android.os.Bundle;

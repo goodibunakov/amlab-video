@@ -1,47 +1,7 @@
 <resources>
     <string name="app_name">amlab video</string>
-    <string name="youtube_apikey">AIzaSyB_KfCQAz95unt7aKdXmsXerRWwsiTgxjY</string>
-    <string name="googleplay_url">https://play.google.com/store/apps/details?id=ru.goodibunakov.amlabvideo</string>
-
-    <string-array name="channel_names">
-        <item>New Video</item>
-        <item>Java for beginners</item>
-        <item>Android studio</item>
-        <item>Android design</item>
-        <item>Developer tools</item>
-        <item>Game dev</item>
-        <item>Eclipse</item>
-    </string-array>
-
-    <string-array name="video_types">
-        <item>1</item>
-        <item>2</item>
-        <item>2</item>
-        <item>2</item>
-        <item>2</item>
-        <item>2</item>
-        <item>2</item>
-    </string-array>
-
-    <!--<string-array name="channel_id">-->
-    <!--<item>UC_adZIRDiLC3eLIq24HBmRA</item>-->
-    <!--<item>2</item>-->
-    <!--<item>2</item>-->
-    <!--<item>2</item>-->
-    <!--<item>2</item>-->
-    <!--<item>2</item>-->
-    <!--<item>2</item>-->
-    <!--</string-array>-->
-
-    <string-array name="channel_id">
-        <item>UCzE7HcbvyEiS5ea1rVRbPLQ</item>
-        <item>PLyfVjOYzujuj1J2z2CgHw1p4PdDwHuRsd</item>
-        <item>PLyfVjOYzujugap6Rf3ETNKkx4v9ePllNK</item>
-        <item>PLyfVjOYzujugPnav0g4l0GGOPbj_vUf93</item>
-        <item>PLyfVjOYzujugEUT-7gYhONqB5Y1xszpCq</item>
-        <item>PLyfVjOYzujuisikez6McGsBtKviTa_lty</item>
-        <item>PLyfVjOYzujuhLNi-AxZsW0idLj9ZChDf0</item>
-    </string-array>
+    <string name="youtube_apikey" translatable="false">AIzaSyB_KfCQAz95unt7aKdXmsXerRWwsiTgxjY</string>
+    <string name="googleplay_url" translatable="false">https://play.google.com/store/apps/details?id=ru.goodibunakov.amlabvideo</string>
 
     <string name="about">О приложении</string>
 
@@ -94,9 +54,5 @@
     <string name="new_videos">Новые видеоуроки</string>
     <string name="splash_slogan">video</string>
     <string name="splash_logo">amlab</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 
 </resources>
