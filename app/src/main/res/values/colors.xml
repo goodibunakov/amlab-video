@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary_color">#607D8B</color>
-    <color name="dark_primary_color">#455A64</color>
-    <color name="text_and_icon_color">#FFFFFF</color>
-    <color name="accent_color">#76ac3b</color>
-    <color name="primary_text">#FFFFFF</color>
-    <color name="secondary_text">#FFFFFF</color>
-    <color name="divider_color">#546E7A</color>
-    <color name="drawer_background_color">#263238</color>
-    <color name="drawer_item_selected_color">#37474F</color>
-    <color name="drawer_divider_color">#455A64</color>
-    <color name="window_background_color">#37474F</color>
-    <color name="material_background_color">#455A64</color>
+    <color name="colorPrimary">#607D8B</color>
+    <color name="colorPrimaryVariant">#455A64</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#76ac3b</color>
+    <color name="colorSecondaryVariant">#FFFFFF</color>
+<!--    <color name="colorOnSecondary">#FFFFFF</color>-->
+<!--    <color name="colorSurface">#546E7A</color>-->
+<!--    <color name="colorOnSurface">#263238</color>-->
+<!--    <color name="colorOnBackground">#37474F</color>-->
+<!--    <color name="colorError">#455A64</color>-->
+<!--    <color name="colorOnError">#37474F</color>-->
 
+    <color name="dividerColor">#876876</color>
 </resources>

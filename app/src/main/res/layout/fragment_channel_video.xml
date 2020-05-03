@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/window_background_color">
+    android:background="@android:color/white">
 
     <LinearLayout
         android:id="@+id/lytRetry"
@@ -13,42 +13,39 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lblAlert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/no_internet_connection"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/colorPrimaryVariant"
             android:textSize="@dimen/title" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/raisedRetry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/accent_color"
-            android:text="@string/retry"
-            android:theme="@style/RaisedButtonStyle" />
+            android:text="@string/retry" />
     </LinearLayout>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/lblNoResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/no_result"
-        android:textColor="@color/text_and_icon_color"
         android:textSize="@dimen/subhead"
         android:visibility="gone" />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/prgLoading"
-        android:layout_width="@dimen/circleprogressbar_width"
-        android:layout_height="@dimen/circleprogressbar_height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"/>
 
-    <com.marshalchen.ultimaterecyclerview.UltimateRecyclerView
-        android:id="@+id/ultimate_recycler_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

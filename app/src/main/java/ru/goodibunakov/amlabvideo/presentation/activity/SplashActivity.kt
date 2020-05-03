@@ -9,7 +9,7 @@ import android.view.WindowManager
 import moxy.MvpAppCompatActivity
 import ru.goodibunakov.amlabvideo.R
 
-class SplashActivity: MvpAppCompatActivity() {
+class SplashActivity : MvpAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -19,18 +19,21 @@ class SplashActivity: MvpAppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         val intent = Intent(applicationContext, MainActivity::class.java)
-//        startActivity(intent)
+        startActivity(intent)
         overridePendingTransition(R.anim.open_next, R.anim.close_main)
+        finish()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (hasFocus) {
-                window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+                window.decorView.systemUiVisibility = (
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+
             }
         }
     }

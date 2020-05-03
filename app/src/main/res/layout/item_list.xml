@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/material_background_color"
+    android:background="@android:color/white"
     android:minHeight="@dimen/item_twoline_height">
 
     <FrameLayout
@@ -14,23 +14,21 @@
         android:layout_marginLeft="@dimen/standard_margin"
         tools:ignore="RtlHardcoded">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgThumbnail"
             android:layout_width="@dimen/thumbnail_width"
             android:layout_height="@dimen/thumbnail_height"
             android:scaleType="centerCrop"
             tools:ignore="ContentDescription" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:background="@color/accent_color"
             android:ellipsize="end"
             android:padding="@dimen/caption_padding"
             android:singleLine="true"
-            android:textColor="@color/text_and_icon_color"
             android:textSize="@dimen/subhead" />
     </FrameLayout>
 
@@ -43,22 +41,20 @@
         android:paddingRight="@dimen/standard_margin"
         tools:ignore="RtlHardcoded">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/primary_text"
             android:textSize="@dimen/title" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtPublishedAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/secondary_text"
             android:textSize="@dimen/subhead" />
     </LinearLayout>
 
@@ -66,5 +62,5 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
         android:layout_gravity="bottom"
-        android:background="@color/divider_color" />
+        android:background="@color/dividerColor" />
 </FrameLayout>
