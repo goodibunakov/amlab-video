@@ -16,7 +16,7 @@ class ApiRepositoryImpl(private val apiService: ApiService) : ApiRepository {
     }
 
     override fun getAllVideosList(): Observable<AllVideosDTO> {
-        return apiService.getLastVideos()
+        return apiService.getAllVideos()
     }
 
     override fun getPlayLists(): Observable<PlaylistsDTO> {
