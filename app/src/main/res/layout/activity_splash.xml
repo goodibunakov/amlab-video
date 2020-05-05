@@ -3,39 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@android:color/white"
     tools:context=".presentation.activity.SplashActivity">
 
-    <LinearLayout
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/gimbalegypextdmed"
-            android:text="@string/splash_logo"
-            android:textColor="@android:color/white"
-            android:textSize="46sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/white"/>
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/gimbalegypextdmed"
-            android:text="@string/splash_slogan"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp" />
-    </LinearLayout>
+        android:src="@mipmap/ic_launcher" />
 </FrameLayout>

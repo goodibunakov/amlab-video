@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">amlab video</string>
-    <string name="youtube_apikey" translatable="false">AIzaSyB_KfCQAz95unt7aKdXmsXerRWwsiTgxjY</string>
     <string name="googleplay_url" translatable="false">https://play.google.com/store/apps/details?id=ru.goodibunakov.amlabvideo</string>
 
     <string name="about">О приложении</string>
@@ -53,6 +52,6 @@
     <string name="new_videos">Новые видеоуроки</string>
 
     <string name="splash_slogan">video</string>
-    <string name="splash_logo">amlab</string>
+    <string name="splash_logo">AMLAB.</string>
 
 </resources>

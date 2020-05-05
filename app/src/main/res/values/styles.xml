@@ -5,12 +5,27 @@
         <item name="colorPrimaryDark">@color/colorPrimaryVariant</item>
         <item name="colorAccent">@color/colorSecondary</item>
         <item name="android:fitsSystemWindows">true</item>
+        <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyleCustom</item>
+        <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyleCustom</item>
 <!--        <item name="android:buttonStyle">@style/RaisedButtonStyle</item>-->
     </style>
 
-    <style name="MaterialDrawer.DayNight" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyle</item>
-        <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyle</item>
+    <style name="Widget.MaterialDrawerStyleCustom" parent="Widget.MaterialDrawerStyle">
+        <item name="materialDrawerInsetForeground">#4000</item>
+        <item name="materialDrawerBackground">?colorSurface</item>
+        <item name="materialDrawerPrimaryText">?android:textColorPrimary</item>
+        <item name="materialDrawerPrimaryIcon">?android:textColorSecondary</item>
+        <item name="materialDrawerSecondaryText">?android:textColorSecondary</item>
+        <item name="materialDrawerSecondaryIcon">?android:textColorSecondary</item>
+        <item name="materialDrawerDividerColor">?android:textColorHint</item>
+        <item name="materialDrawerSelectedBackgroundColor">?colorPrimary</item>
+    </style>
+
+    // define a custom header style
+    <style name="Widget.MaterialDrawerHeaderStyleCustom" parent="">
+<!--        <item name="materialDrawerCompactStyle">true</item>-->
+        <item name="materialDrawerHeaderSelectionText">?colorOnSurface</item>
+        <item name="materialDrawerHeaderSelectionSubtext">?colorOnSurface</item>
     </style>
 
 </resources>

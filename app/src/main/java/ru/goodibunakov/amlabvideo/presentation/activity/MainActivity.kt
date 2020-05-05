@@ -4,24 +4,23 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.mikepenz.materialdrawer.holder.ImageHolder
+import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.*
-import com.mikepenz.materialdrawer.util.addStickyDrawerItems
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.activity_main.*
-import moxy.MvpAppCompatActivity
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.presentation.fragments.PreferencesFragment
 
 
-class MainActivity : MvpAppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var headerView: AccountHeaderView
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
@@ -49,7 +48,7 @@ class MainActivity : MvpAppCompatActivity() {
 
         profile = ProfileDrawerItem().apply {
             nameText = "GooDi"
-            iconDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.splash_logo)!!
+            iconDrawable = ContextCompat.getDrawable(this@MainActivity, R.mipmap.ic_launcher)!!
         }.withEmail("goodibunakov@gmail.com1")
 
         // Create the AccountHeader
@@ -59,21 +58,20 @@ class MainActivity : MvpAppCompatActivity() {
                     headerBackground = ImageHolder(R.drawable.header)
                     addProfiles(profile)
                     withSavedInstance(savedInstanceState)
-                    accountSwitcherArrow.visibility = View.GONE
-                    onAccountHeaderListener = null
+                    selectionListEnabledForSingleProfile = false
                 }
 
         slider.apply {
             itemAdapter.add(
-                    PrimaryDrawerItem().withName("1").withIcon(R.drawable.splash_logo),
+                    PrimaryDrawerItem().withName("1").withIcon(R.mipmap.ic_launcher),
                     SecondaryDrawerItem().withName("2"),
                     SecondaryDrawerItem().withName("3"),
                     SecondaryDrawerItem().withName("4"),
+                    DividerDrawerItem(),
                     SecondaryDrawerItem().withName("5").withIconTintingEnabled(true).withTag("Bullhorn"),
-                    SecondaryDrawerItem().withName("6")
-            )
-            addStickyDrawerItems(
-                    SecondaryDrawerItem().withName("7").withIdentifier(10)
+                    SecondaryDrawerItem().withName("6"),
+                            DividerDrawerItem(),
+                    SecondaryDrawerItem().withName(R.string.about)
             )
             onDrawerItemClickListener = { view, drawerItem, position ->
                 if (drawerItem is Nameable) {

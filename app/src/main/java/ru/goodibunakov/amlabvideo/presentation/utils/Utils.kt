@@ -15,7 +15,6 @@ import kotlin.math.roundToLong
 
 class Utils {
     companion object {
-        const val API_YOUTUBE = "https://www.googleapis.com/youtube/v3/"
 
         const val FUNCTION_SEARCH_YOUTUBE = "search?"
         const val FUNCTION_VIDEO_YOUTUBE = "videos?"
