@@ -1,9 +1,13 @@
 package ru.goodibunakov.amlabvideo.presentation.activity
 
 import android.content.res.Configuration
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +21,7 @@ import com.mikepenz.materialdrawer.model.interfaces.*
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.goodibunakov.amlabvideo.R
-import ru.goodibunakov.amlabvideo.presentation.fragments.PreferencesFragment
+import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -49,7 +53,8 @@ class MainActivity : AppCompatActivity() {
         profile = ProfileDrawerItem().apply {
             nameText = "GooDi"
             iconDrawable = ContextCompat.getDrawable(this@MainActivity, R.mipmap.ic_launcher)!!
-        }.withEmail("goodibunakov@gmail.com1")
+            descriptionText = "goodibunakov@gmail.com1"
+        }
 
         // Create the AccountHeader
         headerView = AccountHeaderView(this, compact = true)
@@ -63,15 +68,23 @@ class MainActivity : AppCompatActivity() {
 
         slider.apply {
             itemAdapter.add(
-                    PrimaryDrawerItem().withName("1").withIcon(R.mipmap.ic_launcher),
+                    PrimaryDrawerItem().apply {
+                        nameText = "1"
+                        isSelected = true
+                    },
                     SecondaryDrawerItem().withName("2"),
                     SecondaryDrawerItem().withName("3"),
                     SecondaryDrawerItem().withName("4"),
                     DividerDrawerItem(),
-                    SecondaryDrawerItem().withName("5").withIconTintingEnabled(true).withTag("Bullhorn"),
+                    SecondaryDrawerItem().apply {
+                        nameText = "5"
+                        tag = "id5"
+                    },
                     SecondaryDrawerItem().withName("6"),
-                            DividerDrawerItem(),
-                    SecondaryDrawerItem().withName(R.string.about)
+                    DividerDrawerItem(),
+                    SecondaryDrawerItem().apply {
+                        nameRes = R.string.about
+                    }
             )
             onDrawerItemClickListener = { view, drawerItem, position ->
                 if (drawerItem is Nameable) {
@@ -94,7 +107,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
+//        menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
@@ -112,7 +125,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showAboutScreen() {
         supportFragmentManager.beginTransaction()
-                .add(PreferencesFragment(), "PreferencesFragment")
+                .add(AboutFragment(), "AboutFragment")
                 .commit()
     }
 

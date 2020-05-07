@@ -10,8 +10,10 @@
 <!--    <color name="colorSurface">#546E7A</color>-->
 <!--    <color name="colorOnSurface">#263238</color>-->
 <!--    <color name="colorOnBackground">#37474F</color>-->
-<!--    <color name="colorError">#455A64</color>-->
-<!--    <color name="colorOnError">#37474F</color>-->
+    <color name="colorError">#C50909</color>
+    <color name="colorOnError">#FFFFFF</color>
+    <color name="colorSuccess">#0A7A10</color>
+    <color name="colorOnSuccess">#FFFFFF</color>
 
     <color name="dividerColor">#876876</color>
 </resources>

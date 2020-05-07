@@ -7,6 +7,11 @@ import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 class ToPlaylistsModelUIMapper : Mapper<List<PlaylistsEntity>, List<PlaylistsModelUI>> {
 
     override fun map(from: List<PlaylistsEntity>): List<PlaylistsModelUI> {
-        TODO("Not yet implemented")
+        return from.map {
+            PlaylistsModelUI(
+                    it.title,
+                    it.listId
+            )
+        }
     }
 }

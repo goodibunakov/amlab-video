@@ -40,4 +40,11 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true" />
 
+    <fragment
+        android:name="ru.goodibunakov.amlabvideo.presentation.fragments.NetworkIndicatorFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        tools:layout="@layout/fragment_network_indicator" />
+
 </androidx.drawerlayout.widget.DrawerLayout>

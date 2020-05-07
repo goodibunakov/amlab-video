@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/networkIndicator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@color/colorSuccess">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/statusView"
+        android:textColor="@color/colorOnSuccess"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="Нет подключения к интернет"
+
+        />
+
+</FrameLayout>

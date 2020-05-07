@@ -22,9 +22,9 @@ class AmlabApplication : MultiDexApplication() {
 
         if (BuildConfig.DEBUG) Stetho.initializeWithDefaults(this)
 
-        apiRepository = ApiRepositoryImpl(ApiService.create())
+        apiRepository = ApiRepositoryImpl(this, ApiService.create())
         //это для первого экрана == все видео
-        apiRepository.getLastVideoList()
+        apiRepository.getAllVideosList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map {
@@ -36,17 +36,17 @@ class AmlabApplication : MultiDexApplication() {
                     Log.d("debug", "${it.localizedMessage}")
                 })
 
-        apiRepository.getPlayListNames()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map {
-                    ToPlaylistsEntityMapper().map(it)
-                }
-                .subscribe({
-                    Log.d("debug", "$it \n ${it.size}")
-                }, {
-                    Log.d("debug", "${it.localizedMessage}")
-                })
+//        apiRepository.getPlayLists()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .map {
+//                    ToPlaylistsEntityMapper().map(it)
+//                }
+//                .subscribe({
+//                    Log.d("debug", "$it \n ${it.size}")
+//                }, {
+//                    Log.d("debug", "${it.localizedMessage}")
+//                })
 
     }
 }

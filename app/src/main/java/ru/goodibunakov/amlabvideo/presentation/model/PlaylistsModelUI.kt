@@ -1,4 +1,6 @@
 package ru.goodibunakov.amlabvideo.presentation.model
 
-class PlaylistsModelUI {
-}
+data class PlaylistsModelUI(
+        val title: String,
+        val id: String
+)
