@@ -65,10 +65,6 @@ https://www.googleapis.com/youtube/v3/commentThreads?part=snippet,replies&channe
 
 Get Comment list by allThreadsRelatedToChannelId:
 https://www.googleapis.com/youtube/v3/commentThreads?part=snippet,replies&allThreadsRelatedToChannelId=UC*****ntcQ&key=AI*****k
-
-Here all api's are Get approach.
-
-Based on channel id we con't get all videos directly, that's the important point here.
  */
 
 interface ApiService {

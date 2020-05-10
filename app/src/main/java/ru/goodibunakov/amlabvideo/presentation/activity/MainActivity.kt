@@ -1,17 +1,15 @@
 package ru.goodibunakov.amlabvideo.presentation.activity
 
 import android.content.res.Configuration
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.mikepenz.materialdrawer.holder.ImageHolder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
@@ -20,8 +18,11 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.*
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
+import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
+import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,11 +35,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        initDrawer()
 
-        initDrawer(savedInstanceState)
+        val mainViewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
+
+        mainViewModel.playlistsLiveData.observe(this, Observer {
+            fillDrawer(savedInstanceState, it)
+        })
     }
 
-    private fun initDrawer(savedInstanceState: Bundle?) {
+    private fun initDrawer() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 
@@ -49,6 +55,9 @@ class MainActivity : AppCompatActivity() {
                 com.mikepenz.materialdrawer.R.string.material_drawer_open,
                 com.mikepenz.materialdrawer.R.string.material_drawer_close
         )
+    }
+
+    private fun fillDrawer(savedInstanceState: Bundle?, playlists: List<PlaylistsModelUI>) {
 
         profile = ProfileDrawerItem().apply {
             nameText = "GooDi"
@@ -69,23 +78,42 @@ class MainActivity : AppCompatActivity() {
         slider.apply {
             itemAdapter.add(
                     PrimaryDrawerItem().apply {
-                        nameText = "1"
+                        nameText = "Новые видео"
                         isSelected = true
-                    },
-                    SecondaryDrawerItem().withName("2"),
-                    SecondaryDrawerItem().withName("3"),
-                    SecondaryDrawerItem().withName("4"),
-                    DividerDrawerItem(),
-                    SecondaryDrawerItem().apply {
-                        nameText = "5"
-                        tag = "id5"
-                    },
-                    SecondaryDrawerItem().withName("6"),
+                    }, DividerDrawerItem())
+            playlists.map {
+                itemAdapter.add(
+                        SecondaryDrawerItem().apply {
+                            nameText = it.title
+                            tag = it.id
+                        }
+                )
+            }
+            itemAdapter.add(
                     DividerDrawerItem(),
                     SecondaryDrawerItem().apply {
                         nameRes = R.string.about
                     }
             )
+//            itemAdapter.add(
+//                    PrimaryDrawerItem().apply {
+//                        nameText = "1"
+//                        isSelected = true
+//                    },
+//                    SecondaryDrawerItem().withName("2"),
+//                    SecondaryDrawerItem().withName("3"),
+//                    SecondaryDrawerItem().withName("4"),
+//                    DividerDrawerItem(),
+//                    SecondaryDrawerItem().apply {
+//                        nameText = "5"
+//                        tag = "id5"
+//                    },
+//                    SecondaryDrawerItem().withName("6"),
+//                    DividerDrawerItem(),
+//                    SecondaryDrawerItem().apply {
+//                        nameRes = R.string.about
+//                    }
+//            )
             onDrawerItemClickListener = { view, drawerItem, position ->
                 if (drawerItem is Nameable) {
                     Toast.makeText(this@MainActivity, drawerItem.name?.getText(this@MainActivity), Toast.LENGTH_SHORT).show()

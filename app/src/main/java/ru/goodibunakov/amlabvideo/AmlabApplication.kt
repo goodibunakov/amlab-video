@@ -6,15 +6,18 @@ import com.facebook.stetho.Stetho
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.goodibunakov.amlabvideo.api.ApiService
-import ru.goodibunakov.amlabvideo.data.mappers.ToPlaylistsEntityMapper
 import ru.goodibunakov.amlabvideo.data.repositories.ApiRepositoryImpl
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
+import ru.goodibunakov.amlabvideo.domain.GetChannelPlaylistsUseCase
+import ru.goodibunakov.amlabvideo.domain.GetNetworkStatusUseCase
+import ru.goodibunakov.amlabvideo.presentation.viewmodels.ViewModelFactory
 
 class AmlabApplication : MultiDexApplication() {
 
     companion object {
         //        lateinit var fileRepository: FileRepository
         lateinit var apiRepository: ApiRepository
+        lateinit var viewModelFactory: ViewModelFactory
     }
 
     override fun onCreate() {
@@ -23,6 +26,10 @@ class AmlabApplication : MultiDexApplication() {
         if (BuildConfig.DEBUG) Stetho.initializeWithDefaults(this)
 
         apiRepository = ApiRepositoryImpl(this, ApiService.create())
+        viewModelFactory = ViewModelFactory(
+                GetChannelPlaylistsUseCase(apiRepository),
+                GetNetworkStatusUseCase(apiRepository)
+        )
         //это для первого экрана == все видео
         apiRepository.getAllVideosList()
                 .subscribeOn(Schedulers.io())

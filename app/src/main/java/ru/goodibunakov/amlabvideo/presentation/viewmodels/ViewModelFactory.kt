@@ -11,7 +11,13 @@ class ViewModelFactory(
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return SplashViewModel(getChannelPlaylistsUseCase, getNetworkStatus) as T
-    }
 
+        if (modelClass.isAssignableFrom(SplashViewModel::class.java))
+            return SplashViewModel(getChannelPlaylistsUseCase, getNetworkStatus) as T
+
+        if (modelClass.isAssignableFrom(MainViewModel::class.java))
+            return MainViewModel(getChannelPlaylistsUseCase, getNetworkStatus) as T
+
+        return super.create(modelClass)
+    }
 }

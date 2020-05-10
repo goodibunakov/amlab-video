@@ -11,12 +11,17 @@ import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
 import ru.goodibunakov.amlabvideo.api.dto.videos.AllVideosDTO
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
 
+
 class ApiRepositoryImpl(
-        private val context: Context,
+        context: Context,
         private val apiService: ApiService
 ) : ApiRepository {
 
-    private lateinit var playlistsList: PlaylistsDTO
+    /**
+     * https://blog.mindorks.com/implement-caching-in-android-using-rxjava-operators
+     */
+
+    private var playlistsList: PlaylistsDTO? = null
     var networkConnected = BehaviorSubject.create<ConnectedStatus>()
 
     companion object {
@@ -51,8 +56,18 @@ class ApiRepositoryImpl(
     }
 
     override fun getPlayLists(): Observable<PlaylistsDTO> {
+//        return Observable.create { emitter: ObservableEmitter<PlaylistsDTO> ->
+//            playlistsList?.let {
+//                emitter.onNext(playlistsList!!)
+//            }
+//            emitter.onComplete()
+//        }
+//
+//        return Observable.just(playlistsList)
+
+
         return apiService.getPlaylists()
-                .doOnNext { playlistsList = it }
+                .doOnNext { playlistsList = it.copy() }
     }
 
 

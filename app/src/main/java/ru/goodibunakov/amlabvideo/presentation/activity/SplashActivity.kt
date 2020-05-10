@@ -11,10 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
-import ru.goodibunakov.amlabvideo.domain.GetChannelPlaylistsUseCase
-import ru.goodibunakov.amlabvideo.domain.GetNetworkStatusUseCase
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SplashViewModel
-import ru.goodibunakov.amlabvideo.presentation.viewmodels.ViewModelFactory
 
 class SplashActivity : AppCompatActivity() {
 
@@ -25,12 +22,7 @@ class SplashActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_splash)
 
-        val splashViewModel: SplashViewModel by viewModels {
-            ViewModelFactory(
-                    GetChannelPlaylistsUseCase(AmlabApplication.apiRepository),
-                    GetNetworkStatusUseCase(AmlabApplication.apiRepository)
-            )
-        }
+        val splashViewModel: SplashViewModel by viewModels { AmlabApplication.viewModelFactory }
 
         splashViewModel.playlistsLiveData.observe(this, Observer {
             if (it.isNotEmpty()) {
