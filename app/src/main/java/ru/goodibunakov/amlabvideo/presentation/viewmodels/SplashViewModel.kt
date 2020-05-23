@@ -3,12 +3,14 @@ package ru.goodibunakov.amlabvideo.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import ru.goodibunakov.amlabvideo.domain.GetChannelPlaylistsUseCase
-import ru.goodibunakov.amlabvideo.domain.GetNetworkStatusUseCase
+import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
+import ru.goodibunakov.amlabvideo.domain.usecase.GetChannelPlaylistsUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetNetworkStatusUseCase
 import ru.goodibunakov.amlabvideo.presentation.mappers.ToPlaylistsModelUIMapper
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 
@@ -17,13 +19,14 @@ class SplashViewModel(
         getNetworkStatus: GetNetworkStatusUseCase
 ) : ViewModel() {
 
-    private var disposable: Disposable
+    private var compositeDisposable = CompositeDisposable()
     val playlistsLiveData = MutableLiveData<List<PlaylistsModelUI>>()
+    val networkLiveData = MutableLiveData<ConnectedStatus>()
     val error = SingleLiveEvent<Boolean>().apply { this.value = false }
 
 
     init {
-        disposable = getChannelPlaylistsUseCase.buildObservable()
+        getChannelPlaylistsUseCase.buildObservable()
                 .subscribeOn(Schedulers.io())
                 .map { ToPlaylistsModelUIMapper.map(it) }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -34,10 +37,22 @@ class SplashViewModel(
                     error.value = true
                     Log.d("debug", "error = ${it.localizedMessage}")
                 })
+                .addTo(compositeDisposable)
+
+
+        getNetworkStatus.buildObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    networkLiveData.value = it
+                }, {
+
+                })
+                .addTo(compositeDisposable)
     }
 
     override fun onCleared() {
+        compositeDisposable.dispose()
         super.onCleared()
-        if (!disposable.isDisposed) disposable.dispose()
     }
 }

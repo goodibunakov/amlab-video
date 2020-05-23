@@ -2,9 +2,9 @@ package ru.goodibunakov.amlabvideo.presentation.activity
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -21,8 +21,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
+import ru.goodibunakov.amlabvideo.presentation.fragments.MessagesFragment
+import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel
+import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
+import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel.Companion.ALL_VIDEOS
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var headerView: AccountHeaderView
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profile: IProfile
+    private val mainViewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
+    private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,10 +43,36 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         initDrawer()
 
-        val mainViewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
-
         mainViewModel.playlistsLiveData.observe(this, Observer {
             fillDrawer(savedInstanceState, it)
+            sharedViewModel.playlistId.value = ALL_VIDEOS
+        })
+
+        sharedViewModel.playlistId.observe(this, Observer { tag ->
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+            if (tag == ALL_VIDEOS) {
+                if (currentFragment is VideoFragment) {
+                    supportFragmentManager.beginTransaction()
+                            .show(currentFragment)
+                            .commit()
+                } else {
+                    supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainer, VideoFragment.newInstance(), TAG_VIDEO_FRAGMENT)
+                            .commit()
+                }
+            }
+            if (tag.contains(APP_MENU_ITEM)) {
+                if (tag.contains(getString(R.string.about))) {
+                    supportFragmentManager.beginTransaction()
+                            .add(AboutFragment(), TAG_ABOUT_FRAGMENT)
+                            .commit()
+                }
+                if (tag.contains(getString(R.string.messages))) {
+                    supportFragmentManager.beginTransaction()
+                            .add(MessagesFragment(), TAG_MESSAGES_FRAGMENT)
+                            .commit()
+                }
+            }
         })
     }
 
@@ -60,16 +92,16 @@ class MainActivity : AppCompatActivity() {
     private fun fillDrawer(savedInstanceState: Bundle?, playlists: List<PlaylistsModelUI>) {
 
         profile = ProfileDrawerItem().apply {
-            nameText = "GooDi"
+//            nameText = "GooDi"
             iconDrawable = ContextCompat.getDrawable(this@MainActivity, R.mipmap.ic_launcher)!!
-            descriptionText = "goodibunakov@gmail.com1"
+//            descriptionText = "goodibunakov@gmail.com"
         }
 
         // Create the AccountHeader
         headerView = AccountHeaderView(this, compact = true)
                 .apply {
                     attachToSliderView(slider)
-                    headerBackground = ImageHolder(R.drawable.header)
+                    headerBackground = ImageHolder(R.drawable.drawer_header)
                     addProfiles(profile)
                     withSavedInstance(savedInstanceState)
                     selectionListEnabledForSingleProfile = false
@@ -78,8 +110,9 @@ class MainActivity : AppCompatActivity() {
         slider.apply {
             itemAdapter.add(
                     PrimaryDrawerItem().apply {
-                        nameText = "Новые видео"
+                        nameRes = R.string.new_videos
                         isSelected = true
+                        tag = ALL_VIDEOS
                     }, DividerDrawerItem())
             playlists.map {
                 itemAdapter.add(
@@ -92,31 +125,23 @@ class MainActivity : AppCompatActivity() {
             itemAdapter.add(
                     DividerDrawerItem(),
                     SecondaryDrawerItem().apply {
+                        nameRes = R.string.messages
+                        tag = APP_MENU_ITEM + "_${getString(R.string.messages)}"
+                    },
+                    SecondaryDrawerItem().apply {
                         nameRes = R.string.about
+                        tag = APP_MENU_ITEM + "_${getString(R.string.about)}"
                     }
             )
-//            itemAdapter.add(
-//                    PrimaryDrawerItem().apply {
-//                        nameText = "1"
-//                        isSelected = true
-//                    },
-//                    SecondaryDrawerItem().withName("2"),
-//                    SecondaryDrawerItem().withName("3"),
-//                    SecondaryDrawerItem().withName("4"),
-//                    DividerDrawerItem(),
-//                    SecondaryDrawerItem().apply {
-//                        nameText = "5"
-//                        tag = "id5"
-//                    },
-//                    SecondaryDrawerItem().withName("6"),
-//                    DividerDrawerItem(),
-//                    SecondaryDrawerItem().apply {
-//                        nameRes = R.string.about
-//                    }
-//            )
             onDrawerItemClickListener = { view, drawerItem, position ->
+                Log.d("debug", "onDrawerItemClickListener: ${drawerItem is Nameable}")
                 if (drawerItem is Nameable) {
-                    Toast.makeText(this@MainActivity, drawerItem.name?.getText(this@MainActivity), Toast.LENGTH_SHORT).show()
+                    val tag = drawerItem.tag as String
+                    sharedViewModel.let {
+                        it.playlistId.value = tag
+                        Log.d("debug", "it.playlistId.value = $tag")
+                        Log.d("debug", "${supportFragmentManager.backStackEntryCount}")
+                    }
                 }
                 false
             }
@@ -142,7 +167,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menuAbout -> {
-                showAboutScreen()
+//                showAboutScreen()
                 return true
             }
             else -> {
@@ -151,11 +176,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAboutScreen() {
-        supportFragmentManager.beginTransaction()
-                .add(AboutFragment(), "AboutFragment")
-                .commit()
-    }
 
     override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
@@ -173,5 +193,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    companion object {
+        private const val APP_MENU_ITEM = "app_menu"
+
+        private const val TAG_VIDEO_FRAGMENT = "video_fragment"
+        private const val TAG_ABOUT_FRAGMENT = "about_fragment"
+        private const val TAG_MESSAGES_FRAGMENT = "messages_fragment"
+
     }
 }

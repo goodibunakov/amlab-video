@@ -12,7 +12,7 @@
     <color name="colorError">#610909</color>
     <color name="colorOnError">#000000</color>
     <color name="colorSuccess">#054508</color>
-    <color name="colorOnSuccess">#000000</color>
+    <color name="colorOnSuccess">#FFFFFF</color>
 
     <color name="statusBarColor">@android:color/black</color>
 

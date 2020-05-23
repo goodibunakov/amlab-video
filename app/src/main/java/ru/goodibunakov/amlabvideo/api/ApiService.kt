@@ -11,6 +11,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
 import ru.goodibunakov.amlabvideo.api.dto.videos.AllVideosDTO
 import java.util.concurrent.TimeUnit
@@ -87,11 +88,14 @@ interface ApiService {
             @Query("pageToken") pageToken: String = ""
     ): Observable<PlaylistsDTO>
 
-//    @GET("/ui-server/v2/service/address/knownSettlements")
-//    fun getSettlementList(): Observable<KnownSettlementsInfoDTO>
-//
-//    @GET("ui-server/v2/service/address/objects/settlements")
-//    fun getSettlementsByQuery(@Query("query") query: String, @Query("skip") skip: Int, @Query("limit") limit: Int): Observable<ListInfoDTO>
+    @GET("playlistItems?")
+    fun getPlaylistVideos(
+            @Query("part") part: String = "snippet,contentDetails,id",
+            @Query("order") order: String = "date",
+            @Query("channelId") playlistId: String,
+            @Query("maxResults") maxResults: Int = 50,
+            @Query("pageToken") pageToken: String = ""
+    ): Observable<VideoDTO>
 
     companion object {
         private const val BASE_URL = "https://www.googleapis.com/youtube/v3/"

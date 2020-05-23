@@ -31,6 +31,29 @@
             android:layout_height="match_parent"
             android:layout_below="@id/appBarLayout" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/noInternet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/toolBarColor"
+            android:padding="130dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_no_internet"
+            tools:visibility="visible" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/networkIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:textColor="@color/colorOnSuccess"
+            android:visibility="gone"
+            tools:background="@color/colorSuccess"
+            tools:text="Нет подключения к интернет"
+            tools:visibility="visible" />
     </RelativeLayout>
 
     <com.mikepenz.materialdrawer.widget.MaterialDrawerSliderView
@@ -39,12 +62,5 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true" />
-
-    <fragment
-        android:name="ru.goodibunakov.amlabvideo.presentation.fragments.NetworkIndicatorFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"
-        tools:layout="@layout/fragment_network_indicator" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

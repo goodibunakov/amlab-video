@@ -2,12 +2,28 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentSplash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/statusBarColor"
+    android:background="@color/toolBarColor"
     tools:context=".presentation.activity.SplashActivity">
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/networkIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSuccess"
+        android:paddingStart="8dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="2dp"
+        android:text="@string/network_indicator_no"
+        android:textColor="@color/colorOnSuccess"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

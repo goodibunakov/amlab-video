@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:background="@color/toolBarColor"
     android:minHeight="@dimen/item_twoline_height">
 
     <FrameLayout
@@ -19,7 +19,8 @@
             android:layout_width="@dimen/thumbnail_width"
             android:layout_height="@dimen/thumbnail_height"
             android:scaleType="centerCrop"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/empty_photo" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtDuration"
@@ -47,6 +48,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
+            tools:text="Название длинное и очень интересное видео тыдыщ!"
             android:textSize="@dimen/title" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -55,12 +57,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
+            tools:text="2020-09-09"
             android:textSize="@dimen/subhead" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
-        android:layout_gravity="bottom"
-        android:background="@color/dividerColor" />
 </FrameLayout>

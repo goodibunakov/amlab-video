@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import ru.goodibunakov.amlabvideo.domain.GetChannelPlaylistsUseCase
-import ru.goodibunakov.amlabvideo.domain.GetNetworkStatusUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetChannelPlaylistsUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetNetworkStatusUseCase
 import ru.goodibunakov.amlabvideo.presentation.mappers.ToPlaylistsModelUIMapper
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 
@@ -35,7 +35,7 @@ class MainViewModel(
     }
 
     override fun onCleared() {
-        super.onCleared()
         if (!disposable.isDisposed) disposable.dispose()
+        super.onCleared()
     }
 }

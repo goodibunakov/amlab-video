@@ -8,8 +8,9 @@ import io.reactivex.schedulers.Schedulers
 import ru.goodibunakov.amlabvideo.api.ApiService
 import ru.goodibunakov.amlabvideo.data.repositories.ApiRepositoryImpl
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
-import ru.goodibunakov.amlabvideo.domain.GetChannelPlaylistsUseCase
-import ru.goodibunakov.amlabvideo.domain.GetNetworkStatusUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetChannelPlaylistsUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetNetworkStatusUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetPlaylistVideosUseCase
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.ViewModelFactory
 
 class AmlabApplication : MultiDexApplication() {
@@ -28,7 +29,8 @@ class AmlabApplication : MultiDexApplication() {
         apiRepository = ApiRepositoryImpl(this, ApiService.create())
         viewModelFactory = ViewModelFactory(
                 GetChannelPlaylistsUseCase(apiRepository),
-                GetNetworkStatusUseCase(apiRepository)
+                GetNetworkStatusUseCase(apiRepository),
+                GetPlaylistVideosUseCase(apiRepository)
         )
         //это для первого экрана == все видео
         apiRepository.getAllVideosList()
@@ -42,18 +44,6 @@ class AmlabApplication : MultiDexApplication() {
                 }, {
                     Log.d("debug", "${it.localizedMessage}")
                 })
-
-//        apiRepository.getPlayLists()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .map {
-//                    ToPlaylistsEntityMapper().map(it)
-//                }
-//                .subscribe({
-//                    Log.d("debug", "$it \n ${it.size}")
-//                }, {
-//                    Log.d("debug", "${it.localizedMessage}")
-//                })
 
     }
 }

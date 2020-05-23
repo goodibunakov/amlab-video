@@ -8,6 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import ru.goodibunakov.amlabvideo.api.ApiService
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
+import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
 import ru.goodibunakov.amlabvideo.api.dto.videos.AllVideosDTO
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
 
@@ -22,7 +23,7 @@ class ApiRepositoryImpl(
      */
 
     private var playlistsList: PlaylistsDTO? = null
-    var networkConnected = BehaviorSubject.create<ConnectedStatus>()
+    var networkConnected = BehaviorSubject.createDefault(ConnectedStatus.UNKNOWN)
 
     companion object {
         const val SKIP = 0
@@ -70,25 +71,7 @@ class ApiRepositoryImpl(
                 .doOnNext { playlistsList = it.copy() }
     }
 
-
-//    override fun loadSettlementByCoordinates(
-//        latitude: Double,
-//        longitude: Double
-//    ): Observable<SettlementDTO> {
-//        return apiService.getSettlementByCoordinates(latitude, longitude)
-//    }
-
-//    override fun loadSettlementList(): Observable<List<ListItem>> {
-//        return apiService.getSettlementList()
-//            .flatMapIterable { it.all }
-//            .map { ToSettlementEntityImplMapper().map(it) }
-//            .toList()
-//            .toObservable()
-//            .map { sortList(it) }
-//    }
-
-//    override fun getSettlementsByQuery(query: String): Observable<List<SettlementDTO>> {
-//        return apiService.getSettlementsByQuery(query, SKIP, LIMIT)
-//            .map { it.data }
-//    }
+    override fun getPlaylistVideos(playlistId: String): Observable<VideoDTO> {
+        return apiService.getPlaylistVideos(playlistId = playlistId)
+    }
 }
