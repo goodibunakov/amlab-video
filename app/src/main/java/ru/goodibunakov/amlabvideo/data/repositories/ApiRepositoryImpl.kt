@@ -9,7 +9,8 @@ import io.reactivex.subjects.BehaviorSubject
 import ru.goodibunakov.amlabvideo.api.ApiService
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
 import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
-import ru.goodibunakov.amlabvideo.api.dto.videos.AllVideosDTO
+import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
+import ru.goodibunakov.amlabvideo.api.dto.videos_all.AllVideosDTO
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
 
 
@@ -53,7 +54,9 @@ class ApiRepositoryImpl(
     override fun networkConnected(): BehaviorSubject<ConnectedStatus> = networkConnected
 
     override fun getAllVideosList(): Observable<AllVideosDTO> {
-        return apiService.getAllVideos()
+        return networkConnected
+                .filter { it == ConnectedStatus.YES }
+                .flatMap { apiService.getAllVideos() }
     }
 
     override fun getPlayLists(): Observable<PlaylistsDTO> {
@@ -67,11 +70,21 @@ class ApiRepositoryImpl(
 //        return Observable.just(playlistsList)
 
 
-        return apiService.getPlaylists()
+        return networkConnected
+                .filter { it == ConnectedStatus.YES }
+                .flatMap { apiService.getPlaylists() }
                 .doOnNext { playlistsList = it.copy() }
     }
 
     override fun getPlaylistVideos(playlistId: String): Observable<VideoDTO> {
-        return apiService.getPlaylistVideos(playlistId = playlistId)
+        return networkConnected
+                .filter { it == ConnectedStatus.YES }
+                .flatMap { apiService.getPlaylistVideos(playlistId = playlistId) }
+    }
+
+    override fun getVideoDetails(id: String): Observable<VideoDetailsDTO> {
+        return networkConnected
+                .filter { it == ConnectedStatus.YES }
+                .flatMap { apiService.getVideoDetails(id = id) }
     }
 }

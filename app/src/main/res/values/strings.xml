@@ -55,4 +55,6 @@
     <string name="network_indicator_no">Нет подключения</string>
     <string name="network_indicator_yes">Подключение восстановлено</string>
 
+    <string name="video_views_and_pass_from_publish_date">%1$s просмотров • </string>
+
 </resources>

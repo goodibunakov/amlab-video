@@ -1,8 +1,8 @@
-package ru.goodibunakov.amlabvideo.api.dto.videos
+package ru.goodibunakov.amlabvideo.api.dto.videos_all
 
 import com.google.gson.annotations.SerializedName
 
-data class Medium(
+data class Default(
         @SerializedName("height")
         val height: Int,
         @SerializedName("url")

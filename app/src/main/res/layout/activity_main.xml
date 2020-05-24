@@ -22,7 +22,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_alignParentTop="true"
-                android:background="@color/toolBarColor" />
+                android:background="@color/toolBarColor"
+                app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView
@@ -45,6 +46,7 @@
             android:id="@+id/networkIndicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:paddingStart="8dp"
             android:paddingTop="2dp"
             android:paddingEnd="8dp"

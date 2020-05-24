@@ -4,7 +4,8 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
 import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
-import ru.goodibunakov.amlabvideo.api.dto.videos.AllVideosDTO
+import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
+import ru.goodibunakov.amlabvideo.api.dto.videos_all.AllVideosDTO
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
 
 interface ApiRepository {
@@ -23,5 +24,13 @@ interface ApiRepository {
      */
     fun getPlaylistVideos(playlistId: String): Observable<VideoDTO>
 
+    /**
+     * Получение всей информации об одном видео
+     */
+    fun getVideoDetails(id: String): Observable<VideoDetailsDTO>
+
+    /**
+     * Наличие интернета
+     */
     fun networkConnected(): BehaviorSubject<ConnectedStatus>
 }

@@ -31,11 +31,12 @@ class SplashViewModel(
                 .map { ToPlaylistsModelUIMapper.map(it) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    Log.d("ddd", "getChannelPlaylistsUseCase = $it")
                     playlistsLiveData.value = it
                     error.value = false
                 }, {
                     error.value = true
-                    Log.d("debug", "error = ${it.localizedMessage}")
+                    Log.d("ddd", "getChannelPlaylistsUseCase error = ${it.localizedMessage}, ${it.cause}")
                 })
                 .addTo(compositeDisposable)
 

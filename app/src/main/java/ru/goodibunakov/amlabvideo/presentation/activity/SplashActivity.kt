@@ -75,7 +75,7 @@ class SplashActivity : AppCompatActivity() {
                 .apply {
                     duration = 400
                     addTarget(R.id.networkIndicator)
-                    if (!isShow) startDelay = 700
+                    if (!isShow) startDelay = 500
                 }
 
         TransitionManager.beginDelayedTransition(parentSplash, transition)

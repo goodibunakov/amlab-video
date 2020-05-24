@@ -1,9 +1,6 @@
-package ru.goodibunakov.amlabvideo.api.dto.videos
+package ru.goodibunakov.amlabvideo.api.dto.videos_all
 
 import com.google.gson.annotations.SerializedName
-import ru.goodibunakov.amlabvideo.api.dto.videos.Default
-import ru.goodibunakov.amlabvideo.api.dto.videos.High
-import ru.goodibunakov.amlabvideo.api.dto.videos.Medium
 
 data class Thumbnails(
         @SerializedName("default")

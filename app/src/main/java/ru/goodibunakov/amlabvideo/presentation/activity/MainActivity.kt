@@ -3,13 +3,17 @@ package ru.goodibunakov.amlabvideo.presentation.activity
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
 import com.mikepenz.materialdrawer.holder.ImageHolder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
@@ -18,8 +22,11 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.*
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.networkIndicator
+import kotlinx.android.synthetic.main.activity_splash.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
+import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.MessagesFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
@@ -64,16 +71,22 @@ class MainActivity : AppCompatActivity() {
             if (tag.contains(APP_MENU_ITEM)) {
                 if (tag.contains(getString(R.string.about))) {
                     supportFragmentManager.beginTransaction()
-                            .add(AboutFragment(), TAG_ABOUT_FRAGMENT)
+                            .replace(R.id.fragmentContainer, AboutFragment(), TAG_ABOUT_FRAGMENT)
                             .commit()
                 }
                 if (tag.contains(getString(R.string.messages))) {
                     supportFragmentManager.beginTransaction()
-                            .add(MessagesFragment(), TAG_MESSAGES_FRAGMENT)
+                            .replace(R.id.fragmentContainer, MessagesFragment(), TAG_MESSAGES_FRAGMENT)
                             .commit()
                 }
             }
         })
+
+        mainViewModel.networkLiveData.observe(this, Observer {
+            showNetworkAvailable(it)
+        })
+
+        mainViewModel.toolbarTitleViewModel.observe(this, Observer { updateToolBarTitle(it) })
     }
 
     private fun initDrawer() {
@@ -113,7 +126,8 @@ class MainActivity : AppCompatActivity() {
                         nameRes = R.string.new_videos
                         isSelected = true
                         tag = ALL_VIDEOS
-                    }, DividerDrawerItem())
+                    },
+                    DividerDrawerItem())
             playlists.map {
                 itemAdapter.add(
                         SecondaryDrawerItem().apply {
@@ -134,18 +148,37 @@ class MainActivity : AppCompatActivity() {
                     }
             )
             onDrawerItemClickListener = { view, drawerItem, position ->
-                Log.d("debug", "onDrawerItemClickListener: ${drawerItem is Nameable}")
+                val tag = drawerItem.tag as String
                 if (drawerItem is Nameable) {
-                    val tag = drawerItem.tag as String
                     sharedViewModel.let {
+                        Log.d("debug", "click = $view")
+                        Log.d("debug", "click = $drawerItem.")
                         it.playlistId.value = tag
                         Log.d("debug", "it.playlistId.value = $tag")
                         Log.d("debug", "${supportFragmentManager.backStackEntryCount}")
                     }
+                    mainViewModel.toolbarTitleViewModel.value = drawerItem.name?.getText(this@MainActivity)
                 }
                 false
             }
             setSavedInstance(savedInstanceState)
+        }
+    }
+
+    private fun updateToolBarTitle(name: String) {
+        when {
+            name == getString(R.string.new_videos) -> {
+                toolbar.title = getString(R.string.new_videos)
+            }
+            name.contains(getString(R.string.messages)) -> {
+                toolbar.title = getString(R.string.messages)
+            }
+            name.contains(getString(R.string.about)) -> {
+                toolbar.title = getString(R.string.about)
+            }
+            else -> {
+                toolbar.title = name
+            }
         }
     }
 
@@ -195,8 +228,41 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showNetworkAvailable(isAvailable: ConnectedStatus) {
+        val indicatorColor = when (isAvailable) {
+            ConnectedStatus.YES -> R.color.colorSuccess
+            ConnectedStatus.NO -> R.color.colorError
+            else -> android.R.color.black
+        }
+        networkIndicator.setBackgroundColor(ContextCompat.getColor(this, indicatorColor))
+
+        networkIndicator.text = when (isAvailable) {
+            ConnectedStatus.YES -> getString(R.string.network_indicator_yes)
+            ConnectedStatus.NO -> getString(R.string.network_indicator_no)
+            else -> ""
+        }
+
+        if (isAvailable == ConnectedStatus.YES)
+            showNetworkIndicator(false)
+        else
+            showNetworkIndicator(true)
+    }
+
+    private fun showNetworkIndicator(isShow: Boolean) {
+        val transition = Slide(Gravity.TOP)
+                .apply {
+                    duration = 400
+                    addTarget(R.id.networkIndicator)
+                    if (!isShow) startDelay = 700
+                }
+
+        TransitionManager.beginDelayedTransition(parentSplash, transition)
+
+        networkIndicator.visibility = if (isShow) View.VISIBLE else View.GONE
+    }
+
     companion object {
-        private const val APP_MENU_ITEM = "app_menu"
+        const val APP_MENU_ITEM = "app_menu"
 
         private const val TAG_VIDEO_FRAGMENT = "video_fragment"
         private const val TAG_ABOUT_FRAGMENT = "about_fragment"
