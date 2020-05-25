@@ -27,8 +27,8 @@ class SplashViewModel(
 
     init {
         getChannelPlaylistsUseCase.buildObservable()
-                .subscribeOn(Schedulers.io())
                 .map { ToPlaylistsModelUIMapper.map(it) }
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Log.d("ddd", "getChannelPlaylistsUseCase = $it")
@@ -37,6 +37,8 @@ class SplashViewModel(
                 }, {
                     error.value = true
                     Log.d("ddd", "getChannelPlaylistsUseCase error = ${it.localizedMessage}, ${it.cause}")
+                },{
+                    Log.d("ddd", "getChannelPlaylistsUseCase complete")
                 })
                 .addTo(compositeDisposable)
 
