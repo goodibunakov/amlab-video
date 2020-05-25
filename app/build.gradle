@@ -1,3 +1,17 @@
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/'}
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.6, 0.99.99]'
+    }
+}
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
+repositories {
+    maven { url 'https://maven.google.com' }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.firebase-perf'
@@ -29,6 +43,11 @@ android {
         packagingOptions {
             exclude 'META-INF/atomicfu.kotlin_module'
         }
+        manifestPlaceholders = [
+                onesignal_app_id: 'b5a88136-4908-4351-8d70-ec8b288282c9',
+                // Project number pulled from dashboard, local value is ignored.
+                onesignal_google_project_number: 'REMOTE'
+        ]
     }
     buildTypes {
         release {
@@ -110,6 +129,9 @@ dependencies {
     implementation "androidx.room:room-rxjava2:2.2.5"
 
     implementation 'com.github.perfomer:blitz:1.0.3'
+
+    //OneSignal
+    implementation 'com.onesignal:OneSignal:[3.13.0, 3.99.99]'
 
     //Test
     testImplementation 'junit:junit:4.13'
