@@ -14,6 +14,7 @@ import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import kotlinx.android.synthetic.main.activity_splash.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
+import ru.goodibunakov.amlabvideo.BuildConfig
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SplashViewModel
@@ -27,6 +28,8 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_splash)
+
+        version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
 
         val splashViewModel: SplashViewModel by viewModels { AmlabApplication.viewModelFactory }
 

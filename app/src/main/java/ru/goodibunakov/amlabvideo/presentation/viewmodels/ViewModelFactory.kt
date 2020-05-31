@@ -21,8 +21,8 @@ class ViewModelFactory(
         if (modelClass.isAssignableFrom(MainViewModel::class.java))
             return MainViewModel(getChannelPlaylistsUseCase, getNetworkStatusUseCase, startToolbarTitle) as T
 
-        if (modelClass.isAssignableFrom(SharedViewModel::class.java))
-            return SharedViewModel() as T
+//        if (modelClass.isAssignableFrom(SharedViewModel::class.java))
+//            return SharedViewModel() as T
 
         if (modelClass.isAssignableFrom(VideoFragmentViewModel::class.java))
             return VideoFragmentViewModel(getPlaylistVideosUseCase, getVideoDetailsUseCase, getAllVideosListUseCase) as T

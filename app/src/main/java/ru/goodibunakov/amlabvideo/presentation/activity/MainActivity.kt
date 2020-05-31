@@ -1,5 +1,6 @@
 package ru.goodibunakov.amlabvideo.presentation.activity
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,9 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +18,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
+import com.google.android.youtube.player.YouTubeApiServiceUtil
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
 import com.mikepenz.materialdrawer.holder.ImageHolder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
@@ -32,30 +39,31 @@ import ru.goodibunakov.amlabvideo.presentation.fragments.MessagesFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel
-import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
-import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel.Companion.ALL_VIDEOS
+import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel.Companion.ALL_VIDEOS
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), YouTubePlayer.OnFullscreenListener {
 
     private lateinit var headerView: AccountHeaderView
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profile: IProfile
     private val mainViewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
-    private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
+//    private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
+    private var isFullscreen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         initDrawer()
+        checkYouTubeApi()
 
         mainViewModel.playlistsLiveData.observe(this, Observer {
             fillDrawer(savedInstanceState, it)
-            sharedViewModel.playlistId.value = ALL_VIDEOS
+            mainViewModel.playlistId.value = ALL_VIDEOS
         })
 
-        sharedViewModel.playlistId.observe(this, Observer { tag ->
+        mainViewModel.playlistId.observe(this, Observer { tag ->
             val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
             if (tag == ALL_VIDEOS) {
                 if (currentFragment is VideoFragment) {
@@ -64,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                             .commit()
                 } else {
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainer, VideoFragment.newInstance(), TAG_VIDEO_FRAGMENT)
+                            .replace(R.id.fragmentContainer, VideoFragment.newInstance(tag), TAG_VIDEO_FRAGMENT)
                             .commit()
                 }
             }
@@ -87,6 +95,17 @@ class MainActivity : AppCompatActivity() {
         })
 
         mainViewModel.toolbarTitleViewModel.observe(this, Observer { updateToolBarTitle(it) })
+    }
+
+    private fun checkYouTubeApi() {
+        val errorReason = YouTubeApiServiceUtil.isYouTubeApiServiceAvailable(this)
+        if (errorReason.isUserRecoverableError) {
+            errorReason.getErrorDialog(this, Companion.RECOVERY_DIALOG_REQUEST).show()
+        } else if (errorReason != YouTubeInitializationResult.SUCCESS) {
+            val errorMessage = String.format(getString(R.string.error_player),
+                    errorReason.toString())
+            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun initDrawer() {
@@ -150,7 +169,7 @@ class MainActivity : AppCompatActivity() {
             onDrawerItemClickListener = { view, drawerItem, position ->
                 val tag = drawerItem.tag as String
                 if (drawerItem is Nameable) {
-                    sharedViewModel.let {
+                    mainViewModel.let {
                         Log.d("debug", "click = $view")
                         Log.d("debug", "click = $drawerItem.")
                         it.playlistId.value = tag
@@ -185,6 +204,7 @@ class MainActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         actionBarDrawerToggle.onConfigurationChanged(newConfig)
+        layout()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -219,14 +239,6 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onBackPressed() {
-        //handle the back press :D close the drawer first and if the drawer is closed close the activity
-        if (root.isDrawerOpen(slider)) {
-            root.closeDrawer(slider)
-        } else {
-            super.onBackPressed()
-        }
-    }
 
     private fun showNetworkAvailable(isAvailable: ConnectedStatus) {
         val indicatorColor = when (isAvailable) {
@@ -267,6 +279,75 @@ class MainActivity : AppCompatActivity() {
         private const val TAG_VIDEO_FRAGMENT = "video_fragment"
         private const val TAG_ABOUT_FRAGMENT = "about_fragment"
         private const val TAG_MESSAGES_FRAGMENT = "messages_fragment"
+        private const val RECOVERY_DIALOG_REQUEST = 1
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RECOVERY_DIALOG_REQUEST) {
+            recreate()
+        }
+    }
+
+    override fun onFullscreen(isFullscreen: Boolean) {
+        this.isFullscreen = isFullscreen
+        layout()
+    }
+
+
+    private fun layout() {
+        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+//        when {
+//            isFullscreen -> {
+//                toolbar.visibility = View.GONE
+//                layoutList.setVisibility(View.GONE)
+//                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+//                setLayoutSize(fragmentVideo.getView(), MATCH_PARENT, MATCH_PARENT)
+//            }
+//            isPortrait -> {
+//                toolbar.visibility = View.VISIBLE
+//                layoutList.setVisibility(View.VISIBLE)
+//                setLayoutSize(fragmentVideo.getView(), WRAP_CONTENT, WRAP_CONTENT)
+//            }
+//            else -> {
+//                toolbar.visibility = View.VISIBLE
+//                layoutList.setVisibility(View.VISIBLE)
+//                val screenWidth = dpToPx(resources.configuration.screenWidthDp)
+//                val videoWidth = screenWidth - screenWidth / 4 - dpToPx(5)
+//                setLayoutSize(fragmentVideo.getView(), videoWidth, WRAP_CONTENT)
+//            }
+//        }
+    }
+
+    override fun onBackPressed() {
+        when {
+            root.isDrawerOpen(slider) -> {
+                root.closeDrawer(slider)
+            }
+            isFullscreen -> {
+                val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+                if (currentFragment is VideoFragment) {
+                    currentFragment.backNormal()
+                } else {
+                    super.onBackPressed()
+                }
+            }
+            else -> {
+                super.onBackPressed()
+            }
+        }
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density + 0.5f).toInt()
+    }
+
+    private fun setLayoutSize(view: View, width: Int, height: Int) {
+        val params = view.layoutParams
+        params.width = width
+        params.height = height
+        view.layoutParams = params
     }
 }

@@ -10,6 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
 import ru.goodibunakov.amlabvideo.domain.usecase.GetChannelPlaylistsUseCase
 import ru.goodibunakov.amlabvideo.domain.usecase.GetNetworkStatusUseCase
+import ru.goodibunakov.amlabvideo.presentation.activity.MainActivity.Companion.APP_MENU_ITEM
 import ru.goodibunakov.amlabvideo.presentation.mappers.ToPlaylistsModelUIMapper
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 
@@ -17,7 +18,11 @@ class MainViewModel(
         getChannelPlaylistsUseCase: GetChannelPlaylistsUseCase,
         getNetworkStatus: GetNetworkStatusUseCase,
         startToolbarTitle: String
-): ViewModel() {
+) : ViewModel() {
+
+    companion object {
+        const val ALL_VIDEOS = "0"
+    }
 
     private var compositeDisposable = CompositeDisposable()
     val playlistsLiveData = MutableLiveData<List<PlaylistsModelUI>>()
@@ -25,7 +30,15 @@ class MainViewModel(
     val networkLiveData = MutableLiveData<ConnectedStatus>()
     val toolbarTitleViewModel = MutableLiveData(startToolbarTitle)
 
+    var playlistId: MutableLiveData<String> = MutableLiveData()
+        set(value) {
+            if (value != field && !(value as String).contains(APP_MENU_ITEM))
+                field = value
+        }
+
     init {
+//        playlistId.value = ALL_VIDEOS
+
         getChannelPlaylistsUseCase.buildObservable()
                 .subscribeOn(Schedulers.io())
                 .map { ToPlaylistsModelUIMapper.map(it) }

@@ -158,8 +158,8 @@ class Utils {
         return (abs(timeDistance) / 1000 / 60.toFloat()).roundToInt()
     }
 
-    fun getTimeFromString(duration: String): String? {
-        var time: String? = ""
+    fun getTimeFromString(duration: String): String {
+        var time = ""
         var hourexists = false
         var minutesexists = false
         var secondsexists = false

@@ -33,22 +33,29 @@
 
     <string name="date_util_suffix">назад</string>
 
+    <string name="version">Версия %1$s</string>
+
+    <string name="pref_vk_key">https://vk.com/amlab</string>
+    <string name="pref_instagram_key">https://www.instagram.com/amlab.me/</string>
+    <string name="pref_fb_key">https://www.facebook.com/amlab.me</string>
+    <string name="pref_site_key">https://amlab.me/</string>
+    <string name="pref_telegram_key">https://telegram.me/amlab</string>
     <string name="pref_share_key">prefShareKey</string>
     <string name="pref_rate_review_key">prefRateReviewKey</string>
 
     <string name="pref_app_title">О приложении</string>
-    <string name="pref_app_summary">Видеоуроки по разработке мобильных приложений</string>
-    <string name="pref_version_title">Версия сборки %1$s</string>
+    <string name="pref_app_summary">Официальное приложение Amlab</string>
+    <string name="pref_version_title">Версия сборки</string>
     <string name="pref_developer_title">Разработчик</string>
-    <string name="pref_developer_summary">FandroidApps</string>
+    <string name="pref_developer_summary">GooDi Mobile</string>
     <string name="pref_share_title">Поделитесь приложением</string>
     <string name="pref_share_summary">Расскажите друзьям об этом приложении</string>
     <string name="pref_rate_review_title">Поставьте оценку</string>
     <string name="pref_rate_review_summary">Оцените приложение и оставьте отзыв в GooglePlay</string>
 
     <string name="share_to">Поделиться</string>
-    <string name="subject">Рекомендую видеоуроки о создании мобильных приложений на канале Start Android!</string>
-    <string name="message">Вы можете скачать приложение "Видеоуроки Start Android" для Android в </string>
+    <string name="subject">Рекомендую приложение Amlab!</string>
+    <string name="message">Вы можете скачать приложение "Amlab video" для Android в </string>
 
     <string name="new_videos">Новые видео</string>
 

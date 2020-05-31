@@ -40,16 +40,16 @@ class VideoFragmentViewModel(
                     Log.d("ddd", "loadPlaylist $it")
                     loadVideoDetails(it.firstOrNull()?.videoId ?: "")
                     currentVideoLiveData.value = it.firstOrNull()
-                    videosLiveData.value = it.drop(1)
+                    videosLiveData.value = it
                 }, {
                     Log.d("ddd", "loadPlaylist error = ${it.localizedMessage}")
-                    Log.d("ddd", "loadPlaylist error = ${it}")
+                    Log.d("ddd", "loadPlaylist error = $it")
                     Log.d("ddd", "loadPlaylist error = ${it.message}")
                 })
                 .addTo(compositeDisposable)
     }
 
-    fun loadAllVideosList(){
+    fun loadAllVideosList() {
         getAllVideosList.buildObservable()
                 .map { ToVideoModelUIMapper.map(it) }
                 .subscribeOn(Schedulers.io())
@@ -76,7 +76,7 @@ class VideoFragmentViewModel(
                     Log.d("ddd", "loadVideoDetails $it")
                     videoDetails.value = it
                 }, {
-Log.d("ddd", "loadVideoDetails error = ${it.localizedMessage}")
+                    Log.d("ddd", "loadVideoDetails error = ${it.localizedMessage}")
                 })
                 .addTo(compositeDisposable)
     }

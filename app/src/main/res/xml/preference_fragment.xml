@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="@string/pref_share_key"
+        android:summary="@string/pref_share_summary"
+        android:title="@string/pref_share_title" />
+
+    <PreferenceCategory android:title="Amlab в интернете">
+
+        <Preference
+            android:icon="@mipmap/ic_launcher_round"
+            android:title="Наш сайт" />
+
+        <Preference
+            android:icon="@drawable/ic_vk"
+            android:key="@string/pref_vk_key"
+            android:title="ВКонтакте" />
+
+        <Preference
+            android:icon="@drawable/ic_telegram"
+            android:key="@string/pref_telegram_key"
+            android:title="Teleram чат" />
+
+        <Preference
+            android:icon="@drawable/ic_instagram"
+            android:key="@string/pref_instagram_key"
+            android:title="Instagram" />
+
+        <Preference
+            android:icon="@drawable/ic_fb"
+            android:key="@string/pref_fb_key"
+            android:title="Facebook" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            android:key="@string/pref_rate_review_key"
+            android:summary="@string/pref_rate_review_summary"
+            android:title="@string/pref_rate_review_title" />
+
+        <Preference
+            android:selectable="false"
+            android:summary="@string/pref_developer_summary"
+            android:title="@string/pref_developer_title" />
+    </PreferenceCategory>
+</PreferenceScreen>
