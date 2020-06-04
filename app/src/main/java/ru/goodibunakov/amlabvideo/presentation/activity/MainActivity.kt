@@ -8,19 +8,16 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
-import com.google.android.youtube.player.YouTubeApiServiceUtil
-import com.google.android.youtube.player.YouTubeInitializationResult
-import com.google.android.youtube.player.YouTubePlayer
 import com.mikepenz.materialdrawer.holder.ImageHolder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
@@ -29,34 +26,36 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.*
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.networkIndicator
-import kotlinx.android.synthetic.main.activity_splash.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.MessagesFragment
+import ru.goodibunakov.amlabvideo.presentation.fragments.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
+import ru.goodibunakov.amlabvideo.presentation.utils.FullScreenHelper
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel.Companion.ALL_VIDEOS
 
 
-class MainActivity : AppCompatActivity(), YouTubePlayer.OnFullscreenListener {
+class MainActivity : AppCompatActivity(), OnFullScreenListener {
 
     private lateinit var headerView: AccountHeaderView
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profile: IProfile
     private val mainViewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
-//    private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
+
+    //    private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
     private var isFullscreen = false
+    private lateinit var fullScreenHelper: FullScreenHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        fullScreenHelper = FullScreenHelper(this, appBarLayout)
         setSupportActionBar(toolbar)
         initDrawer()
-        checkYouTubeApi()
 
         mainViewModel.playlistsLiveData.observe(this, Observer {
             fillDrawer(savedInstanceState, it)
@@ -64,18 +63,12 @@ class MainActivity : AppCompatActivity(), YouTubePlayer.OnFullscreenListener {
         })
 
         mainViewModel.playlistId.observe(this, Observer { tag ->
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
             if (tag == ALL_VIDEOS) {
-                if (currentFragment is VideoFragment) {
-                    supportFragmentManager.beginTransaction()
-                            .show(currentFragment)
-                            .commit()
-                } else {
-                    supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainer, VideoFragment.newInstance(tag), TAG_VIDEO_FRAGMENT)
-                            .commit()
-                }
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, VideoFragment.newInstance(tag), TAG_VIDEO_FRAGMENT)
+                        .commit()
             }
+
             if (tag.contains(APP_MENU_ITEM)) {
                 if (tag.contains(getString(R.string.about))) {
                     supportFragmentManager.beginTransaction()
@@ -97,28 +90,15 @@ class MainActivity : AppCompatActivity(), YouTubePlayer.OnFullscreenListener {
         mainViewModel.toolbarTitleViewModel.observe(this, Observer { updateToolBarTitle(it) })
     }
 
-    private fun checkYouTubeApi() {
-        val errorReason = YouTubeApiServiceUtil.isYouTubeApiServiceAvailable(this)
-        if (errorReason.isUserRecoverableError) {
-            errorReason.getErrorDialog(this, Companion.RECOVERY_DIALOG_REQUEST).show()
-        } else if (errorReason != YouTubeInitializationResult.SUCCESS) {
-            val errorMessage = String.format(getString(R.string.error_player),
-                    errorReason.toString())
-            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-        }
-    }
-
     private fun initDrawer() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 
-        actionBarDrawerToggle = ActionBarDrawerToggle(
-                this,
-                root,
-                toolbar,
-                com.mikepenz.materialdrawer.R.string.material_drawer_open,
-                com.mikepenz.materialdrawer.R.string.material_drawer_close
-        )
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, root, toolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+            rootLayout.updatePadding(top = insets.systemWindowInsetTop)
+            insets
+        }
     }
 
     private fun fillDrawer(savedInstanceState: Bundle?, playlists: List<PlaylistsModelUI>) {
@@ -201,11 +181,6 @@ class MainActivity : AppCompatActivity(), YouTubePlayer.OnFullscreenListener {
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        actionBarDrawerToggle.onConfigurationChanged(newConfig)
-        layout()
-    }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -268,7 +243,7 @@ class MainActivity : AppCompatActivity(), YouTubePlayer.OnFullscreenListener {
                     if (!isShow) startDelay = 700
                 }
 
-        TransitionManager.beginDelayedTransition(parentSplash, transition)
+        TransitionManager.beginDelayedTransition(root, transition)
 
         networkIndicator.visibility = if (isShow) View.VISIBLE else View.GONE
     }
@@ -280,45 +255,21 @@ class MainActivity : AppCompatActivity(), YouTubePlayer.OnFullscreenListener {
         private const val TAG_ABOUT_FRAGMENT = "about_fragment"
         private const val TAG_MESSAGES_FRAGMENT = "messages_fragment"
         private const val RECOVERY_DIALOG_REQUEST = 1
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RECOVERY_DIALOG_REQUEST) {
-            recreate()
-        }
+        if (requestCode == RECOVERY_DIALOG_REQUEST) recreate()
     }
 
-    override fun onFullscreen(isFullscreen: Boolean) {
-        this.isFullscreen = isFullscreen
-        layout()
-    }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
 
+        actionBarDrawerToggle.onConfigurationChanged(newConfig)
 
-    private fun layout() {
-        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-
-//        when {
-//            isFullscreen -> {
-//                toolbar.visibility = View.GONE
-//                layoutList.setVisibility(View.GONE)
-//                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-//                setLayoutSize(fragmentVideo.getView(), MATCH_PARENT, MATCH_PARENT)
-//            }
-//            isPortrait -> {
-//                toolbar.visibility = View.VISIBLE
-//                layoutList.setVisibility(View.VISIBLE)
-//                setLayoutSize(fragmentVideo.getView(), WRAP_CONTENT, WRAP_CONTENT)
-//            }
-//            else -> {
-//                toolbar.visibility = View.VISIBLE
-//                layoutList.setVisibility(View.VISIBLE)
-//                val screenWidth = dpToPx(resources.configuration.screenWidthDp)
-//                val videoWidth = screenWidth - screenWidth / 4 - dpToPx(5)
-//                setLayoutSize(fragmentVideo.getView(), videoWidth, WRAP_CONTENT)
-//            }
-//        }
+//        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+//            exitFullScreen()
+//        } else enterFullScreen()
     }
 
     override fun onBackPressed() {
@@ -340,14 +291,26 @@ class MainActivity : AppCompatActivity(), YouTubePlayer.OnFullscreenListener {
         }
     }
 
-    private fun dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density + 0.5f).toInt()
+    override fun enterFullScreen() {
+        isFullscreen = true
+//        ViewCompat.setOnApplyWindowInsetsListener(
+//                root,
+//                fun(v: View, insets: WindowInsetsCompat): WindowInsetsCompat? {
+//                    toolbar.updatePadding(top = insets.systemWindowInsetTop, bottom = insets.stableInsetBottom)
+//                    return insets
+//                }
+//        )
+        fullScreenHelper.enterFullScreen()
+//        root.apply {
+//            fitsSystemWindows = false
+//            requestApplyInsets()
+//        }
     }
 
-    private fun setLayoutSize(view: View, width: Int, height: Int) {
-        val params = view.layoutParams
-        params.width = width
-        params.height = height
-        view.layoutParams = params
+    override fun exitFullScreen() {
+        isFullscreen = false
+        fullScreenHelper.exitFullScreen()
+//        root.fitsSystemWindows = true
+//        root.requestApplyInsets()
     }
 }
