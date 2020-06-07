@@ -264,13 +264,11 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
 
         actionBarDrawerToggle.onConfigurationChanged(newConfig)
 
-//        isFullscreen = if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-//            exitFullScreen()
-//            false
-//        } else {
-//            enterFullScreen()
-//            true
-//        }
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            exitFullScreen()
+        } else {
+            enterFullScreen()
+        }
     }
 
     override fun onBackPressed() {

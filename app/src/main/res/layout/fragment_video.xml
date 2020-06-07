@@ -16,58 +16,61 @@
         app:showYouTubeButton="false" />
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
         android:id="@+id/infoLayout"
-        app:cardElevation="2dp"
-        android:layout_below="@id/playerView"
-        android:layout_height="wrap_content" >
-
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/infoTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            tools:text="Здесь название видео" />
+        android:layout_below="@id/playerView"
+        android:layout_marginTop="8dp"
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/infoDetails"
-                android:layout_width="wrap_content"
+                android:id="@+id/infoTitle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                tools:text="50000 просмотров • " />
+                android:lineSpacingExtra="1dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                tools:text="Здесь название видео длинное и очень интересное, а главное - очень полезное!" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/infoTimeAgo"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                tools:text="10 дней назад" />
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/infoDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    tools:text="50000 просмотров • " />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/infoTimeAgo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    tools:text="10 дней назад" />
+
+            </LinearLayout>
+
+            <!--        <View-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="1dp"-->
+            <!--            android:layout_marginTop="8dp"-->
+            <!--            android:background="@color/dividerColor" />-->
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/dividerColor" />
-
-    </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView

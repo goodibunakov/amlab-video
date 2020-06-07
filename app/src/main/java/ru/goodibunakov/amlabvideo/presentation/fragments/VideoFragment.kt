@@ -1,12 +1,14 @@
 package ru.goodibunakov.amlabvideo.presentation.fragments
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
@@ -24,8 +26,8 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_video.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
-import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.adapter.VideoAdapter
+import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel.Companion.ALL_VIDEOS
@@ -107,6 +109,7 @@ class VideoFragment : Fragment(), OnClickListener {
             }
 
             override fun onYouTubePlayerExitFullScreen() {
+                if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) return
                 onFullScreenListener.exitFullScreen()
 //                removeCustomActionsFromPlayer()
             }
@@ -160,6 +163,12 @@ class VideoFragment : Fragment(), OnClickListener {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         playerView.getPlayerUiController().getMenu()?.dismiss()
+
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            playerView.exitFullScreen()
+        } else {
+            playerView.enterFullScreen()
+        }
     }
 
     override fun onItemClick(videoItem: VideoUIModel) {
