@@ -26,6 +26,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
             android:hardwareAccelerated="true"
             android:label=""
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" />
 
         <meta-data

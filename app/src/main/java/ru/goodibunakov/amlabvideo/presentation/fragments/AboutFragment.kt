@@ -1,10 +1,13 @@
 package ru.goodibunakov.amlabvideo.presentation.fragments
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import ru.goodibunakov.amlabvideo.BuildConfig
 import ru.goodibunakov.amlabvideo.R
 
 
@@ -31,13 +34,34 @@ class AboutFragment : PreferenceFragmentCompat() {
                 startActivity(rateReviewIntent)
                 true
             }
-            getString(R.string.pref_vk_key) -> {
+            getString(R.string.pref_site_key),
+            getString(R.string.pref_vk_key),
+            getString(R.string.pref_telegram_key),
+            getString(R.string.pref_instagram_key),
+            getString(R.string.pref_fb_key) -> {
                 val url = preference.title.toString()
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                startActivity(intent)
+                startActivity(Intent.createChooser(intent, getString(R.string.open_with)))
+                true
+            }
+            getString(R.string.pref_developer_title) -> {
+                sendEmailToDeveloper()
                 true
             }
             else -> super.onPreferenceTreeClick(preference)
+        }
+    }
+
+    private fun sendEmailToDeveloper() {
+        val intent = Intent(Intent.ACTION_SENDTO)
+        intent.data = Uri.parse("mailto:")
+        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("goodi@bk.ru"))
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Amlab Android App ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})")
+//        intent.putExtra(Intent.EXTRA_TEXT, "Я хочу поговорить о...")
+        try {
+            startActivity(Intent.createChooser(intent, "Отправить письмо..."))
+        } catch (ex: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), getString(R.string.error_no_email_clients), Toast.LENGTH_SHORT).show()
         }
     }
 }

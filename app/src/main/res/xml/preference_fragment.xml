@@ -6,10 +6,16 @@
         android:summary="@string/pref_share_summary"
         android:title="@string/pref_share_title" />
 
+    <Preference
+        android:key="@string/pref_rate_review_key"
+        android:summary="@string/pref_rate_review_summary"
+        android:title="@string/pref_rate_review_title" />
+
     <PreferenceCategory android:title="Amlab в интернете">
 
         <Preference
             android:icon="@mipmap/ic_launcher_round"
+            android:key="@string/pref_site_key"
             android:title="Наш сайт" />
 
         <Preference
@@ -20,7 +26,7 @@
         <Preference
             android:icon="@drawable/ic_telegram"
             android:key="@string/pref_telegram_key"
-            android:title="Teleram чат" />
+            android:title="Telegram чат" />
 
         <Preference
             android:icon="@drawable/ic_instagram"
@@ -35,13 +41,9 @@
     </PreferenceCategory>
 
     <PreferenceCategory>
-        <Preference
-            android:key="@string/pref_rate_review_key"
-            android:summary="@string/pref_rate_review_summary"
-            android:title="@string/pref_rate_review_title" />
 
         <Preference
-            android:selectable="false"
+            android:key="@string/pref_developer_title"
             android:summary="@string/pref_developer_summary"
             android:title="@string/pref_developer_title" />
     </PreferenceCategory>

@@ -54,8 +54,9 @@
     <string name="pref_rate_review_summary">Оцените приложение и оставьте отзыв в GooglePlay</string>
 
     <string name="share_to">Поделиться</string>
+    <string name="open_with">Открыть</string>
     <string name="subject">Рекомендую приложение Amlab!</string>
-    <string name="message">Вы можете скачать приложение "Amlab video" для Android в </string>
+    <string name="message">Ты можешь скачать приложение "Amlab video" для Android в </string>
 
     <string name="new_videos">Новые видео</string>
 
@@ -63,5 +64,7 @@
     <string name="network_indicator_yes">Подключение восстановлено</string>
 
     <string name="video_views_and_pass_from_publish_date">%1$s просмотров • </string>
+
+    <string name="error_no_email_clients">Не найдено почтовых клиентов</string>
 
 </resources>

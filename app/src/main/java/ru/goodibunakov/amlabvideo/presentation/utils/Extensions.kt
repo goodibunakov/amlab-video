@@ -10,7 +10,7 @@ import ru.goodibunakov.amlabvideo.presentation.activity.MainActivity
 
 
 fun MutableLiveData<String>.setValidatedValue(newValue: String) {
-    if (value != newValue && !newValue.contains(MainActivity.APP_MENU_ITEM)) {
+    if (value != newValue) {
         value = newValue
     }
 }

@@ -65,23 +65,18 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
         })
 
         sharedViewModel.playlistId.observe(this, Observer { tag ->
-            if (tag == ALL_VIDEOS) {
+            if (!tag.contains(APP_MENU_ITEM)) {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, VideoFragment(), TAG_VIDEO_FRAGMENT)
                         .commit()
-            }
-
-            if (tag.contains(APP_MENU_ITEM)) {
-                if (tag.contains(getString(R.string.about))) {
-                    supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainer, AboutFragment(), TAG_ABOUT_FRAGMENT)
-                            .commit()
-                }
-                if (tag.contains(getString(R.string.messages))) {
-                    supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainer, MessagesFragment(), TAG_MESSAGES_FRAGMENT)
-                            .commit()
-                }
+            } else if (tag.contains(getString(R.string.about))) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, AboutFragment(), TAG_ABOUT_FRAGMENT)
+                        .commit()
+            } else if (tag.contains(getString(R.string.messages))) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, MessagesFragment(), TAG_MESSAGES_FRAGMENT)
+                        .commit()
             }
         })
 
@@ -89,7 +84,7 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
             showNetworkAvailable(it)
         })
 
-        mainViewModel.toolbarTitleViewModel.observe(this, Observer { updateToolBarTitle(it) })
+        mainViewModel.toolbarTitleLiveData.observe(this, Observer { updateToolBarTitle(it) })
     }
 
     private fun initDrawer() {
@@ -152,13 +147,13 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
                 val tag = drawerItem.tag as String
                 if (drawerItem is Nameable) {
                     mainViewModel.let {
-                        Log.d("debug", "click = $view")
-                        Log.d("debug", "click = $drawerItem.")
+                        Log.d("debug", "onDrawerItemClickListener click = $view")
+                        Log.d("debug", "onDrawerItemClickListener click = $drawerItem.")
                         sharedViewModel.playlistId.setValidatedValue(tag)
-                        Log.d("debug", "it.playlistId.value = $tag")
-                        Log.d("debug", "${supportFragmentManager.backStackEntryCount}")
+                        Log.d("debug", "onDrawerItemClickListener it.playlistId.value = $tag")
+                        Log.d("debug", "onDrawerItemClickListener ${supportFragmentManager.backStackEntryCount}")
                     }
-                    mainViewModel.toolbarTitleViewModel.value = drawerItem.name?.getText(this@MainActivity)
+                    mainViewModel.toolbarTitleLiveData.value = drawerItem.name?.getText(this@MainActivity)
                 }
                 false
             }
@@ -269,13 +264,13 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
 
         actionBarDrawerToggle.onConfigurationChanged(newConfig)
 
-        isFullscreen = if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            exitFullScreen()
-            false
-        } else {
-            enterFullScreen()
-            true
-        }
+//        isFullscreen = if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+//            exitFullScreen()
+//            false
+//        } else {
+//            enterFullScreen()
+//            true
+//        }
     }
 
     override fun onBackPressed() {

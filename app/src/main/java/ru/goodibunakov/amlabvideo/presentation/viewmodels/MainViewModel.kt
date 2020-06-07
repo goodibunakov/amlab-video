@@ -27,10 +27,11 @@ class MainViewModel(
     val playlistsLiveData = MutableLiveData<List<PlaylistsModelUI>>()
     val error = SingleLiveEvent<Boolean>().apply { this.value = false }
     val networkLiveData = MutableLiveData<ConnectedStatus>()
-    val toolbarTitleViewModel = MutableLiveData(startToolbarTitle)
+    val toolbarTitleLiveData = MutableLiveData(startToolbarTitle)
 
 
     init {
+        Log.d("debug", "toolbarTitleLiveData in MainViewModel = ${toolbarTitleLiveData.value}")
         getChannelPlaylistsUseCase.buildObservable()
                 .subscribeOn(Schedulers.io())
                 .map { ToPlaylistsModelUIMapper.map(it) }
