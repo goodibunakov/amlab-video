@@ -164,16 +164,16 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
     private fun updateToolBarTitle(name: String) {
         when {
             name == getString(R.string.new_videos) -> {
-                toolbar.title = getString(R.string.new_videos)
+                supportActionBar?.title = getString(R.string.new_videos)
             }
             name.contains(getString(R.string.messages)) -> {
-                toolbar.title = getString(R.string.messages)
+                supportActionBar?.title = getString(R.string.messages)
             }
             name.contains(getString(R.string.about)) -> {
-                toolbar.title = getString(R.string.about)
+                supportActionBar?.title = getString(R.string.about)
             }
             else -> {
-                toolbar.title = name
+                supportActionBar?.title = name
             }
         }
     }

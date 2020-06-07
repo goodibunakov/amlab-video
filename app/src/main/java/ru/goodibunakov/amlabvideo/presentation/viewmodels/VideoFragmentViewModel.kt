@@ -81,6 +81,7 @@ class VideoFragmentViewModel(
                     Log.d("debug", "getAllVideosList doOnNext")
                 }
                 .subscribe({
+                    videoIdSubject.onNext(it.firstOrNull()?.videoId ?: "")
                     videosLiveData.value = it
                 }, {
 
@@ -93,6 +94,7 @@ class VideoFragmentViewModel(
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap { id ->
+                    Log.d("ddd", "id = $id")
                     getVideoDetailsUseCase.set(id)
                     getVideoDetailsUseCase.buildObservable()
                 }
