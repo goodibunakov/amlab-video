@@ -62,7 +62,10 @@ class VideoFragment : Fragment(), OnClickListener {
         Log.d("debug", "VideoFragment onViewCreated")
         initPlayerView()
         initRecyclerView()
+        observeLiveData()
+    }
 
+    private fun observeLiveData() {
         sharedViewModel.playlistId.observe(viewLifecycleOwner, Observer {
             if (it == ALL_VIDEOS) viewModel.loadAllVideosList() else viewModel.loadPlaylist(it)
         })
@@ -161,7 +164,7 @@ class VideoFragment : Fragment(), OnClickListener {
 
     override fun onItemClick(videoItem: VideoUIModel) {
         Log.d("debug", "clicked $videoItem")
-        viewModel.videoIdSubject.onNext(videoItem.videoId)
+        if (videoItem.videoId != viewModel.videoIdSubject.value) viewModel.videoIdSubject.onNext(videoItem.videoId)
     }
 
     override fun onDestroyView() {
