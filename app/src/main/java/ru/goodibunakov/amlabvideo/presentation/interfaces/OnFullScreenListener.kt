@@ -1,4 +1,4 @@
-package ru.goodibunakov.amlabvideo.presentation.fragments
+package ru.goodibunakov.amlabvideo.presentation.interfaces
 
 interface OnFullScreenListener {
     fun enterFullScreen()

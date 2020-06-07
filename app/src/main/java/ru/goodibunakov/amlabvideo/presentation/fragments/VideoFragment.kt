@@ -20,11 +20,13 @@ import com.perfomer.blitz.setTimeAgo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_video.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
-import ru.goodibunakov.amlabvideo.presentation.OnClickListener
+import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.adapter.VideoAdapter
+import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel.Companion.ALL_VIDEOS
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
@@ -38,7 +40,7 @@ class VideoFragment : Fragment(), OnClickListener {
     private val viewModel: VideoFragmentViewModel by viewModels { AmlabApplication.viewModelFactory }
 
     private lateinit var adapter: VideoAdapter
-    private var videoId: String? = null
+    private lateinit var youTubePlayerDisposable: Disposable
 
     private lateinit var onFullScreenListener: OnFullScreenListener
 
@@ -72,11 +74,6 @@ class VideoFragment : Fragment(), OnClickListener {
 
         viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, Observer {
             progressBar.visibility = if (it) View.VISIBLE else View.GONE
-            Log.d("debug", "progressBarVisibilityLiveData = $it")
-        })
-
-        viewModel.currentVideoLiveData.observe(viewLifecycleOwner, Observer {
-//            playerView.video = it.videoId
         })
 
         viewModel.videoDetails.observe(viewLifecycleOwner, Observer {
@@ -93,8 +90,11 @@ class VideoFragment : Fragment(), OnClickListener {
         lifecycle.addObserver(playerView)
         playerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
-                val videoId = "S0Q4gqBUs7c"
-                youTubePlayer.loadVideo(videoId, 0F)
+                youTubePlayerDisposable = viewModel.videoIdSubject
+                        .filter { it.isNotEmpty() }
+                        .subscribe({
+                            youTubePlayer.cueVideo(it, 0f)
+                        }, {})
             }
         })
         playerView.addFullScreenListener(object : YouTubePlayerFullScreenListener {
@@ -161,7 +161,11 @@ class VideoFragment : Fragment(), OnClickListener {
 
     override fun onItemClick(videoItem: VideoUIModel) {
         Log.d("debug", "clicked $videoItem")
-        viewModel.currentVideoLiveData.value = videoItem
         viewModel.videoIdSubject.onNext(videoItem.videoId)
+    }
+
+    override fun onDestroyView() {
+        if (::youTubePlayerDisposable.isInitialized && !youTubePlayerDisposable.isDisposed) youTubePlayerDisposable.dispose()
+        super.onDestroyView()
     }
 }

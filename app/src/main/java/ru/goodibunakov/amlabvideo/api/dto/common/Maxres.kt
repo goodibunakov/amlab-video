@@ -1,4 +1,4 @@
-package ru.goodibunakov.amlabvideo.api.dto.video_details
+package ru.goodibunakov.amlabvideo.api.dto.common
 
 import com.google.gson.annotations.SerializedName
 

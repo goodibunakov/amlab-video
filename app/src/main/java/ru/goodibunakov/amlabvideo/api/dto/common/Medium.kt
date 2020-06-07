@@ -1,4 +1,4 @@
-package ru.goodibunakov.amlabvideo.api.dto.playlists
+package ru.goodibunakov.amlabvideo.api.dto.common
 
 import com.google.gson.annotations.SerializedName
 

@@ -23,6 +23,8 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_alignParentTop="true"
                 android:background="@color/toolBarColor"
+                app:contentInsetStartWithNavigation="0dp"
+                app:titleMarginStart="0dp"
                 app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -30,10 +32,10 @@
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
+            android:layout_below="@id/appBarLayout"
             android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@id/appBarLayout" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/noInternet"

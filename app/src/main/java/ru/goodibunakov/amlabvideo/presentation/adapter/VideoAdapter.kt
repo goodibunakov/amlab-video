@@ -10,7 +10,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_list.view.*
 import ru.goodibunakov.amlabvideo.R
-import ru.goodibunakov.amlabvideo.presentation.OnClickListener
+import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 
 class VideoAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<VideoAdapter.VideoItemViewHolder>() {

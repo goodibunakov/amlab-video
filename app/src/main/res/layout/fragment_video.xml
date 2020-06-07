@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root"
     tools:context=".presentation.fragments.VideoFragment">
 
     <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -12,16 +12,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        app:showYouTubeButton="false"
-        app:autoPlay="false" />
+        app:autoPlay="false"
+        app:showYouTubeButton="false" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:id="@+id/infoLayout"
+        app:cardElevation="2dp"
+        android:layout_below="@id/playerView"
+        android:layout_height="wrap_content" >
 
     <LinearLayout
-        android:id="@+id/infoLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/playerView"
-        android:orientation="vertical"
-        android:paddingTop="8dp">
+        android:orientation="vertical">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/infoTitle"
@@ -64,6 +68,7 @@
             android:background="@color/dividerColor" />
 
     </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"

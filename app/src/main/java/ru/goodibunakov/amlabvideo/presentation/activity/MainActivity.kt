@@ -30,7 +30,7 @@ import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.MessagesFragment
-import ru.goodibunakov.amlabvideo.presentation.fragments.OnFullScreenListener
+import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 import ru.goodibunakov.amlabvideo.presentation.utils.FullScreenHelper

@@ -9,14 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/toolBarColor"
-        android:minHeight="@dimen/item_twoline_height"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:minHeight="@dimen/thumbnail_height"
         android:orientation="horizontal">
 
         <FrameLayout
             android:id="@+id/lytThumbnail"
             android:layout_width="@dimen/thumbnail_width"
             android:layout_height="@dimen/thumbnail_height"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="top"
             android:layout_marginLeft="@dimen/standard_margin"
             tools:ignore="RtlHardcoded">
 
@@ -45,7 +47,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="top"
             android:orientation="vertical"
             android:paddingLeft="@dimen/standard_margin"
             android:paddingRight="@dimen/standard_margin"
@@ -57,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="4"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 tools:text="Название длинное и очень интересное видео тыдыщ!" />
 
             <com.google.android.material.textview.MaterialTextView

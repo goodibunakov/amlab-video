@@ -1,4 +1,4 @@
-package ru.goodibunakov.amlabvideo.presentation
+package ru.goodibunakov.amlabvideo.presentation.interfaces
 
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 

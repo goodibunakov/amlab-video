@@ -25,7 +25,6 @@ class VideoFragmentViewModel(
     private val compositeDisposable = CompositeDisposable()
     val videosLiveData = MutableLiveData<List<VideoUIModel>>()
     val progressBarVisibilityLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
-    val currentVideoLiveData = MutableLiveData<VideoUIModel>()
     val videoDetails = MutableLiveData<VideoDetailsUI>()
     var videoIdSubject = BehaviorSubject.createDefault("")
 
