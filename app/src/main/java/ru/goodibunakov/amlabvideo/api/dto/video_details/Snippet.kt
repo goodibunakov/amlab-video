@@ -20,7 +20,7 @@ data class Snippet(
         @SerializedName("publishedAt")
         val publishedAt: String,
         @SerializedName("tags")
-        val tags: List<String>,
+        val tags: List<String>?,
         @SerializedName("thumbnails")
         val thumbnails: Thumbnails,
         @SerializedName("title")

@@ -2,6 +2,7 @@ package ru.goodibunakov.amlabvideo.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -12,15 +13,22 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_splash.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.BuildConfig
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
+import ru.goodibunakov.amlabvideo.presentation.utils.zoomIn
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SplashViewModel
+import java.util.concurrent.TimeUnit
 
 
 class SplashActivity : AppCompatActivity() {
+
+    private lateinit var animationDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -29,18 +37,25 @@ class SplashActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_splash)
 
-        version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
-
         val splashViewModel: SplashViewModel by viewModels { AmlabApplication.viewModelFactory }
 
-        splashViewModel.playlistsLiveData.observe(this, Observer {
-            if (it.isNotEmpty()) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                overridePendingTransition(R.anim.open_next, R.anim.close_main)
-                finish()
-            }
-        })
+        animationDisposable = logo.zoomIn()
+                .delay(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Log.d("debug", "animationDisposable oncomplete")
+                    splashViewModel.playlistsLiveData.observe(this, Observer {
+                        if (it.isNotEmpty()) {
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            overridePendingTransition(R.anim.open_next, R.anim.close_main)
+                            finish()
+                        }
+                    })
+                },{Log.d("debug", "animationDisposable error = $it")})
+
+
+        version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
 
         splashViewModel.error.observe(this, Observer {
             it?.let {
@@ -96,5 +111,10 @@ class SplashActivity : AppCompatActivity() {
                             or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 
         }
+    }
+
+    override fun onDestroy() {
+        if (::animationDisposable.isInitialized && !animationDisposable.isDisposed) animationDisposable.dispose()
+        super.onDestroy()
     }
 }

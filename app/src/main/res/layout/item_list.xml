@@ -3,62 +3,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/toolBarColor"
-    android:minHeight="@dimen/item_twoline_height">
-
-    <FrameLayout
-        android:id="@+id/lytThumbnail"
-        android:layout_width="@dimen/thumbnail_width"
-        android:layout_height="@dimen/thumbnail_height"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/standard_margin"
-        tools:ignore="RtlHardcoded">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imgThumbnail"
-            android:layout_width="@dimen/thumbnail_width"
-            android:layout_height="@dimen/thumbnail_height"
-            android:scaleType="centerCrop"
-            tools:ignore="ContentDescription"
-            tools:src="@drawable/empty_photo" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txtDuration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:ellipsize="end"
-            android:padding="@dimen/caption_padding"
-            android:singleLine="true"
-            android:textSize="@dimen/subhead" />
-    </FrameLayout>
+    android:foreground="?android:selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/item_padding_with_icon"
-        android:paddingRight="@dimen/standard_margin"
-        tools:ignore="RtlHardcoded">
+        android:background="@color/toolBarColor"
+        android:minHeight="@dimen/item_twoline_height"
+        android:orientation="horizontal">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txtTitle"
+        <FrameLayout
+            android:id="@+id/lytThumbnail"
+            android:layout_width="@dimen/thumbnail_width"
+            android:layout_height="@dimen/thumbnail_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/standard_margin"
+            tools:ignore="RtlHardcoded">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgThumbnail"
+                android:layout_width="@dimen/thumbnail_width"
+                android:layout_height="@dimen/thumbnail_height"
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription"
+                tools:src="@drawable/empty_photo" />
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/txtDuration"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="bottom|right"-->
+<!--                android:background="@color/toolBarColor"-->
+<!--                android:ellipsize="end"-->
+<!--                android:padding="@dimen/caption_padding"-->
+<!--                android:singleLine="true"-->
+<!--                android:textSize="@dimen/subhead"-->
+<!--                tools:background="@color/toolBarColor"-->
+<!--                tools:text="1:40" />-->
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            tools:text="Название длинное и очень интересное видео тыдыщ!"
-            android:textSize="@dimen/title" />
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/standard_margin"
+            android:paddingRight="@dimen/standard_margin"
+            tools:ignore="RtlHardcoded">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txtPublishedAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            tools:text="2020-09-09"
-            android:textSize="@dimen/subhead" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="4"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                tools:text="Название длинное и очень интересное видео тыдыщ!" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtPublishedAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                tools:text="2020-09-09" />
+        </LinearLayout>
+
     </LinearLayout>
-
 </FrameLayout>

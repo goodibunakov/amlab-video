@@ -13,7 +13,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
 import androidx.transition.Slide
@@ -35,8 +34,10 @@ import ru.goodibunakov.amlabvideo.presentation.fragments.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 import ru.goodibunakov.amlabvideo.presentation.utils.FullScreenHelper
+import ru.goodibunakov.amlabvideo.presentation.utils.setValidatedValue
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel.Companion.ALL_VIDEOS
+import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
 
 
 class MainActivity : AppCompatActivity(), OnFullScreenListener {
@@ -44,9 +45,10 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
     private lateinit var headerView: AccountHeaderView
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profile: IProfile
-    private val mainViewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
 
-    //    private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
+    private val mainViewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
+    private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
+
     private var isFullscreen = false
     private lateinit var fullScreenHelper: FullScreenHelper
 
@@ -59,13 +61,13 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
 
         mainViewModel.playlistsLiveData.observe(this, Observer {
             fillDrawer(savedInstanceState, it)
-            mainViewModel.playlistId.value = ALL_VIDEOS
+            sharedViewModel.playlistId.setValidatedValue(ALL_VIDEOS)
         })
 
-        mainViewModel.playlistId.observe(this, Observer { tag ->
+        sharedViewModel.playlistId.observe(this, Observer { tag ->
             if (tag == ALL_VIDEOS) {
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, VideoFragment.newInstance(tag), TAG_VIDEO_FRAGMENT)
+                        .replace(R.id.fragmentContainer, VideoFragment(), TAG_VIDEO_FRAGMENT)
                         .commit()
             }
 
@@ -152,7 +154,7 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
                     mainViewModel.let {
                         Log.d("debug", "click = $view")
                         Log.d("debug", "click = $drawerItem.")
-                        it.playlistId.value = tag
+                        sharedViewModel.playlistId.setValidatedValue(tag)
                         Log.d("debug", "it.playlistId.value = $tag")
                         Log.d("debug", "${supportFragmentManager.backStackEntryCount}")
                     }
@@ -267,9 +269,13 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
 
         actionBarDrawerToggle.onConfigurationChanged(newConfig)
 
-//        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-//            exitFullScreen()
-//        } else enterFullScreen()
+        isFullscreen = if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            exitFullScreen()
+            false
+        } else {
+            enterFullScreen()
+            true
+        }
     }
 
     override fun onBackPressed() {
@@ -280,7 +286,8 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
             isFullscreen -> {
                 val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
                 if (currentFragment is VideoFragment) {
-                    currentFragment.backNormal()
+                    currentFragment.exitFullScreen()
+                    isFullscreen = false
                 } else {
                     super.onBackPressed()
                 }
@@ -293,24 +300,11 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
 
     override fun enterFullScreen() {
         isFullscreen = true
-//        ViewCompat.setOnApplyWindowInsetsListener(
-//                root,
-//                fun(v: View, insets: WindowInsetsCompat): WindowInsetsCompat? {
-//                    toolbar.updatePadding(top = insets.systemWindowInsetTop, bottom = insets.stableInsetBottom)
-//                    return insets
-//                }
-//        )
         fullScreenHelper.enterFullScreen()
-//        root.apply {
-//            fitsSystemWindows = false
-//            requestApplyInsets()
-//        }
     }
 
     override fun exitFullScreen() {
         isFullscreen = false
         fullScreenHelper.exitFullScreen()
-//        root.fitsSystemWindows = true
-//        root.requestApplyInsets()
     }
 }

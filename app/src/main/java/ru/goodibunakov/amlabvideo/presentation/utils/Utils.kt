@@ -14,52 +14,6 @@ import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 class Utils {
-    companion object {
-
-        const val FUNCTION_SEARCH_YOUTUBE = "search?"
-        const val FUNCTION_VIDEO_YOUTUBE = "videos?"
-        const val FUNCTION_PLAYLIST_ITEMS_YOUTUBE = "playlistItems?"
-
-        const val PARAM_KEY_YOUTUBE = "key="
-        const val PARAM_CHANNEL_ID_YOUTUBE = "channelId="
-        const val PARAM_PLAYLIST_ID_YOUTUBE = "playlistId="
-        const val PARAM_VIDEO_ID_YOUTUBE = "id="
-        const val PARAM_PART_YOUTUBE = "part="
-        const val PARAM_PAGE_TOKEN_YOUTUBE = "pageToken="
-        const val PARAM_ORDER_YOUTUBE = "order=date"
-        const val PARAM_MAX_RESULT_YOUTUBE = "maxResults="
-        const val PARAM_TYPE_YOUTUBE = "type=video"
-        const val PARAM_FIELD_SEARCH_YOUTUBE = "fields=nextPageToken," +
-                "pageInfo(totalResults),items(id(videoId),snippet(title,thumbnails,publishedAt))"
-        const val PARAM_FIELD_VIDEO_YOUTUBE = "fields=pageInfo(totalResults)," +
-                "items(contentDetails(duration))&"
-        const val PARAM_FIELD_PLAYLIST_YOUTUBE = "fields=nextPageToken," +
-                "pageInfo(totalResults),items(snippet(title,thumbnails,publishedAt,resourceId(videoId)))"
-        const val PARAM_RESULT_PER_PAGE = 8
-
-        const val ARRAY_PAGE_TOKEN = "nextPageToken"
-        const val ARRAY_ITEMS = "items"
-
-        const val OBJECT_ITEMS_ID = "id"
-        const val OBJECT_ITEMS_CONTENT_DETAIL = "contentDetails"
-        const val OBJECT_ITEMS_SNIPPET = "snippet"
-        const val OBJECT_ITEMS_SNIPPET_THUMBNAILS = "thumbnails"
-        const val OBJECT_ITEMS_SNIPPET_RESOURCE_ID = "resourceId"
-        const val OBJECT_ITEMS_SNIPPET_THUMBNAILS_MEDIUM = "medium"
-
-        const val KEY_VIDEO_ID = "videoId"
-        const val KEY_TITLE = "title"
-        const val KEY_PUBLISHED_AT = "publishedAt"
-        const val KEY_URL_THUMBNAILS = "url"
-        const val KEY_DURATION = "duration"
-
-        const val ARG_TIMEOUT_MS = 4000
-
-        const val TAG_FANDROID = "Fandroid:"
-
-        const val TAG_CHANNEL_ID = "channel_id"
-        const val TAG_VIDEO_TYPE = "video_type"
-    }
 
     fun showSnackBar(view: View?, message: String?) {
         Snackbar.make(view!!, message!!, Snackbar.LENGTH_SHORT).show()
@@ -76,12 +30,12 @@ class Utils {
         return getTimeAgo(result, activity)
     }
 
-    fun currentDate(): Date {
+    private fun currentDate(): Date {
         val calendar = Calendar.getInstance()
         return calendar.time
     }
 
-    fun getTimeAgo(date: Date?, ctx: Context): String? {
+    private fun getTimeAgo(date: Date?, ctx: Context): String? {
         if (date == null) {
             return null
         }
@@ -94,8 +48,7 @@ class Utils {
         val dim = getTimeDistanceInMinutes(time)
         var timeAgo: String?
         timeAgo = if (dim == 0) {
-            ctx.resources.getString(R.string.date_util_term_less) + " " +
-                    ctx.resources.getString(R.string.date_util_unit_minute)
+            ctx.resources.getString(R.string.date_util_term_less) + " " + ctx.resources.getString(R.string.date_util_unit_minute)
         } else if (dim == 1 || dim == 21 || dim == 31 || dim == 41) {
             dim.toString() + " " + ctx.resources.getString(R.string.date_util_unit_minuta)
         } else if (dim == 2 || dim == 3 || dim == 4 || dim == 22 || dim == 23 || dim == 24 || dim == 32 || dim == 33 || dim == 34 || dim == 42 || dim == 43 || dim == 44) {

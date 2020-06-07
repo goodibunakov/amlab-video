@@ -12,7 +12,7 @@ data class VideoDetailsUI(
         val description: String,
         val publishedAt: String,
         val publishedAtDate: Date,
-        val tags: List<String>,
+        val tags: List<String>?,
         val categoryId: String,
         val liveBroadcastContent: String,
         val duration: String,

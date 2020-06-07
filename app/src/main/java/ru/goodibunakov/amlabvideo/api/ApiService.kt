@@ -74,9 +74,10 @@ interface ApiService {
     @GET("search?")
     fun getAllVideos(
             @Query("part") part: String = "snippet",
+            @Query("type") type: String = "video",
             @Query("order") order: String = "date",
             @Query("channelId") channelId: String = CHANNEL_ID,
-            @Query("maxResults") maxResults: Int = 20,
+            @Query("maxResults") maxResults: Int = 50,
             @Query("pageToken") pageToken: String = ""
     ): Observable<AllVideosDTO>
 

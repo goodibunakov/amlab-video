@@ -6,8 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.view.View;
 import android.view.WindowManager;
 
-import androidx.core.view.ViewCompat;
-
 /**
  * Class responsible for changing the view from full screen to non-full screen and vice versa.
  *
@@ -33,7 +31,7 @@ public class FullScreenHelper {
     @SuppressLint("SourceLockedOrientationActivity")
     public void enterFullScreen() {
         hideSystemUi();
-        context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//        context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         context.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         for (View view : views) {
             view.setVisibility(View.GONE);
@@ -47,7 +45,7 @@ public class FullScreenHelper {
     @SuppressLint("SourceLockedOrientationActivity")
     public void exitFullScreen() {
         showSystemUi();
-        context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         for (View view : views) {
             view.setVisibility(View.VISIBLE);

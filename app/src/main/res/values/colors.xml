@@ -15,8 +15,8 @@
     <color name="colorSuccess">#0A7A10</color>
     <color name="colorOnSuccess">#FFFFFF</color>
 
-    <color name="statusBarColor">@android:color/darker_gray</color>
-    <color name="dividerColor">@android:color/darker_gray</color>
+    <color name="statusBarColor">#CDCDCD</color>
+    <color name="dividerColor">#CDCDCD</color>
     <color name="toolBarColor">@android:color/white</color>
     <color name="windowBackground">@android:color/white</color>
 </resources>

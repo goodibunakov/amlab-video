@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="colorPrimary">#377CCC</color>
     <color name="colorPrimaryVariant">#2560A5</color>
     <color name="colorOnPrimary">#FFFFFF</color>
@@ -15,7 +16,6 @@
     <color name="colorOnSuccess">#FFFFFF</color>
 
     <color name="statusBarColor">@android:color/black</color>
-
     <color name="dividerColor">@android:color/darker_gray</color>
     <color name="toolBarColor">@android:color/black</color>
     <color name="windowBackground">@android:color/black</color>

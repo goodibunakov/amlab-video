@@ -7,6 +7,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import ru.goodibunakov.amlabvideo.domain.usecase.GetAllVideosListUseCase
 import ru.goodibunakov.amlabvideo.domain.usecase.GetPlaylistVideosUseCase
 import ru.goodibunakov.amlabvideo.domain.usecase.GetVideoDetailsUseCase
@@ -26,6 +27,11 @@ class VideoFragmentViewModel(
     val progressBarVisibilityLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
     val currentVideoLiveData = MutableLiveData<VideoUIModel>()
     val videoDetails = MutableLiveData<VideoDetailsUI>()
+    var videoIdSubject = BehaviorSubject.createDefault("")
+
+    init {
+        loadVideoDetails()
+    }
 
     fun loadPlaylist(playlistId: String) {
         getPlaylistVideosUseCase.set(playlistId)
@@ -33,13 +39,21 @@ class VideoFragmentViewModel(
                 .map { ToVideoModelUIMapper.map(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { progressBarVisibilityLiveData.value = true }
-                .doOnError { progressBarVisibilityLiveData.value = false }
-                .doOnNext { progressBarVisibilityLiveData.value = false }
+                .doOnSubscribe {
+                    progressBarVisibilityLiveData.value = true
+                    Log.d("debug", "getPlaylistVideosUseCase doOnSubscribe")
+                }
+                .doOnError {
+                    progressBarVisibilityLiveData.value = false
+                    Log.d("debug", "getPlaylistVideosUseCase doOnError")
+                }
+                .doOnNext {
+                    progressBarVisibilityLiveData.value = false
+                    Log.d("debug", "getPlaylistVideosUseCase doOnNext")
+                }
                 .subscribe({
                     Log.d("ddd", "loadPlaylist $it")
-                    loadVideoDetails(it.firstOrNull()?.videoId ?: "")
-                    currentVideoLiveData.value = it.firstOrNull()
+                    videoIdSubject.onNext(it.firstOrNull()?.videoId ?: "")
                     videosLiveData.value = it
                 }, {
                     Log.d("ddd", "loadPlaylist error = ${it.localizedMessage}")
@@ -54,29 +68,41 @@ class VideoFragmentViewModel(
                 .map { ToVideoModelUIMapper.map(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { progressBarVisibilityLiveData.value = true }
-                .doOnError { progressBarVisibilityLiveData.value = false }
-                .doOnNext { progressBarVisibilityLiveData.value = false }
+                .doOnSubscribe {
+                    progressBarVisibilityLiveData.value = true
+                    Log.d("debug", "getAllVideosList doOnSubscribe")
+                }
+                .doOnError {
+                    progressBarVisibilityLiveData.value = false
+                    Log.d("debug", "getAllVideosList doOnError $it")
+                }
+                .doOnNext {
+                    progressBarVisibilityLiveData.value = false
+                    Log.d("debug", "getAllVideosList doOnNext")
+                }
                 .subscribe({
-                    Log.d("debug", "all videos = $it")
+                    videosLiveData.value = it
                 }, {
 
                 })
                 .addTo(compositeDisposable)
     }
 
-    private fun loadVideoDetails(id: String) {
-        getVideoDetailsUseCase.set(id)
-        getVideoDetailsUseCase.buildObservable()
-                .map { ToVideoDetailsModelUIMapper.map(it) }
+    private fun loadVideoDetails() {
+        videoIdSubject.filter { it.isNotEmpty() }
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap { id ->
+                    getVideoDetailsUseCase.set(id)
+                    getVideoDetailsUseCase.buildObservable()
+                }
+                .map { ToVideoDetailsModelUIMapper.map(it) }
                 .observeOn(AndroidSchedulers.mainThread())
-                .firstOrError()
                 .subscribe({
-                    Log.d("ddd", "loadVideoDetails $it")
+                    Log.d("debug", "loadVideoDetails $it")
                     videoDetails.value = it
                 }, {
-                    Log.d("ddd", "loadVideoDetails error = ${it.localizedMessage}")
+                    Log.d("debug", "loadVideoDetails error = ${it.localizedMessage}")
                 })
                 .addTo(compositeDisposable)
     }
