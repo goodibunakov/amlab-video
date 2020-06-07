@@ -2,6 +2,7 @@ package ru.goodibunakov.amlabvideo.domain
 
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import ru.goodibunakov.amlabvideo.api.dto.channel_details.BrandingDTO
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
 import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
 import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
@@ -33,4 +34,9 @@ interface ApiRepository {
      * Наличие интернета
      */
     fun networkConnected(): BehaviorSubject<ConnectedStatus>
+
+    /**
+     * Инфо о канале
+     */
+    fun getChannelDetails(): Observable<BrandingDTO>
 }

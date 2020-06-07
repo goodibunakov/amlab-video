@@ -40,6 +40,7 @@ class AmlabApplication : MultiDexApplication() {
                 GetPlaylistVideosUseCase(apiRepository),
                 GetVideoDetailsUseCase(apiRepository),
                 GetAllVideosListUseCase(apiRepository),
+                GetAboutChannelUseCase(apiRepository),
                 getString(R.string.new_videos)
         )
     }

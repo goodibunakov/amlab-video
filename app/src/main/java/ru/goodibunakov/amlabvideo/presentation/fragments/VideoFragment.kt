@@ -68,8 +68,8 @@ class VideoFragment : Fragment(), OnClickListener {
     }
 
     private fun observeLiveData() {
-        sharedViewModel.playlistId.observe(viewLifecycleOwner, Observer {
-            if (it == ALL_VIDEOS) viewModel.loadAllVideosList() else viewModel.loadPlaylist(it)
+        sharedViewModel.playlistId.observe(viewLifecycleOwner, Observer { playlistId ->
+            viewModel.loadItems(playlistId)
         })
 
         viewModel.videosLiveData.observe(viewLifecycleOwner, Observer {

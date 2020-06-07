@@ -11,6 +11,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import ru.goodibunakov.amlabvideo.api.dto.channel_details.BrandingDTO
 import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
 import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
@@ -104,6 +105,14 @@ interface ApiService {
             @Query("part") part: String = "snippet,contentDetails,statistics",
             @Query("id") id: String
     ): Observable<VideoDetailsDTO>
+
+//    https://www.googleapis.com/youtube/v3/channels?part=brandingSettings&id=UC_adZIRDiLC3eLIq24HBmRA&key=AIzaSyB8XPLOU4IPt99fJHiDhvNjoywzqpA3JT8
+    @GET("channels?")
+    fun getChannelDetails(
+            @Query("part") part: String = "brandingSettings",
+            @Query("id") id: String = CHANNEL_ID
+    ): Observable<BrandingDTO>
+
 
     companion object {
         private const val BASE_URL = "https://www.googleapis.com/youtube/v3/"

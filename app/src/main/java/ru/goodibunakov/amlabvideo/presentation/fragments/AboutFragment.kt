@@ -10,7 +10,6 @@ import androidx.preference.PreferenceFragmentCompat
 import ru.goodibunakov.amlabvideo.BuildConfig
 import ru.goodibunakov.amlabvideo.R
 
-
 class AboutFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

@@ -10,6 +10,7 @@ class ViewModelFactory(
         private val getPlaylistVideosUseCase: GetPlaylistVideosUseCase,
         private val getVideoDetailsUseCase: GetVideoDetailsUseCase,
         private val getAllVideosListUseCase: GetAllVideosListUseCase,
+        private val getAboutChannelUseCase: GetAboutChannelUseCase,
         private val startToolbarTitle: String
 ) : ViewModelProvider.NewInstanceFactory() {
 
@@ -26,6 +27,9 @@ class ViewModelFactory(
 
         if (modelClass.isAssignableFrom(VideoFragmentViewModel::class.java))
             return VideoFragmentViewModel(getPlaylistVideosUseCase, getVideoDetailsUseCase, getAllVideosListUseCase) as T
+
+        if (modelClass.isAssignableFrom(AboutChannelViewModel::class.java))
+            return AboutChannelViewModel(getAboutChannelUseCase) as T
 
         return super.create(modelClass)
     }

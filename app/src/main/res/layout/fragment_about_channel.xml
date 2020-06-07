@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".presentation.fragments.AboutChannelFragment">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:scaleType="fitXY"
+        tools:src="@drawable/empty_photo" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="@dimen/standard_margin"
+            tools:text="Amlab - это образовательный онлайн-проект для фотографов.
+Вместе с нашими подписчиками мы создаем сообщество творческих ребят влюбленных в фотографию. Тех, кто не боится пробовать, экспериментировать, развиваться.
+Здесь на канале мы делимся с вами хорошим настроением и хотим замотивировать вас фотографировать как можно чаще.
+Вы найдете у нас уроки по фотографии, лайфхаки по съемке в домашних условиях с самой бюджетной техникой (на фотоаппарат или телефон), интервью с фотографами.
+Наш девиз: С нами вы можете учиться по подписке AMLAB+  -- https://goo.gl/taHHdl
+Вступай в наше сообщество! " />
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</LinearLayout>

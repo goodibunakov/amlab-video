@@ -113,4 +113,8 @@ class VideoFragmentViewModel(
         compositeDisposable.dispose()
         super.onCleared()
     }
+
+    fun loadItems(playlistId: String) {
+        if (playlistId == MainViewModel.ALL_VIDEOS) loadAllVideosList() else loadPlaylist(playlistId)
+    }
 }

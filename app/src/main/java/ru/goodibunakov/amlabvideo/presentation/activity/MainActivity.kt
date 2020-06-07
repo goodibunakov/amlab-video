@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
+import ru.goodibunakov.amlabvideo.presentation.fragments.AboutChannelFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.MessagesFragment
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
@@ -76,6 +77,10 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
             } else if (tag.contains(getString(R.string.messages))) {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, MessagesFragment(), TAG_MESSAGES_FRAGMENT)
+                        .commit()
+            } else if (tag.contains(getString(R.string.about_channel))) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, AboutChannelFragment(), TAG_ABOUT_CHANNEL_FRAGMENT)
                         .commit()
             }
         })
@@ -139,6 +144,10 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
                         tag = APP_MENU_ITEM + "_${getString(R.string.messages)}"
                     },
                     SecondaryDrawerItem().apply {
+                        nameRes = R.string.about_channel
+                        tag = APP_MENU_ITEM + "_${getString(R.string.about_channel)}"
+                    },
+                    SecondaryDrawerItem().apply {
                         nameRes = R.string.about
                         tag = APP_MENU_ITEM + "_${getString(R.string.about)}"
                     }
@@ -171,6 +180,9 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
             }
             name.contains(getString(R.string.about)) -> {
                 supportActionBar?.title = getString(R.string.about)
+            }
+            name.contains(getString(R.string.about_channel)) -> {
+                supportActionBar?.title = getString(R.string.about_channel)
             }
             else -> {
                 supportActionBar?.title = name
@@ -250,6 +262,7 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
 
         private const val TAG_VIDEO_FRAGMENT = "video_fragment"
         private const val TAG_ABOUT_FRAGMENT = "about_fragment"
+        private const val TAG_ABOUT_CHANNEL_FRAGMENT = "about_channel"
         private const val TAG_MESSAGES_FRAGMENT = "messages_fragment"
         private const val RECOVERY_DIALOG_REQUEST = 1
     }

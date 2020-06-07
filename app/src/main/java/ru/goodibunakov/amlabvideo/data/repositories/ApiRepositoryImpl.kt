@@ -7,6 +7,7 @@ import android.net.NetworkRequest
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import ru.goodibunakov.amlabvideo.api.ApiService
+import ru.goodibunakov.amlabvideo.api.dto.channel_details.BrandingDTO
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
 import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
 import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
@@ -59,17 +60,13 @@ class ApiRepositoryImpl(
                 .flatMap { apiService.getAllVideos() }
     }
 
+    override fun getChannelDetails(): Observable<BrandingDTO> {
+        return networkConnected
+                .filter { it == ConnectedStatus.YES }
+                .flatMap { apiService.getChannelDetails() }
+    }
+
     override fun getPlayLists(): Observable<PlaylistsDTO> {
-//        return Observable.create { emitter: ObservableEmitter<PlaylistsDTO> ->
-//            playlistsList?.let {
-//                emitter.onNext(playlistsList!!)
-//            }
-//            emitter.onComplete()
-//        }
-//
-//        return Observable.just(playlistsList)
-
-
         return networkConnected
                 .filter { it == ConnectedStatus.YES }
                 .flatMap { apiService.getPlaylists() }
