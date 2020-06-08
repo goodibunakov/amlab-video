@@ -18,7 +18,7 @@ data class Snippet(
         @SerializedName("resourceId")
         val resourceId: ResourceId,
         @SerializedName("thumbnails")
-        val thumbnails: Thumbnails,
+        val thumbnails: Thumbnails?,
         @SerializedName("title")
         val title: String
 )

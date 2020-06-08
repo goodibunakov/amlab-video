@@ -13,7 +13,7 @@ object ToVideoEntityMapper : Mapper<VideoDTO, List<VideoEntity>> {
             VideoEntity(
                     title = it.snippet.title,
                     videoId = it.snippet.resourceId.videoId,
-                    imageUrl = it.snippet.thumbnails.default.url,
+                    imageUrl = it.snippet.thumbnails?.default?.url,
                     createdDate = it.snippet.publishedAt
             )
         }

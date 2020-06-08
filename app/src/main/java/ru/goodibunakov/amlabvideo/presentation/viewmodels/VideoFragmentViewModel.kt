@@ -32,7 +32,7 @@ class VideoFragmentViewModel(
         loadVideoDetails()
     }
 
-    fun loadPlaylist(playlistId: String) {
+    private fun loadPlaylist(playlistId: String) {
         getPlaylistVideosUseCase.set(playlistId)
         getPlaylistVideosUseCase.buildObservable()
                 .map { ToVideoModelUIMapper.map(it) }

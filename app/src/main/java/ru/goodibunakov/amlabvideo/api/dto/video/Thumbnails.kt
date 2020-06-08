@@ -8,13 +8,13 @@ import ru.goodibunakov.amlabvideo.api.dto.common.Medium
 
 data class Thumbnails(
         @SerializedName("default")
-        val default: Default,
+        val default: Default?,
         @SerializedName("high")
-        val high: High,
+        val high: High?,
         @SerializedName("maxres")
-        val maxres: Maxres,
+        val maxres: Maxres?,
         @SerializedName("medium")
-        val medium: Medium,
+        val medium: Medium?,
         @SerializedName("standard")
-        val standard: Standard
+        val standard: Standard?
 )
