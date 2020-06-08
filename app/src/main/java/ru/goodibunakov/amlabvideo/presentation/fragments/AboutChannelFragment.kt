@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_about_channel.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
@@ -29,12 +31,16 @@ class AboutChannelFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, Observer {
-            progress.visibility = if (it) View.VISIBLE else View.GONE
+            progress.visibility = it
         })
 
         viewModel.liveData.observe(viewLifecycleOwner, Observer {
+            val requestOptions = RequestOptions()
+                    .error(R.drawable.empty_photo)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
             Glide.with(header.context)
                     .load(it.headerUrl)
+                    .apply(requestOptions)
                     .thumbnail(0.1f)
                     .transition(DrawableTransitionOptions().crossFade())
                     .into(header)

@@ -7,13 +7,12 @@ import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -26,9 +25,11 @@ import ru.goodibunakov.amlabvideo.presentation.viewmodels.SplashViewModel
 import java.util.concurrent.TimeUnit
 
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : BaseActivity<SplashViewModel>() {
 
     private lateinit var animationDisposable: Disposable
+
+    override val viewModel: SplashViewModel by viewModels { AmlabApplication.viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -37,14 +38,12 @@ class SplashActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_splash)
 
-        val splashViewModel: SplashViewModel by viewModels { AmlabApplication.viewModelFactory }
-
         animationDisposable = logo.zoomIn()
                 .delay(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Log.d("debug", "animationDisposable oncomplete")
-                    splashViewModel.playlistsLiveData.observe(this, Observer {
+                    viewModel.playlistsLiveData.observe(this, Observer {
                         if (it.isNotEmpty()) {
                             val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
@@ -54,21 +53,16 @@ class SplashActivity : AppCompatActivity() {
                     })
                 },{Log.d("debug", "animationDisposable error = $it")})
 
-
         version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
 
-        splashViewModel.error.observe(this, Observer {
+        viewModel.error.observe(this, Observer {
             it?.let {
-//                if (it) Toast.makeText(this, "Ошибка", Toast.LENGTH_SHORT).show()
+               Toast.makeText(this, "Ошибка: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
-        })
-
-        splashViewModel.networkLiveData.observe(this, Observer {
-            showNetworkAvailable(it)
         })
     }
 
-    private fun showNetworkAvailable(isAvailable: ConnectedStatus) {
+    override fun showNetworkAvailable(isAvailable: ConnectedStatus) {
         val indicatorColor = when (isAvailable) {
             ConnectedStatus.YES -> R.color.colorSuccess
             ConnectedStatus.NO -> R.color.colorError
@@ -89,9 +83,9 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun showNetworkIndicator(isShow: Boolean) {
-        val transition = Slide(Gravity.TOP)
+        val transition = Slide(Gravity.BOTTOM)
                 .apply {
-                    duration = 400
+                    duration = 500
                     addTarget(R.id.networkIndicator)
                     if (!isShow) startDelay = 500
                 }

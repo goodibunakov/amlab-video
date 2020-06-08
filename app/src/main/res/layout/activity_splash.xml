@@ -15,11 +15,12 @@
         android:background="@color/colorSuccess"
         android:gravity="center"
         android:paddingStart="8dp"
-        android:paddingTop="2dp"
+        android:paddingTop="4dp"
         android:paddingEnd="8dp"
-        android:paddingBottom="2dp"
+        android:paddingBottom="4dp"
         android:text="@string/network_indicator_no"
         android:textColor="@color/colorOnSuccess"
+        android:layout_gravity="bottom"
         android:visibility="gone"
         tools:visibility="visible" />
 

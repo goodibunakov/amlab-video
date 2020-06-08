@@ -10,7 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
@@ -25,6 +24,8 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.*
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.root
+import kotlinx.android.synthetic.main.fragment_video.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
@@ -41,13 +42,13 @@ import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel.Companio
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
 
 
-class MainActivity : AppCompatActivity(), OnFullScreenListener {
+class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     private lateinit var headerView: AccountHeaderView
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profile: IProfile
 
-    private val mainViewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
+    override val viewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
     private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
 
     private var isFullscreen = false
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
         setSupportActionBar(toolbar)
         initDrawer()
 
-        mainViewModel.playlistsLiveData.observe(this, Observer {
+        viewModel.playlistsLiveData.observe(this, Observer {
             fillDrawer(savedInstanceState, it)
             sharedViewModel.playlistId.setValidatedValue(ALL_VIDEOS)
         })
@@ -85,11 +86,7 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
             }
         })
 
-        mainViewModel.networkLiveData.observe(this, Observer {
-            showNetworkAvailable(it)
-        })
-
-        mainViewModel.toolbarTitleLiveData.observe(this, Observer { updateToolBarTitle(it) })
+        viewModel.toolbarTitleLiveData.observe(this, Observer { updateToolBarTitle(it) })
     }
 
     private fun initDrawer() {
@@ -155,14 +152,14 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
             onDrawerItemClickListener = { view, drawerItem, position ->
                 val tag = drawerItem.tag as String
                 if (drawerItem is Nameable) {
-                    mainViewModel.let {
+                    viewModel.let {
                         Log.d("debug", "onDrawerItemClickListener click = $view")
                         Log.d("debug", "onDrawerItemClickListener click = $drawerItem.")
                         sharedViewModel.playlistId.setValidatedValue(tag)
                         Log.d("debug", "onDrawerItemClickListener it.playlistId.value = $tag")
                         Log.d("debug", "onDrawerItemClickListener ${supportFragmentManager.backStackEntryCount}")
                     }
-                    mainViewModel.toolbarTitleLiveData.value = drawerItem.name?.getText(this@MainActivity)
+                    viewModel.toolbarTitleLiveData.value = drawerItem.name?.getText(this@MainActivity)
                 }
                 false
             }
@@ -224,7 +221,7 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
     }
 
 
-    private fun showNetworkAvailable(isAvailable: ConnectedStatus) {
+    override fun showNetworkAvailable(isAvailable: ConnectedStatus) {
         val indicatorColor = when (isAvailable) {
             ConnectedStatus.YES -> R.color.colorSuccess
             ConnectedStatus.NO -> R.color.colorError
@@ -238,16 +235,21 @@ class MainActivity : AppCompatActivity(), OnFullScreenListener {
             else -> ""
         }
 
-        if (isAvailable == ConnectedStatus.YES)
+        if (isAvailable == ConnectedStatus.YES) {
             showNetworkIndicator(false)
-        else
+            fragmentContainer.visibility = View.VISIBLE
+            noInternet.visibility = View.GONE
+        } else {
             showNetworkIndicator(true)
+            fragmentContainer.visibility = View.INVISIBLE
+            noInternet.visibility = View.VISIBLE
+        }
     }
 
     private fun showNetworkIndicator(isShow: Boolean) {
-        val transition = Slide(Gravity.TOP)
+        val transition = Slide(Gravity.BOTTOM)
                 .apply {
-                    duration = 400
+                    duration = 500
                     addTarget(R.id.networkIndicator)
                     if (!isShow) startDelay = 700
                 }

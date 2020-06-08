@@ -39,7 +39,7 @@ class VideoAdapter(private val onClickListener: OnClickListener) : RecyclerView.
     inner class VideoItemViewHolder(itemView: View, private val onClickListener: OnClickListener) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: VideoUIModel) {
-            val requestOptions: RequestOptions = RequestOptions()
+            val requestOptions = RequestOptions()
                     .error(R.drawable.empty_photo)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
             Glide.with(itemView.context)
