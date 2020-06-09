@@ -17,16 +17,17 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/infoLayout"
-        app:cardCornerRadius="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/playerView"
-        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="@color/toolBarColor"
+        app:cardCornerRadius="0dp"
         app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
@@ -51,7 +52,7 @@
                     android:id="@+id/infoDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                     tools:text="50000 просмотров • " />
 
@@ -65,11 +66,11 @@
 
             </LinearLayout>
 
-            <!--        <View-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="1dp"-->
-            <!--            android:layout_marginTop="8dp"-->
-            <!--            android:background="@color/dividerColor" />-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/dividerColor" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -88,6 +89,20 @@
         android:layout_alignTop="@id/recycler"
         android:layout_alignBottom="@id/recycler"
         android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/somethingWrong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/recycler"
+        android:layout_alignTop="@id/recycler"
+        android:layout_alignEnd="@id/recycler"
+        android:layout_alignBottom="@id/recycler"
+        android:gravity="center"
+        android:text="@string/something_wrong"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:visibility="gone"
         tools:visibility="visible" />
 

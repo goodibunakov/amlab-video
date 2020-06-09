@@ -69,5 +69,6 @@
     <string name="error_no_email_clients">Не найдено почтовых клиентов</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="something_wrong">Что-то пошло не так :(</string>
 
 </resources>

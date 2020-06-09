@@ -26,6 +26,7 @@ class VideoFragmentViewModel(
     val videosLiveData = MutableLiveData<List<VideoUIModel>>()
     val progressBarVisibilityLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
     val videoDetails = MutableLiveData<VideoDetailsUI>()
+    val error = SingleLiveEvent<Throwable?>().apply { this.value = null }
     var videoIdSubject = BehaviorSubject.createDefault("")
 
     init {
@@ -54,7 +55,9 @@ class VideoFragmentViewModel(
                     Log.d("ddd", "loadPlaylist $it")
                     videoIdSubject.onNext(it.firstOrNull()?.videoId ?: "")
                     videosLiveData.value = it
+                    error.value = null
                 }, {
+                    error.value = it
                     Log.d("ddd", "loadPlaylist error = ${it.localizedMessage}")
                     Log.d("ddd", "loadPlaylist error = $it")
                     Log.d("ddd", "loadPlaylist error = ${it.message}")
@@ -62,7 +65,7 @@ class VideoFragmentViewModel(
                 .addTo(compositeDisposable)
     }
 
-    fun loadAllVideosList() {
+    private fun loadAllVideosList() {
         getAllVideosList.buildObservable()
                 .map { ToVideoModelUIMapper.map(it) }
                 .subscribeOn(Schedulers.io())

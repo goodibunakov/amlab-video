@@ -89,6 +89,11 @@ class VideoFragment : Fragment(), OnClickListener {
                     it.viewCount)
             infoTimeAgo.setTimeAgo(it.publishedAtDate)
         })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer {
+            if (it != null) somethingWrong.visibility = View.VISIBLE
+            else somethingWrong.visibility = View.GONE
+        })
     }
 
     private fun initPlayerView() {
