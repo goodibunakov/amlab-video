@@ -3,6 +3,7 @@
     <string name="googleplay_url" translatable="false">https://play.google.com/store/apps/details?id=ru.goodibunakov.amlabvideo</string>
 
     <string name="about">О приложении</string>
+    <string name="update_playlists">Обновить плейлисты</string>
     <string name="about_channel">О канале Amlab</string>
     <string name="messages">Сообщения</string>
 
@@ -67,8 +68,7 @@
     <string name="video_views_and_pass_from_publish_date">%1$s просмотров • </string>
 
     <string name="error_no_email_clients">Не найдено почтовых клиентов</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="something_wrong">Что-то пошло не так :(</string>
 
 </resources>

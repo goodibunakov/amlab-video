@@ -10,13 +10,13 @@ import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTODatabase
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.TABLE_PLAYLISTS
 
 @Dao
-interface PlaylistsDao {
+interface Dao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(playlists: PlaylistsDTODatabase): Completable
+    fun insertPlaylists(playlists: PlaylistsDTODatabase): Completable
 
     @Query("DELETE FROM $TABLE_PLAYLISTS")
-    fun delete(): Completable
+    fun deletePlaylists(): Completable
 
     @Query("SELECT * FROM $TABLE_PLAYLISTS")
     fun getPlaylists(): Maybe<PlaylistsDTODatabase>

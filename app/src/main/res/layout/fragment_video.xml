@@ -52,7 +52,6 @@
                     android:id="@+id/infoDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                     tools:text="50000 просмотров • " />
 

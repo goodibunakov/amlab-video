@@ -22,9 +22,9 @@ class VideoAdapter(private val onClickListener: OnClickListener) : RecyclerView.
         return VideoItemViewHolder(itemView, onClickListener)
     }
 
-    fun setItems(list: List<VideoUIModel>) {
+    fun addItems(list: List<VideoUIModel>) {
         items.addAll(list)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(items.size, list.size)
     }
 
     override fun getItemCount(): Int {

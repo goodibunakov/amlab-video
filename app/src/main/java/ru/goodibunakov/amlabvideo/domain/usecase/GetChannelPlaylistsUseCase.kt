@@ -3,9 +3,7 @@ package ru.goodibunakov.amlabvideo.domain.usecase
 import android.util.Log
 import io.reactivex.Observable
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
-import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTODatabase
 import ru.goodibunakov.amlabvideo.data.mappers.ToPlaylistsEntityMapper
-import ru.goodibunakov.amlabvideo.data.repositories.DatabaseRepositoryImpl
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
 import ru.goodibunakov.amlabvideo.domain.DatabaseRepository
 import ru.goodibunakov.amlabvideo.domain.UseCase
@@ -20,14 +18,11 @@ class GetChannelPlaylistsUseCase(
 
     //    TODO получить список листов из кэша, если нет то из БД, если нет то из сети и закэшировать
     override fun buildObservable(): Observable<out List<PlaylistsEntity>> {
-//        return apiRepository.getPlayLists()
-//                .map { ToPlaylistsEntityMapper.map(it) }
-
         return Observable.concat(
                 databaseRepository.getPlaylists().toObservable(),
                 apiRepository.getPlayLists()
                         .doOnNext {
-                            databaseRepository.insert(it)
+                            databaseRepository.insertPlaylists(it)
                                     .subscribe({
                                         Log.d("debug", "insert completed")
                                     }, {

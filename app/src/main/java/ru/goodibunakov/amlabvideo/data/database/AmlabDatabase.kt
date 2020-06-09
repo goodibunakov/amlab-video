@@ -9,16 +9,16 @@ import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.DATABASE_NAME
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.DATABASE_VERSION
 
 @Database(entities = [PlaylistsDTODatabase::class], version = DATABASE_VERSION, exportSchema = true)
-abstract class PlaylistsDatabase : RoomDatabase() {
+abstract class AmlabDatabase : RoomDatabase() {
 
-    abstract fun playlistsDao(): PlaylistsDao
+    abstract fun dao(): Dao
 
     companion object {
 
         @Volatile
-        private var INSTANCE: PlaylistsDatabase? = null
+        private var INSTANCE: AmlabDatabase? = null
 
-        fun getDatabase(context: Context): PlaylistsDatabase {
+        fun getDatabase(context: Context): AmlabDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance
@@ -26,7 +26,7 @@ abstract class PlaylistsDatabase : RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                         context.applicationContext,
-                        PlaylistsDatabase::class.java,
+                        AmlabDatabase::class.java,
                         DATABASE_NAME).build()
                 INSTANCE = instance
                 return instance

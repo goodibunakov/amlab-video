@@ -117,7 +117,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                     withSavedInstance(savedInstanceState)
                     selectionListEnabledForSingleProfile = false
                 }
-
+//slider.adapter.notifyDataSetChanged()
         slider.apply {
             itemAdapter.add(
                     PrimaryDrawerItem().apply {
@@ -200,8 +200,8 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menuAbout -> {
-//                showAboutScreen()
+            R.id.menuUpdatePlaylists-> {
+//                viewModel.loadPlaylists()
                 return true
             }
             else -> {
@@ -276,6 +276,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+//        toolbar?.menu?.close()
 
         actionBarDrawerToggle.onConfigurationChanged(newConfig)
 

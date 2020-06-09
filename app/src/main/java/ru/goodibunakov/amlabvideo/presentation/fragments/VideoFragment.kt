@@ -1,14 +1,12 @@
 package ru.goodibunakov.amlabvideo.presentation.fragments
 
 import android.content.Context
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
@@ -16,8 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.perfomer.blitz.setTimeAgo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -30,7 +30,6 @@ import ru.goodibunakov.amlabvideo.presentation.adapter.VideoAdapter
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
-import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel.Companion.ALL_VIDEOS
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.VideoFragmentViewModel
 import java.util.*
@@ -41,7 +40,7 @@ class VideoFragment : Fragment(), OnClickListener {
     private val sharedViewModel: SharedViewModel by activityViewModels { AmlabApplication.viewModelFactory }
     private val viewModel: VideoFragmentViewModel by viewModels { AmlabApplication.viewModelFactory }
 
-    private lateinit var adapter: VideoAdapter
+    private lateinit var videoAdapter: VideoAdapter
     private lateinit var youTubePlayerDisposable: Disposable
 
     private lateinit var onFullScreenListener: OnFullScreenListener
@@ -73,7 +72,7 @@ class VideoFragment : Fragment(), OnClickListener {
         })
 
         viewModel.videosLiveData.observe(viewLifecycleOwner, Observer {
-            adapter.setItems(it)
+            videoAdapter.addItems(it)
             Log.d("debug", "list video = $it")
         })
 
@@ -153,12 +152,17 @@ class VideoFragment : Fragment(), OnClickListener {
 //    }
 
     private fun initRecyclerView() {
-        val layoutManager = LinearLayoutManager(requireContext())
-        recycler.setHasFixedSize(true)
-        adapter = VideoAdapter(this)
-        recycler.adapter = adapter
-        recycler.layoutManager = layoutManager
-        recycler.addItemDecoration(DividerItemDecoration(recycler.context, layoutManager.orientation))
+        videoAdapter = VideoAdapter(this)
+        recycler.apply {
+            setHasFixedSize(true)
+            adapter = videoAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(DividerItemDecoration(recycler.context, DividerItemDecoration.VERTICAL))
+            itemAnimator = DefaultItemAnimator()
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            })
+        }
     }
 
     fun exitFullScreen() {
