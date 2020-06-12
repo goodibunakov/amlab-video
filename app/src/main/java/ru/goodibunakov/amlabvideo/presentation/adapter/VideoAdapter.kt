@@ -36,7 +36,10 @@ class VideoAdapter(private val onClickListener: OnClickListener) : RecyclerView.
     }
 
 
-    inner class VideoItemViewHolder(itemView: View, private val onClickListener: OnClickListener) : RecyclerView.ViewHolder(itemView) {
+    inner class VideoItemViewHolder(
+            itemView: View,
+            private val onClickListener: OnClickListener
+    ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: VideoUIModel) {
             val requestOptions = RequestOptions()

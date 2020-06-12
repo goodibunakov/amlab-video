@@ -18,7 +18,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/infoLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_below="@id/playerView"
         app:cardBackgroundColor="@color/toolBarColor"
         app:cardCornerRadius="0dp"
@@ -26,17 +26,20 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:layout_marginTop="8dp"
             android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/infoTitle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:lineSpacingExtra="1dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 tools:text="Здесь название видео длинное и очень интересное, а главное - очень полезное!" />
 

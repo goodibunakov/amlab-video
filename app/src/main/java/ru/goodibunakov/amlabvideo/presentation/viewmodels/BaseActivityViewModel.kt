@@ -14,9 +14,9 @@ import ru.goodibunakov.amlabvideo.presentation.mappers.ToPlaylistsModelUIMapper
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 
 open class BaseActivityViewModel(
-        getNetworkStatus: GetNetworkStatusUseCase,
-        getChannelPlaylistsUseCase: GetChannelPlaylistsUseCase
-): ViewModel() {
+        private val getNetworkStatus: GetNetworkStatusUseCase,
+        private val getChannelPlaylistsUseCase: GetChannelPlaylistsUseCase
+) : ViewModel() {
 
     val networkLiveData = MutableLiveData<ConnectedStatus>()
     val playlistsLiveData = MutableLiveData<List<PlaylistsModelUI>>()
@@ -24,17 +24,11 @@ open class BaseActivityViewModel(
     private var compositeDisposable = CompositeDisposable()
 
     init {
-        getNetworkStatus.buildObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Log.d("debug", "getNetworkStatus in BaseActivityViewModel = $it")
-                    networkLiveData.value = it
-                }, {
-                    Log.d("debug", "getNetworkStatus in BaseActivityViewModel = $it")
-                })
-                .addTo(compositeDisposable)
+        networkStatusSubscribe()
+        getChannelPlaylistsSubscribe()
+    }
 
+    private fun getChannelPlaylistsSubscribe() {
         getChannelPlaylistsUseCase.buildObservable()
                 .map { ToPlaylistsModelUIMapper.map(it) }
                 .subscribeOn(Schedulers.io())
@@ -49,6 +43,27 @@ open class BaseActivityViewModel(
                 }, {
                     Log.d("ddd", "getChannelPlaylistsUseCase complete")
                 })
+                .addTo(compositeDisposable)
+    }
+
+    private fun networkStatusSubscribe() {
+        getNetworkStatus.buildObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Log.d("debug", "getNetworkStatus in BaseActivityViewModel = $it")
+                    networkLiveData.value = it
+                }, {
+                    Log.d("debug", "getNetworkStatus in BaseActivityViewModel = $it")
+                })
+                .addTo(compositeDisposable)
+    }
+
+    fun updatePlaylistsToDatabase() {
+        getChannelPlaylistsUseCase.updatePlaylistsToDatabase()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
                 .addTo(compositeDisposable)
     }
 

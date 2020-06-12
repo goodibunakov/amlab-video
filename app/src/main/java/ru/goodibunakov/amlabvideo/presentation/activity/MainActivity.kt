@@ -18,24 +18,22 @@ import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import com.mikepenz.materialdrawer.holder.ImageHolder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.*
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.root
-import kotlinx.android.synthetic.main.fragment_video.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutChannelFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.MessagesFragment
-import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
+import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 import ru.goodibunakov.amlabvideo.presentation.utils.FullScreenHelper
+import ru.goodibunakov.amlabvideo.presentation.utils.GmailDrawerItemPrimary
+import ru.goodibunakov.amlabvideo.presentation.utils.GmailDrawerItemSecondary
 import ru.goodibunakov.amlabvideo.presentation.utils.setValidatedValue
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel.Companion.ALL_VIDEOS
@@ -117,10 +115,10 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                     withSavedInstance(savedInstanceState)
                     selectionListEnabledForSingleProfile = false
                 }
-//slider.adapter.notifyDataSetChanged()
+//slider.adapter.notifyDataSetChanged() ??????????????
         slider.apply {
             itemAdapter.add(
-                    PrimaryDrawerItem().apply {
+                    GmailDrawerItemPrimary().apply {
                         nameRes = R.string.new_videos
                         isSelected = true
                         tag = ALL_VIDEOS
@@ -128,7 +126,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                     DividerDrawerItem())
             playlists.map {
                 itemAdapter.add(
-                        SecondaryDrawerItem().apply {
+                        GmailDrawerItemSecondary().apply {
                             nameText = it.title
                             tag = it.id
                         }
@@ -136,15 +134,15 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             }
             itemAdapter.add(
                     DividerDrawerItem(),
-                    SecondaryDrawerItem().apply {
+                    GmailDrawerItemSecondary().apply {
                         nameRes = R.string.messages
                         tag = APP_MENU_ITEM + "_${getString(R.string.messages)}"
                     },
-                    SecondaryDrawerItem().apply {
+                    GmailDrawerItemSecondary().apply {
                         nameRes = R.string.about_channel
                         tag = APP_MENU_ITEM + "_${getString(R.string.about_channel)}"
                     },
-                    SecondaryDrawerItem().apply {
+                    GmailDrawerItemSecondary().apply {
                         nameRes = R.string.about
                         tag = APP_MENU_ITEM + "_${getString(R.string.about)}"
                     }
@@ -194,14 +192,14 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        menuInflater.inflate(R.menu.main_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menuUpdatePlaylists-> {
-//                viewModel.loadPlaylists()
+                viewModel.updatePlaylistsToDatabase()
                 return true
             }
             else -> {

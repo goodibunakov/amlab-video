@@ -15,4 +15,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- MaterialDrawe Gmail Design -->
+    <dimen name="gmail_material_drawer_item_corner_radius">20dp</dimen>
+    <dimen name="gmail_material_drawer_item_background_padding_start">0dp</dimen>
+    <dimen name="gmail_material_drawer_item_background_padding_end">8dp</dimen>
+    <dimen name="gmail_material_drawer_item_background_padding_top_bottom">4dp</dimen>
 </resources>
