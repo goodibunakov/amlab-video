@@ -16,6 +16,11 @@ interface DatabaseRepository {
     fun deletePlaylists(): Completable
 
     /**
+     * Обновить плейлисты в БД
+     */
+    fun updatePlaylists(playlistsDTO: PlaylistsDTO): Maybe<Int>
+
+    /**
      * Получение плейлистов из БД
      */
     fun getPlaylists(): Maybe<PlaylistsDTO>

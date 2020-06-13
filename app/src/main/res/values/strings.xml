@@ -71,4 +71,7 @@
 
     <string name="something_wrong">Что-то пошло не так :(</string>
 
+    <string name="playlists_update_error">Ошибка обновления базы данных</string>
+    <string name="playlists_update_success">Плейлисты успешно обновлены</string>
+
 </resources>

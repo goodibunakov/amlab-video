@@ -2,6 +2,7 @@ package ru.goodibunakov.amlabvideo.domain.usecase
 
 import android.util.Log
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
 import ru.goodibunakov.amlabvideo.data.mappers.ToPlaylistsEntityMapper
@@ -25,9 +26,9 @@ class GetChannelPlaylistsUseCase(
                         .doOnNext {
                             databaseRepository.insertPlaylists(it)
                                     .subscribe({
-                                        Log.d("debug", "insert completed")
+                                        Log.d("debug", "GetChannelPlaylistsUseCase insert completed")
                                     }, {
-                                        Log.d("debug", "insert error = $it")
+                                        Log.d("debug", "GetChannelPlaylistsUseCase insert error = $it")
                                     })
                         }
         )
@@ -37,8 +38,12 @@ class GetChannelPlaylistsUseCase(
                 .toObservable()
     }
 
-    fun updatePlaylistsToDatabase(): Completable {
+    fun updatePlaylistsToDatabase(): Maybe<List<PlaylistsEntity>> {
         return apiRepository.getPlayLists()
-                .flatMapCompletable { databaseRepository.insertPlaylists(it) }
+                .firstElement()
+                .doOnSuccess {
+                    databaseRepository.updatePlaylists(it)
+                }
+                .map { ToPlaylistsEntityMapper.map(it) }
     }
 }

@@ -16,6 +16,7 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
+import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.materialdrawer.holder.ImageHolder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
@@ -39,6 +40,10 @@ import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel.Companion.ALL_VIDEOS
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
 
+/**
+ * Переключение светлой-темной темы
+ * https://proandroiddev.com/dark-mode-on-android-app-with-kotlin-dc759fc5f0e1
+ */
 
 class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
@@ -85,7 +90,13 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         })
 
         viewModel.toolbarTitleLiveData.observe(this, Observer { updateToolBarTitle(it) })
+
+        viewModel.playlistsUpdatedLiveData.observe(this, Observer {
+            showPlaylistUpdated(it)
+        })
     }
+
+
 
     private fun initDrawer() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -198,7 +209,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menuUpdatePlaylists-> {
+            R.id.menuUpdatePlaylists -> {
                 viewModel.updatePlaylistsToDatabase()
                 return true
             }
@@ -313,5 +324,13 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     override fun exitFullScreen() {
         isFullscreen = false
         fullScreenHelper.exitFullScreen()
+    }
+
+    private fun showPlaylistUpdated(throwable: Throwable?) {
+        if (throwable != null) {
+            Snackbar.make(root, getString(R.string.playlists_update_error), Snackbar.LENGTH_SHORT).show()
+        } else {
+            Snackbar.make(root, getString(R.string.playlists_update_success), Snackbar.LENGTH_SHORT).show()
+        }
     }
 }

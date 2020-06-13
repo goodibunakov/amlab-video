@@ -7,12 +7,12 @@ import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -57,7 +57,7 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
 
         viewModel.error.observe(this, Observer {
             it?.let {
-               Toast.makeText(this, "Ошибка: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
+                Snackbar.make(parentSplash, "Ошибка: ${it.localizedMessage}", Snackbar.LENGTH_SHORT).show()
             }
         })
     }

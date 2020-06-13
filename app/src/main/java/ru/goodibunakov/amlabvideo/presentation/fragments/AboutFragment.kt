@@ -4,9 +4,9 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.android.material.snackbar.Snackbar
 import ru.goodibunakov.amlabvideo.BuildConfig
 import ru.goodibunakov.amlabvideo.R
 
@@ -60,7 +60,9 @@ class AboutFragment : PreferenceFragmentCompat() {
         try {
             startActivity(Intent.createChooser(intent, "Отправить письмо..."))
         } catch (ex: ActivityNotFoundException) {
-            Toast.makeText(requireContext(), getString(R.string.error_no_email_clients), Toast.LENGTH_SHORT).show()
+            view?.let {
+                Snackbar.make(it, getString(R.string.error_no_email_clients), Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 }

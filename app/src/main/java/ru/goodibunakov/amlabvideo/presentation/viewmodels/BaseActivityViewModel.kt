@@ -20,6 +20,7 @@ open class BaseActivityViewModel(
 
     val networkLiveData = MutableLiveData<ConnectedStatus>()
     val playlistsLiveData = MutableLiveData<List<PlaylistsModelUI>>()
+    val playlistsUpdatedLiveData = MutableLiveData<Throwable?>()
     val error = SingleLiveEvent<Throwable?>().apply { this.value = null }
     private var compositeDisposable = CompositeDisposable()
 
@@ -62,9 +63,19 @@ open class BaseActivityViewModel(
     fun updatePlaylistsToDatabase() {
         getChannelPlaylistsUseCase.updatePlaylistsToDatabase()
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .map { ToPlaylistsModelUIMapper.map(it) }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+                .subscribe({
+                    playlistsLiveData.value = it
+                    playlistsUpdatedLiveData.value = null
+                    Log.d("debug", "BaseActivityViewModel: updatePlaylistsToDatabase onnext $it")
+                }, {
+                    playlistsUpdatedLiveData.value = it
+                    Log.d("debug", "BaseActivityViewModel: updatePlaylistsToDatabase error = $it")
+                })
                 .addTo(compositeDisposable)
+
     }
 
     override fun onCleared() {

@@ -20,8 +20,8 @@ fun View.zoomIn(duration: Long = 1000L): Completable {
     return animationSubject.doOnSubscribe {
         ViewCompat.animate(this)
                 .setDuration(duration)
-                .scaleXBy(.3f)
-                .scaleYBy(.3f)
+                .scaleXBy(.2f)
+                .scaleYBy(.2f)
                 .setInterpolator(BounceInterpolator())
                 .withEndAction {
                     animationSubject.onComplete()
