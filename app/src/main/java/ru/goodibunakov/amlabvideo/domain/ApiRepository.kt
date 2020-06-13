@@ -11,9 +11,14 @@ import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
 
 interface ApiRepository {
     /**
-     * Получение всех видео на канале Amlab
+     * Получение всех видео на канале
      */
     fun getAllVideosList(): Observable<AllVideosDTO>
+
+    /**
+     * Получение всех видео на канале
+     */
+    fun getMoreAllVideosList(pageToken: String): Observable<AllVideosDTO>
 
     /**
      * Получение списка плейлистов
@@ -23,7 +28,7 @@ interface ApiRepository {
     /**
      * Получение плейтиста
      */
-    fun getPlaylistVideos(playlistId: String): Observable<VideoDTO>
+    fun getPlaylistVideos(playlistId: String, pageToken: String? = ""): Observable<VideoDTO>
 
     /**
      * Получение всей информации об одном видео

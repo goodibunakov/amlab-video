@@ -1,7 +1,6 @@
 package ru.goodibunakov.amlabvideo.presentation.fragments
 
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

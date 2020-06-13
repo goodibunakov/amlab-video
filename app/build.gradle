@@ -131,6 +131,9 @@ dependencies {
     //Self-updating string with relative time in TextView
     implementation 'com.github.perfomer:blitz:1.0.3'
 
+    // RateBottomSheet
+    implementation 'com.mikhaellopez:ratebottomsheet:1.1.0'
+
     //OneSignal
     implementation 'com.onesignal:OneSignal:3.14.0'
 

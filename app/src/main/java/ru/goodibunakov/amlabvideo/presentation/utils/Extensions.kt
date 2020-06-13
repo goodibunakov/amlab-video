@@ -6,7 +6,6 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Completable
 import io.reactivex.subjects.CompletableSubject
-import ru.goodibunakov.amlabvideo.presentation.activity.MainActivity
 
 
 fun MutableLiveData<String>.setValidatedValue(newValue: String) {

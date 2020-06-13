@@ -4,7 +4,6 @@ import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
-import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTODatabase
 import ru.goodibunakov.amlabvideo.data.database.Dao
 import ru.goodibunakov.amlabvideo.data.mappers.ToDatabaseModelMapper
 import ru.goodibunakov.amlabvideo.data.mappers.ToPlaylistsDTOMapper

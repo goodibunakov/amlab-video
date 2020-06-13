@@ -10,10 +10,22 @@ import ru.goodibunakov.amlabvideo.domain.entity.VideoEntity
 class GetPlaylistVideosUseCase(private val apiRepository: ApiRepository) : UseCase<String, List<VideoEntity>>() {
 
     private var playlistId: String = ""
+    private var pageToken : String? = ""
 
     override fun buildObservable(): Observable<out List<VideoEntity>> {
         Log.d("debug", "playlistId = $playlistId")
-        return apiRepository.getPlaylistVideos(playlistId)
+        return apiRepository.getPlaylistVideos(playlistId = playlistId)
+                .doOnNext {
+                    pageToken = it.nextPageToken
+                }
+                .map { ToVideoEntityMapper.map(it) }
+    }
+
+    fun loadMore(): Observable<out List<VideoEntity>> {
+        return apiRepository.getPlaylistVideos(playlistId = playlistId, pageToken = pageToken)
+                .doOnNext {
+                    pageToken = it.nextPageToken
+                }
                 .map { ToVideoEntityMapper.map(it) }
     }
 

@@ -106,7 +106,7 @@ interface ApiService {
             @Query("id") id: String
     ): Observable<VideoDetailsDTO>
 
-//    https://www.googleapis.com/youtube/v3/channels?part=brandingSettings&id=UC_adZIRDiLC3eLIq24HBmRA&key=AIzaSyB8XPLOU4IPt99fJHiDhvNjoywzqpA3JT8
+    //    https://www.googleapis.com/youtube/v3/channels?part=brandingSettings&id=UC_adZIRDiLC3eLIq24HBmRA&key=AIzaSyB8XPLOU4IPt99fJHiDhvNjoywzqpA3JT8
     @GET("channels?")
     fun getChannelDetails(
             @Query("part") part: String = "brandingSettings",
@@ -123,23 +123,26 @@ interface ApiService {
             val gson = GsonBuilder().setLenient().create()
 
             val httpClient = OkHttpClient.Builder()
-            val httpLoggingInterceptor = HttpLoggingInterceptor()
-            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-            httpClient.addInterceptor(httpLoggingInterceptor)
-            httpClient.addInterceptor(object : Interceptor {
-                override fun intercept(chain: Interceptor.Chain): Response {
-                    val original = chain.request()
-                    val originalHttpUrl = original.url
-                    val url = originalHttpUrl.newBuilder()
-                            .addQueryParameter("key", YOUTUBE_APIKEY)
-                            .build()
-                    val requestBuilder = original.newBuilder().url(url)
-                    val request = requestBuilder.build()
-                    return chain.proceed(request)
-                }
-            })
-            httpClient.connectTimeout(50, TimeUnit.SECONDS)
-            httpClient.readTimeout(50, TimeUnit.SECONDS)
+                    .apply {
+                        val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                        }
+                        addInterceptor(httpLoggingInterceptor)
+                        addInterceptor(object : Interceptor {
+                            override fun intercept(chain: Interceptor.Chain): Response {
+                                val original = chain.request()
+                                val originalHttpUrl = original.url
+                                val url = originalHttpUrl.newBuilder()
+                                        .addQueryParameter("key", YOUTUBE_APIKEY)
+                                        .build()
+                                val requestBuilder = original.newBuilder().url(url)
+                                val request = requestBuilder.build()
+                                return chain.proceed(request)
+                            }
+                        })
+                        connectTimeout(50, TimeUnit.SECONDS)
+                        readTimeout(50, TimeUnit.SECONDS)
+                    }
             val retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(httpClient.build())

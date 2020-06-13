@@ -2,7 +2,6 @@ package ru.goodibunakov.amlabvideo.presentation.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -13,11 +12,11 @@ import android.view.WindowManager;
  */
 public class FullScreenHelper {
 
-    private Activity context;
-    private View[] views;
+    private final Activity context;
+    private final View[] views;
 
     /**
-     * @param context
+     * @param context context
      * @param views   to hide/show
      */
     public FullScreenHelper(Activity context, View... views) {

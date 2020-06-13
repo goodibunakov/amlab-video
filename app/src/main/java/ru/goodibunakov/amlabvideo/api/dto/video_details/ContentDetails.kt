@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class ContentDetails(
         @SerializedName("caption")
         val caption: String,
-        @SerializedName("contentRating")
-        val contentRating: ContentRating,
+//        @SerializedName("contentRating")
+//        val contentRating: ContentRating,
         @SerializedName("definition")
         val definition: String,
         @SerializedName("dimension")

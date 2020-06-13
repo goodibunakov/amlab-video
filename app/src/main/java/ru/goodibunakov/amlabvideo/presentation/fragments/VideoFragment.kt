@@ -3,6 +3,7 @@ package ru.goodibunakov.amlabvideo.presentation.fragments
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.mikhaellopez.ratebottomsheet.RateBottomSheet
+import com.mikhaellopez.ratebottomsheet.RateBottomSheetManager
 import com.perfomer.blitz.setTimeAgo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -26,7 +28,8 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_video.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
-import ru.goodibunakov.amlabvideo.presentation.adapter.VideoAdapter
+import ru.goodibunakov.amlabvideo.presentation.recycler_utils.InfiniteScrollListener
+import ru.goodibunakov.amlabvideo.presentation.recycler_utils.VideoAdapter
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
@@ -35,7 +38,7 @@ import ru.goodibunakov.amlabvideo.presentation.viewmodels.VideoFragmentViewModel
 import java.util.*
 
 
-class VideoFragment : Fragment(), OnClickListener {
+class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoadMoreListener {
 
     private val sharedViewModel: SharedViewModel by activityViewModels { AmlabApplication.viewModelFactory }
     private val viewModel: VideoFragmentViewModel by viewModels { AmlabApplication.viewModelFactory }
@@ -64,6 +67,7 @@ class VideoFragment : Fragment(), OnClickListener {
         initPlayerView()
         initRecyclerView()
         observeLiveData()
+        initRateBottomSheet()
     }
 
     private fun observeLiveData() {
@@ -73,7 +77,6 @@ class VideoFragment : Fragment(), OnClickListener {
 
         viewModel.videosLiveData.observe(viewLifecycleOwner, Observer {
             videoAdapter.addItems(it)
-            Log.d("debug", "list video = $it")
         })
 
         viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, Observer {
@@ -92,6 +95,10 @@ class VideoFragment : Fragment(), OnClickListener {
         viewModel.error.observe(viewLifecycleOwner, Observer {
             if (it != null) somethingWrong.visibility = View.VISIBLE
             else somethingWrong.visibility = View.GONE
+        })
+
+        viewModel.recyclerLoadMoreProcess.observe(viewLifecycleOwner, Observer {
+            if (it) videoAdapter.addNull() else videoAdapter.removeNull()
         })
     }
 
@@ -153,16 +160,35 @@ class VideoFragment : Fragment(), OnClickListener {
 
     private fun initRecyclerView() {
         videoAdapter = VideoAdapter(this)
+        val linearLayoutManager = LinearLayoutManager(requireContext())
         recycler.apply {
             setHasFixedSize(true)
             adapter = videoAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = linearLayoutManager
             addItemDecoration(DividerItemDecoration(recycler.context, DividerItemDecoration.VERTICAL))
             itemAnimator = DefaultItemAnimator()
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            })
+            addOnScrollListener(InfiniteScrollListener(linearLayoutManager, this@VideoFragment)
+//                    object : RecyclerView.OnScrollListener() {
+//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                    super.onScrolled(recyclerView, dx, dy)
+//                    val lastVisibleItemPosition = (layoutManager as LinearLayoutManager?)?.findLastVisibleItemPosition()
+//                    lastVisibleItemPosition?.let {
+//                        if (lastVisibleItemPosition <= adapter!!.itemCount - 5) {
+//                            if (viewModel.canLoadMore()) {
+//                                viewModel.loadMoreItems()
+//                            }
+//                        }
+//                    }
+//
+//                    Log.d("debug", "recycler = $recyclerView dx = $dx dy = $dy")
+//                }
+//            }
+            )
         }
+    }
+
+    override fun onLoadMore() {
+        viewModel.loadMoreItems()
     }
 
     fun exitFullScreen() {
@@ -183,6 +209,21 @@ class VideoFragment : Fragment(), OnClickListener {
     override fun onItemClick(videoItem: VideoUIModel) {
         Log.d("debug", "clicked $videoItem")
         if (videoItem.videoId != viewModel.videoIdSubject.value) viewModel.videoIdSubject.onNext(videoItem.videoId)
+    }
+
+    private fun initRateBottomSheet() {
+        context?.let {
+            RateBottomSheetManager(it)
+                    .setInstallDays(3) // 3 by default
+                    .setLaunchTimes(5) // 5 by default
+                    .setRemindInterval(2) // 2 by default
+                    .setShowAskBottomSheet(true) // True by default
+                    .setShowLaterButton(true) // True by default
+                    .setShowCloseButtonIcon(true) // True by default
+                    .monitor()
+        }
+
+        Handler().postDelayed({ RateBottomSheet.showRateBottomSheetIfMeetsConditions(this) }, 3500)
     }
 
     override fun onDestroyView() {

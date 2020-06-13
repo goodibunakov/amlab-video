@@ -27,11 +27,6 @@ class ApiRepositoryImpl(
     private var playlistsList: PlaylistsDTO? = null
     var networkConnected = BehaviorSubject.createDefault(ConnectedStatus.UNKNOWN)
 
-    companion object {
-        const val SKIP = 0
-        const val LIMIT = Integer.MAX_VALUE
-    }
-
     init {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
@@ -60,6 +55,12 @@ class ApiRepositoryImpl(
                 .flatMap { apiService.getAllVideos() }
     }
 
+    override fun getMoreAllVideosList(pageToken: String): Observable<AllVideosDTO> {
+        return networkConnected
+                .filter { it == ConnectedStatus.YES }
+                .flatMap { apiService.getAllVideos(pageToken = pageToken) }
+    }
+
     override fun getChannelDetails(): Observable<BrandingDTO> {
         return networkConnected
                 .filter { it == ConnectedStatus.YES }
@@ -73,10 +74,10 @@ class ApiRepositoryImpl(
                 .doOnNext { playlistsList = it.copy() }
     }
 
-    override fun getPlaylistVideos(playlistId: String): Observable<VideoDTO> {
+    override fun getPlaylistVideos(playlistId: String, pageToken: String?): Observable<VideoDTO> {
         return networkConnected
                 .filter { it == ConnectedStatus.YES }
-                .flatMap { apiService.getPlaylistVideos(playlistId = playlistId) }
+                .flatMap { apiService.getPlaylistVideos(playlistId = playlistId, pageToken = pageToken ?: "") }
     }
 
     override fun getVideoDetails(id: String): Observable<VideoDetailsDTO> {

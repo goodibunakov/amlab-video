@@ -1,8 +1,6 @@
-package ru.goodibunakov.amlabvideo.presentation.adapter
+package ru.goodibunakov.amlabvideo.presentation.recycler_utils
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -13,35 +11,17 @@ import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 
-class VideoAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<VideoAdapter.VideoItemViewHolder>() {
+abstract class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    abstract fun bind(item: VideoUIModel?)
+}
 
-    private val items: MutableList<VideoUIModel> = mutableListOf()
+class VideoItemViewHolder(
+        itemView: View,
+        private val onClickListener: OnClickListener
+) : BaseViewHolder(itemView) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoItemViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
-        return VideoItemViewHolder(itemView, onClickListener)
-    }
-
-    fun addItems(list: List<VideoUIModel>) {
-        items.addAll(list)
-        notifyItemRangeInserted(items.size, list.size)
-    }
-
-    override fun getItemCount(): Int {
-        return items.size
-    }
-
-    override fun onBindViewHolder(holder: VideoItemViewHolder, position: Int) {
-        holder.bind(items[position])
-    }
-
-
-    inner class VideoItemViewHolder(
-            itemView: View,
-            private val onClickListener: OnClickListener
-    ) : RecyclerView.ViewHolder(itemView) {
-
-        fun bind(item: VideoUIModel) {
+    override fun bind(item: VideoUIModel?) {
+        item?.let {
             val requestOptions = RequestOptions()
                     .error(R.drawable.empty_photo)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -58,4 +38,8 @@ class VideoAdapter(private val onClickListener: OnClickListener) : RecyclerView.
             itemView.setOnClickListener { onClickListener.onItemClick(item) }
         }
     }
+}
+
+class LoadingViewHolder(itemView: View) : BaseViewHolder(itemView) {
+    override fun bind(item: VideoUIModel?) {}
 }

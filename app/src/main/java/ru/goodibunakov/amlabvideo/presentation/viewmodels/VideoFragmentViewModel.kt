@@ -19,15 +19,17 @@ import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 class VideoFragmentViewModel(
         private val getPlaylistVideosUseCase: GetPlaylistVideosUseCase,
         private val getVideoDetailsUseCase: GetVideoDetailsUseCase,
-        private val getAllVideosList: GetAllVideosListUseCase
+        private val getAllVideosListUseCase: GetAllVideosListUseCase
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
     val videosLiveData = MutableLiveData<List<VideoUIModel>>()
     val progressBarVisibilityLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
     val videoDetails = MutableLiveData<VideoDetailsUI>()
+    val recyclerLoadMoreProcess = MutableLiveData<Boolean>()
     val error = SingleLiveEvent<Throwable?>().apply { this.value = null }
     var videoIdSubject = BehaviorSubject.createDefault("")
+    private lateinit var playlistId: String
 
     init {
         loadVideoDetails()
@@ -65,8 +67,30 @@ class VideoFragmentViewModel(
                 .addTo(compositeDisposable)
     }
 
+    private fun loadMorePlaylist() {
+        getPlaylistVideosUseCase.loadMore()
+                .map { ToVideoModelUIMapper.map(it) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { recyclerLoadMoreProcess.value = true }
+                .doOnNext { recyclerLoadMoreProcess.value = false }
+                .doOnError { recyclerLoadMoreProcess.value = false }
+                .subscribe({
+                    Log.d("ddd", "loadPlaylist $it")
+                    val previousList = videosLiveData.value
+                    videosLiveData.value = previousList?.toMutableList()?.apply { addAll(it) }
+                    error.value = null
+                }, {
+                    error.value = it
+                    Log.d("ddd", "loadPlaylist error = ${it.localizedMessage}")
+                    Log.d("ddd", "loadPlaylist error = $it")
+                    Log.d("ddd", "loadPlaylist error = ${it.message}")
+                })
+                .addTo(compositeDisposable)
+    }
+
     private fun loadAllVideosList() {
-        getAllVideosList.buildObservable()
+        getAllVideosListUseCase.buildObservable()
                 .map { ToVideoModelUIMapper.map(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -85,6 +109,23 @@ class VideoFragmentViewModel(
                 .subscribe({
                     videoIdSubject.onNext(it.firstOrNull()?.videoId ?: "")
                     videosLiveData.value = it
+                }, {
+
+                })
+                .addTo(compositeDisposable)
+    }
+
+    private fun loadMoreAllVideosList() {
+        getAllVideosListUseCase.getMoreAllVideosList()
+                .map { ToVideoModelUIMapper.map(it) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { recyclerLoadMoreProcess.value = true }
+                .doOnNext { recyclerLoadMoreProcess.value = false }
+                .doOnError { recyclerLoadMoreProcess.value = false }
+                .subscribe({
+                    val previousList = videosLiveData.value
+                    videosLiveData.value = previousList?.toMutableList()?.apply { addAll(it) }
                 }, {
 
                 })
@@ -118,6 +159,13 @@ class VideoFragmentViewModel(
     }
 
     fun loadItems(playlistId: String) {
-        if (playlistId == MainViewModel.ALL_VIDEOS) loadAllVideosList() else loadPlaylist(playlistId)
+        this.playlistId = playlistId
+        if (this.playlistId == MainViewModel.ALL_VIDEOS) loadAllVideosList() else loadPlaylist(playlistId)
+    }
+
+    fun loadMoreItems() {
+        if (!getAllVideosListUseCase.canLoadMore()) return
+        if (this.playlistId == MainViewModel.ALL_VIDEOS) loadMoreAllVideosList()
+        else loadMorePlaylist()
     }
 }
