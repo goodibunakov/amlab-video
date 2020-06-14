@@ -15,15 +15,15 @@ class MainViewModel(
         const val ALL_VIDEOS = "0"
     }
 
-    private var compositeDisposable = CompositeDisposable()
+//    private var compositeDisposable = CompositeDisposable()
     val toolbarTitleLiveData = MutableLiveData(startToolbarTitle)
 
-    init {
+//    init {
+//
+//    }
 
-    }
-
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
-    }
+//    override fun onCleared() {
+//        compositeDisposable.dispose()
+//        super.onCleared()
+//    }
 }

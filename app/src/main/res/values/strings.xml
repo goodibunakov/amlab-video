@@ -42,7 +42,7 @@
 
     <string name="something_wrong">Что-то пошло не так :(</string>
 
-    <string name="playlists_update_error">Ошибка обновления базы данных</string>
+    <string name="playlists_update_error">Не удалось обновить плейлисты</string>
     <string name="playlists_update_success">Плейлисты успешно обновлены</string>
 
     <string name="rate_popup_ask_title">Нравится приложение?</string>
@@ -50,9 +50,13 @@
     <string name="rate_popup_ask_ok">Да</string>
     <string name="rate_popup_ask_no">Нет</string>
     <string name="rate_popup_title">Оцените это приложение</string>
-    <string name="rate_popup_message">Не могли бы вы уделить минуту, чтобы оценить это приложение? Это не займет больше минуты. Спасибо за поддержку!</string>
+    <string name="rate_popup_message">Не могли бы вы уделить минуту, чтобы оценить это приложение? Это не займет больше минуты.</string>
     <string name="rate_popup_ok">Оценить сейчас</string>
     <string name="rate_popup_later">Напомнить позже</string>
     <string name="rate_popup_no">Нет, спасибо</string>
+
+    <string name="dialog_error_quota_title">Внимание!</string>
+    <string name="dialog_error_quota_message">Лимит запросов к Youtube на сегодня исчерпан. Заходи завтра</string>
+    <string name="dialog_ok">Понятно</string>
 
 </resources>

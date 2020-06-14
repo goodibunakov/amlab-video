@@ -17,6 +17,7 @@ class GetPlaylistVideosUseCase(private val apiRepository: ApiRepository) : UseCa
         return apiRepository.getPlaylistVideos(playlistId = playlistId)
                 .doOnNext {
                     pageToken = it.nextPageToken
+                    Log.d("ddd", "pageToken1 = $pageToken")
                 }
                 .map { ToVideoEntityMapper.map(it) }
     }
@@ -25,11 +26,16 @@ class GetPlaylistVideosUseCase(private val apiRepository: ApiRepository) : UseCa
         return apiRepository.getPlaylistVideos(playlistId = playlistId, pageToken = pageToken)
                 .doOnNext {
                     pageToken = it.nextPageToken
+                    Log.d("ddd", "pageToken2 = $pageToken")
                 }
                 .map { ToVideoEntityMapper.map(it) }
     }
 
     override fun set(data: String) {
         playlistId = data
+    }
+
+    fun canLoadMore(): Boolean {
+        return pageToken != null
     }
 }

@@ -1,5 +1,8 @@
 package ru.goodibunakov.amlabvideo.api
 
+import android.content.Context
+import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import okhttp3.Interceptor
@@ -12,10 +15,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.goodibunakov.amlabvideo.api.dto.channel_details.BrandingDTO
+import ru.goodibunakov.amlabvideo.api.dto.error.QuotaErrorResponse
 import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
 import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
 import ru.goodibunakov.amlabvideo.api.dto.videos_all.AllVideosDTO
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
@@ -119,7 +124,7 @@ interface ApiService {
         private const val YOUTUBE_APIKEY = "AIzaSyB8XPLOU4IPt99fJHiDhvNjoywzqpA3JT8"
         private const val CHANNEL_ID = "UC_adZIRDiLC3eLIq24HBmRA"
 
-        fun create(): ApiService {
+        fun create(context: Context): ApiService {
             val gson = GsonBuilder().setLenient().create()
 
             val httpClient = OkHttpClient.Builder()
@@ -140,6 +145,9 @@ interface ApiService {
                                 return chain.proceed(request)
                             }
                         })
+                        addInterceptor(
+                                QuotaErrorInterceptor(LocalBroadcastManager.getInstance(context), gson)
+                        )
                         connectTimeout(50, TimeUnit.SECONDS)
                         readTimeout(50, TimeUnit.SECONDS)
                     }

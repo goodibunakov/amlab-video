@@ -33,6 +33,19 @@ class AboutChannelFragment : Fragment() {
             progress.visibility = it
         })
 
+        viewModel.error.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                somethingWrong.visibility = View.VISIBLE
+                header.visibility = View.GONE
+                contentView.visibility = View.GONE
+            }
+            else {
+                somethingWrong.visibility = View.GONE
+                header.visibility = View.VISIBLE
+                contentView.visibility = View.VISIBLE
+            }
+        })
+
         viewModel.liveData.observe(viewLifecycleOwner, Observer {
             val requestOptions = RequestOptions()
                     .error(R.drawable.empty_photo)

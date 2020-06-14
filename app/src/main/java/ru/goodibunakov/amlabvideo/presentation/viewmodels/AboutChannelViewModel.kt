@@ -14,6 +14,7 @@ class AboutChannelViewModel(getAboutChannelUseCase: GetAboutChannelUseCase) : Vi
 
     val liveData = MutableLiveData<AboutChannelUIModel>()
     val progressBarVisibilityLiveData = MutableLiveData<Int>()
+    val error = MutableLiveData<Throwable?>().apply { this.value = null }
 
     private var disposable: Disposable = getAboutChannelUseCase.buildObservable()
             .subscribeOn(Schedulers.io())
@@ -30,7 +31,10 @@ class AboutChannelViewModel(getAboutChannelUseCase: GetAboutChannelUseCase) : Vi
             }
             .subscribe({
                 liveData.value = it
-            }, {})
+                error.value = null
+            }, {
+                error.value = it
+            })
 
     override fun onCleared() {
         if (!disposable.isDisposed) disposable.dispose()

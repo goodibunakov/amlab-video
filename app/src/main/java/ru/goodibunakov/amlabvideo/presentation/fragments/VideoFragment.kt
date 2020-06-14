@@ -47,6 +47,7 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
     private lateinit var youTubePlayerDisposable: Disposable
 
     private lateinit var onFullScreenListener: OnFullScreenListener
+    private lateinit var infiniteScrollListener: InfiniteScrollListener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -76,6 +77,7 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
         })
 
         viewModel.videosLiveData.observe(viewLifecycleOwner, Observer {
+            infiniteScrollListener.setLoaded()
             videoAdapter.addItems(it)
         })
 
@@ -99,6 +101,10 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
 
         viewModel.recyclerLoadMoreProcess.observe(viewLifecycleOwner, Observer {
             if (it) videoAdapter.addNull() else videoAdapter.removeNull()
+        })
+
+        viewModel.canLoadMoreLiveData.observe(viewLifecycleOwner, Observer {
+            infiniteScrollListener.setCanLoadMore(it)
         })
     }
 
@@ -161,29 +167,14 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
     private fun initRecyclerView() {
         videoAdapter = VideoAdapter(this)
         val linearLayoutManager = LinearLayoutManager(requireContext())
+        infiniteScrollListener = InfiniteScrollListener(linearLayoutManager, this@VideoFragment)
         recycler.apply {
             setHasFixedSize(true)
             adapter = videoAdapter
             layoutManager = linearLayoutManager
             addItemDecoration(DividerItemDecoration(recycler.context, DividerItemDecoration.VERTICAL))
             itemAnimator = DefaultItemAnimator()
-            addOnScrollListener(InfiniteScrollListener(linearLayoutManager, this@VideoFragment)
-//                    object : RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    super.onScrolled(recyclerView, dx, dy)
-//                    val lastVisibleItemPosition = (layoutManager as LinearLayoutManager?)?.findLastVisibleItemPosition()
-//                    lastVisibleItemPosition?.let {
-//                        if (lastVisibleItemPosition <= adapter!!.itemCount - 5) {
-//                            if (viewModel.canLoadMore()) {
-//                                viewModel.loadMoreItems()
-//                            }
-//                        }
-//                    }
-//
-//                    Log.d("debug", "recycler = $recyclerView dx = $dx dy = $dy")
-//                }
-//            }
-            )
+            addOnScrollListener(infiniteScrollListener)
         }
     }
 

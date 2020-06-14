@@ -30,8 +30,9 @@ class AmlabApplication : MultiDexApplication() {
                 .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
                 .unsubscribeWhenNotificationsAreDisabled(true)
                 .init()
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
 
-        apiRepository = ApiRepositoryImpl(this, ApiService.create())
+        apiRepository = ApiRepositoryImpl(this, ApiService.create(this.applicationContext))
         databaseRepository = DatabaseRepositoryImpl(AmlabDatabase.getDatabase(this).dao())
         viewModelFactory = ViewModelFactory(
                 GetChannelPlaylistsUseCase(apiRepository, databaseRepository),

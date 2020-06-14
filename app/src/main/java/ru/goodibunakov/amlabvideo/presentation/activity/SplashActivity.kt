@@ -45,13 +45,19 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
                     Log.d("debug", "animationDisposable oncomplete")
                     viewModel.playlistsLiveData.observe(this, Observer {
                         if (it.isNotEmpty()) {
-                            val intent = Intent(this, MainActivity::class.java)
-                            startActivity(intent)
-                            overridePendingTransition(R.anim.open_next, R.anim.close_main)
-                            finish()
+                            viewModel.errorQuotaLiveData.observe(this, Observer { errorQuotaExists ->
+                                if (!errorQuotaExists) {
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    startActivity(intent)
+                                    overridePendingTransition(R.anim.open_next, R.anim.close_main)
+                                    finish()
+                                }
+                            })
                         }
                     })
-                },{Log.d("debug", "animationDisposable error = $it")})
+                },{
+                    Log.d("debug", "animationDisposable error = $it")
+                })
 
         version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
 

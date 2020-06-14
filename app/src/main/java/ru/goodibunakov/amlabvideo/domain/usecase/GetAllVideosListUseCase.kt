@@ -28,6 +28,6 @@ class GetAllVideosListUseCase(private val apiRepository: ApiRepository) : UseCas
     }
 
     fun canLoadMore(): Boolean {
-        return !pageToken.isNullOrEmpty()
+        return pageToken != null
     }
 }

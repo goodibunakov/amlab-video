@@ -1,6 +1,5 @@
 package ru.goodibunakov.amlabvideo.presentation.mappers
 
-import android.util.Log
 import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
 import ru.goodibunakov.amlabvideo.domain.Mapper
 import ru.goodibunakov.amlabvideo.presentation.model.VideoDetailsUI
@@ -11,7 +10,6 @@ object ToVideoDetailsModelUIMapper : Mapper<VideoDetailsDTO, VideoDetailsUI> {
 
     override fun map(from: VideoDetailsDTO): VideoDetailsUI {
         val item = from.items[0]
-        Log.d("debug", "ToVideoDetailsModelUIMapper = $item")
         return VideoDetailsUI(
                 viewCount = item.statistics.viewCount,
                 likeCount = item.statistics.likeCount,

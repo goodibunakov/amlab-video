@@ -9,10 +9,10 @@ class SplashViewModel(
         getNetworkStatus: GetNetworkStatusUseCase
 ) : BaseActivityViewModel(getNetworkStatus, getChannelPlaylistsUseCase) {
 
-    private var compositeDisposable = CompositeDisposable()
-
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
-    }
+//    private var compositeDisposable = CompositeDisposable()
+//
+//    override fun onCleared() {
+//        compositeDisposable.dispose()
+//        super.onCleared()
+//    }
 }

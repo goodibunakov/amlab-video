@@ -1,5 +1,6 @@
 package ru.goodibunakov.amlabvideo.presentation.recycler_utils
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -25,19 +26,22 @@ class VideoAdapter(private val onClickListener: OnClickListener) : RecyclerView.
     }
 
     fun addItems(list: List<VideoUIModel>) {
-        val itemsSize = items.size
+        Log.d("ddd", "size1 = ${items.size}")
         items.addAll(list)
-        notifyItemRangeInserted(itemsSize, list.size)
+        Log.d("ddd", "size2 = ${items.size}")
+        notifyItemRangeInserted(itemCount, list.size)
     }
 
     fun addNull() {
         items.add(null)
         notifyItemInserted(items.size - 1)
+        Log.d("ddd", "addNull = ${items.size}")
     }
 
     fun removeNull() {
         items.removeAt(items.size - 1)
         notifyItemRemoved(items.size)
+        Log.d("ddd", "removeNull = ${items.size}")
     }
 
     override fun getItemCount(): Int {
