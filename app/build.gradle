@@ -30,7 +30,7 @@ android {
         versionName "1.0-beta1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
-        archivesBaseName = "amlabvideo-$versionName($versionCode)"
+        archivesBaseName = "amlab-$versionName($versionCode)"
         multiDexEnabled true
         javaCompileOptions {
             annotationProcessorOptions {

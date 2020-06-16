@@ -14,7 +14,7 @@
     <PreferenceCategory android:title="Amlab в интернете">
 
         <Preference
-            android:icon="@mipmap/ic_launcher_round"
+            android:icon="@drawable/ic_logo"
             android:key="@string/pref_site_key"
             android:title="Наш сайт" />
 

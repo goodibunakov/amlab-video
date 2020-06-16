@@ -30,6 +30,6 @@ object ToVideoDetailsModelUIMapper : Mapper<VideoDetailsDTO, VideoDetailsUI> {
 
     //2020-05-04T08:00:06Z
     private fun convertToDate(publishedAt: String): Date {
-        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH).parse(publishedAt) ?: Date()
+        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).parse(publishedAt) ?: Date()
     }
 }

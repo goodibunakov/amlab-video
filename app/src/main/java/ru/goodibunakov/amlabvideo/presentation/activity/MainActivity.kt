@@ -1,6 +1,7 @@
 package ru.goodibunakov.amlabvideo.presentation.activity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
+import androidx.core.view.updatePaddingRelative
 import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
@@ -61,8 +63,8 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         fullScreenHelper = FullScreenHelper(this, appBarLayout)
-        setSupportActionBar(toolbar)
-        initDrawer()
+
+        initDrawerAndToolbar()
 
         viewModel.playlistsLiveData.observe(this, Observer {
             fillDrawer(savedInstanceState, it)
@@ -97,14 +99,19 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     }
 
 
-
-    private fun initDrawer() {
+    private fun initDrawerAndToolbar() {
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 
         actionBarDrawerToggle = ActionBarDrawerToggle(this, root, toolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
+        actionBarDrawerToggle.isDrawerSlideAnimationEnabled = true
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
-            rootLayout.updatePadding(top = insets.systemWindowInsetTop)
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                rootLayout.updatePadding(top = insets.systemWindowInsetTop)
+            } else {
+                slider.insetForeground = null
+            }
             insets
         }
     }
@@ -126,7 +133,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                     withSavedInstance(savedInstanceState)
                     selectionListEnabledForSingleProfile = false
                 }
-//slider.adapter.notifyDataSetChanged() ??????????????
+
         slider.apply {
             itemAdapter.add(
                     GmailDrawerItemPrimary().apply {
@@ -148,21 +155,26 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                     GmailDrawerItemSecondary().apply {
                         nameRes = R.string.messages
                         tag = APP_MENU_ITEM + "_${getString(R.string.messages)}"
+                        iconRes = R.drawable.message
+                        isIconTinted = true
                     },
                     GmailDrawerItemSecondary().apply {
                         nameRes = R.string.about_channel
                         tag = APP_MENU_ITEM + "_${getString(R.string.about_channel)}"
+                        iconRes = R.drawable.youtube
+                        isIconTinted = true
                     },
                     GmailDrawerItemSecondary().apply {
                         nameRes = R.string.about
                         tag = APP_MENU_ITEM + "_${getString(R.string.about)}"
+                        iconRes = R.drawable.information_outline
+                        isIconTinted = true
                     }
             )
             onDrawerItemClickListener = { view, drawerItem, position ->
                 val tag = drawerItem.tag as String
                 if (drawerItem is Nameable) {
                     viewModel.let {
-                        Log.d("debug", "onDrawerItemClickListener click = $view")
                         Log.d("debug", "onDrawerItemClickListener click = $drawerItem.")
                         sharedViewModel.playlistId.setValidatedValue(tag)
                         Log.d("debug", "onDrawerItemClickListener it.playlistId.value = $tag")
@@ -285,14 +297,18 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-//        toolbar?.menu?.close()
+        toolbar?.menu?.close()
 
         actionBarDrawerToggle.onConfigurationChanged(newConfig)
 
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            exitFullScreen()
-        } else {
-            enterFullScreen()
+
+        if (supportFragmentManager.findFragmentById(R.id.fragmentContainer) is VideoFragment) {
+            if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                exitFullScreen()
+            } else {
+                if (root.isDrawerOpen(slider)) root.closeDrawer(slider)
+                enterFullScreen()
+            }
         }
     }
 

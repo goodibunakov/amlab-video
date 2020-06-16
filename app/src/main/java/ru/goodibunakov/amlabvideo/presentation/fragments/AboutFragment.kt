@@ -38,7 +38,7 @@ class AboutFragment : PreferenceFragmentCompat() {
             getString(R.string.pref_telegram_key),
             getString(R.string.pref_instagram_key),
             getString(R.string.pref_fb_key) -> {
-                val url = preference.title.toString()
+                val url = preference.key.toString()
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(Intent.createChooser(intent, getString(R.string.open_with)))
                 true

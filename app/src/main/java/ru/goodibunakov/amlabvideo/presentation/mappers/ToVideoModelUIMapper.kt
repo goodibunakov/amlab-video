@@ -25,9 +25,9 @@ object ToVideoModelUIMapper : Mapper<List<VideoEntity>, List<VideoUIModel>> {
 
         var formattedDate: String? = null
         try {
-            val convertedDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).parse(input)
+            val convertedDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).parse(input)
             convertedDate?.let {
-                formattedDate = SimpleDateFormat("dd MMMM yyyy", Locale.US).format(it)
+                formattedDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(it)
             }
         } catch (e: ParseException) {
             e.printStackTrace()
