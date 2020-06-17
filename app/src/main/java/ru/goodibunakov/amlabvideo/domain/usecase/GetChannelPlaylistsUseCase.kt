@@ -3,6 +3,7 @@ package ru.goodibunakov.amlabvideo.domain.usecase
 import android.util.Log
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Single
 import ru.goodibunakov.amlabvideo.data.mappers.ToPlaylistsEntityMapper
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
 import ru.goodibunakov.amlabvideo.domain.DatabaseRepository
@@ -30,6 +31,7 @@ class GetChannelPlaylistsUseCase(
                 .firstOrError()
                 .doOnError { Log.d("debug", "jopa $it") }
                 .map { ToPlaylistsEntityMapper.map(it) }
+                .flatMap { Single.fromCallable { setNewVideosPlaylistToFirstPlace(it) } }
                 .toObservable()
     }
 
@@ -40,5 +42,20 @@ class GetChannelPlaylistsUseCase(
                     databaseRepository.updatePlaylists(it)
                 }
                 .map { ToPlaylistsEntityMapper.map(it) }
+    }
+
+
+    private fun setNewVideosPlaylistToFirstPlace(list: List<PlaylistsEntity>): List<PlaylistsEntity> {
+        val newVideosPlaylistIndex = list.indexOfFirst { it.listId == PLAYLIST_NEW_VIDEO_ID }
+        return if (newVideosPlaylistIndex == 0) {
+            list
+        } else {
+            val newVideosPlaylist = list.toMutableList().removeAt(newVideosPlaylistIndex)
+            list.toMutableList().apply { add(0, newVideosPlaylist) }
+        }
+    }
+
+    companion object {
+        private const val PLAYLIST_NEW_VIDEO_ID = "PLvnAyibYVyhvCG8eKGsl57ClQ6e21aofa"
     }
 }

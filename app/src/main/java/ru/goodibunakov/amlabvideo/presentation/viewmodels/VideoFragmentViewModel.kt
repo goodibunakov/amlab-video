@@ -1,7 +1,6 @@
 package ru.goodibunakov.amlabvideo.presentation.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,7 +15,6 @@ import ru.goodibunakov.amlabvideo.presentation.mappers.ToVideoDetailsModelUIMapp
 import ru.goodibunakov.amlabvideo.presentation.mappers.ToVideoModelUIMapper
 import ru.goodibunakov.amlabvideo.presentation.model.VideoDetailsUI
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
-import ru.goodibunakov.amlabvideo.presentation.utils.addAll
 
 class VideoFragmentViewModel(
         private val getPlaylistVideosUseCase: GetPlaylistVideosUseCase,
@@ -32,7 +30,6 @@ class VideoFragmentViewModel(
     val canLoadMoreLiveData = MutableLiveData<Boolean>(false)
     val error = SingleLiveEvent<Throwable?>().apply { this.value = null }
     var videoIdSubject = BehaviorSubject.createDefault("")
-    private lateinit var playlistId: String
 
     init {
         loadVideoDetails()
@@ -168,12 +165,10 @@ class VideoFragmentViewModel(
     }
 
     fun loadItems(playlistId: String) {
-        this.playlistId = playlistId
-        if (this.playlistId == MainViewModel.ALL_VIDEOS) loadAllVideosList() else loadPlaylist(playlistId)
+        loadPlaylist(playlistId)
     }
 
     fun loadMoreItems() {
-        if (this.playlistId == MainViewModel.ALL_VIDEOS) loadMoreAllVideosList()
-        else loadMorePlaylist()
+        loadMorePlaylist()
     }
 }

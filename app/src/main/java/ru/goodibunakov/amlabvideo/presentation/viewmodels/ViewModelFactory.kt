@@ -10,8 +10,7 @@ class ViewModelFactory(
         private val getPlaylistVideosUseCase: GetPlaylistVideosUseCase,
         private val getVideoDetailsUseCase: GetVideoDetailsUseCase,
         private val getAllVideosListUseCase: GetAllVideosListUseCase,
-        private val getAboutChannelUseCase: GetAboutChannelUseCase,
-        private val startToolbarTitle: String
+        private val getAboutChannelUseCase: GetAboutChannelUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -20,7 +19,7 @@ class ViewModelFactory(
             return SplashViewModel(getChannelPlaylistsUseCase, getNetworkStatusUseCase) as T
 
         if (modelClass.isAssignableFrom(MainViewModel::class.java))
-            return MainViewModel(getChannelPlaylistsUseCase, getNetworkStatusUseCase, startToolbarTitle) as T
+            return MainViewModel(getChannelPlaylistsUseCase, getNetworkStatusUseCase) as T
 
         if (modelClass.isAssignableFrom(SharedViewModel::class.java))
             return SharedViewModel() as T

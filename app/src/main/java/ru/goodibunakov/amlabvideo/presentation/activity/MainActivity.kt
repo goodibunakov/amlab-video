@@ -1,20 +1,15 @@
 package ru.goodibunakov.amlabvideo.presentation.activity
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
-import androidx.core.view.updatePaddingRelative
 import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
@@ -39,8 +34,8 @@ import ru.goodibunakov.amlabvideo.presentation.utils.GmailDrawerItemPrimary
 import ru.goodibunakov.amlabvideo.presentation.utils.GmailDrawerItemSecondary
 import ru.goodibunakov.amlabvideo.presentation.utils.setValidatedValue
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel
-import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel.Companion.ALL_VIDEOS
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
+
 
 /**
  * Переключение светлой-темной темы
@@ -68,7 +63,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         viewModel.playlistsLiveData.observe(this, Observer {
             fillDrawer(savedInstanceState, it)
-            sharedViewModel.playlistId.setValidatedValue(ALL_VIDEOS)
+//            sharedViewModel.playlistId.setValidatedValue(it.first().id)
         })
 
         sharedViewModel.playlistId.observe(this, Observer { tag ->
@@ -120,7 +115,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         profile = ProfileDrawerItem().apply {
 //            nameText = "GooDi"
-            iconDrawable = ContextCompat.getDrawable(this@MainActivity, R.mipmap.ic_launcher)!!
+            iconDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_logo)!!
 //            descriptionText = "goodibunakov@gmail.com"
         }
 
@@ -137,12 +132,14 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         slider.apply {
             itemAdapter.add(
                     GmailDrawerItemPrimary().apply {
-                        nameRes = R.string.new_videos
-                        isSelected = true
-                        tag = ALL_VIDEOS
+                        nameText = playlists.first().title
+                        tag = playlists.first().id
+//                        isSelected = true
+                        identifier = 0
                     },
-                    DividerDrawerItem())
-            playlists.map {
+                    DividerDrawerItem()
+            )
+            playlists.drop(1).map {
                 itemAdapter.add(
                         GmailDrawerItemSecondary().apply {
                             nameText = it.title
@@ -186,13 +183,11 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             }
             setSavedInstance(savedInstanceState)
         }
+        slider.setSelection(0, true)
     }
 
     private fun updateToolBarTitle(name: String) {
         when {
-            name == getString(R.string.new_videos) -> {
-                supportActionBar?.title = getString(R.string.new_videos)
-            }
             name.contains(getString(R.string.messages)) -> {
                 supportActionBar?.title = getString(R.string.messages)
             }
