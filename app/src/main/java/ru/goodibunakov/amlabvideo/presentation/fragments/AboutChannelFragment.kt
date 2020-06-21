@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_about_channel.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
+import ru.goodibunakov.amlabvideo.presentation.utils.setVisibility
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.AboutChannelViewModel
 
 
@@ -30,20 +31,13 @@ class AboutChannelFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, Observer {
-            progress.visibility = it
+            progress.setVisibility(it)
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                somethingWrong.visibility = View.VISIBLE
-                header.visibility = View.GONE
-                contentView.visibility = View.GONE
-            }
-            else {
-                somethingWrong.visibility = View.GONE
-                header.visibility = View.VISIBLE
-                contentView.visibility = View.VISIBLE
-            }
+            emptyText.setVisibility(it != null)
+            header.setVisibility(it == null)
+            contentView.setVisibility(it == null)
         })
 
         viewModel.liveData.observe(viewLifecycleOwner, Observer {

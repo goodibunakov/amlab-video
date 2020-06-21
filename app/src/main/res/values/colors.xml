@@ -17,6 +17,7 @@
 
     <color name="statusBarColor">#CDCDCD</color>
     <color name="dividerColor">#CDCDCD</color>
+    <color name="iconMenuColor">#757575</color>
     <color name="toolBarColor">@android:color/white</color>
     <color name="windowBackground">@android:color/white</color>
 </resources>

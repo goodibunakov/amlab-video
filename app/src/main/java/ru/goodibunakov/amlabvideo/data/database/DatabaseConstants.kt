@@ -7,4 +7,6 @@ object DatabaseConstants {
 
     const val TABLE_PLAYLISTS = "playlists"
     const val TABLE_MESSAGES = "messages"
+    const val COLUMN_DATE = "dateReceived"
+    const val TABLE_STAR = "star"
 }

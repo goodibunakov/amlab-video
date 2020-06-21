@@ -28,11 +28,13 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_video.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
+import ru.goodibunakov.amlabvideo.presentation.activity.MainActivity.Companion.APP_MENU_ITEM
 import ru.goodibunakov.amlabvideo.presentation.recycler_utils.InfiniteScrollListener
 import ru.goodibunakov.amlabvideo.presentation.recycler_utils.VideoAdapter
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
+import ru.goodibunakov.amlabvideo.presentation.utils.setVisibility
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.VideoFragmentViewModel
 import java.util.*
@@ -73,7 +75,9 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
 
     private fun observeLiveData() {
         sharedViewModel.playlistId.observe(viewLifecycleOwner, Observer { playlistId ->
-            viewModel.loadItems(playlistId)
+            if (!playlistId.contains(APP_MENU_ITEM)){
+                viewModel.loadItems(playlistId)
+            }
         })
 
         viewModel.videosLiveData.observe(viewLifecycleOwner, Observer {
@@ -82,21 +86,20 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
         })
 
         viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, Observer {
-            progressBar.visibility = if (it) View.VISIBLE else View.GONE
+            progressBar.setVisibility(it)
         })
 
         viewModel.videoDetails.observe(viewLifecycleOwner, Observer {
             infoTitle.text = it.title
             infoDetails.text = String.format(
-                    Locale.US,
+                    Locale.getDefault(),
                     getString(R.string.video_views_and_pass_from_publish_date),
                     it.viewCount)
             infoTimeAgo.setTimeAgo(it.publishedAtDate)
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer {
-            if (it != null) somethingWrong.visibility = View.VISIBLE
-            else somethingWrong.visibility = View.GONE
+            emptyText.setVisibility(it != null)
         })
 
         viewModel.recyclerLoadMoreProcess.observe(viewLifecycleOwner, Observer {

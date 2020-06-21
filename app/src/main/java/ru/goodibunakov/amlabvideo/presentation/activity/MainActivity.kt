@@ -29,10 +29,7 @@ import ru.goodibunakov.amlabvideo.presentation.fragments.MessagesFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
-import ru.goodibunakov.amlabvideo.presentation.utils.FullScreenHelper
-import ru.goodibunakov.amlabvideo.presentation.utils.GmailDrawerItemPrimary
-import ru.goodibunakov.amlabvideo.presentation.utils.GmailDrawerItemSecondary
-import ru.goodibunakov.amlabvideo.presentation.utils.setValidatedValue
+import ru.goodibunakov.amlabvideo.presentation.utils.*
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MainViewModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
 
@@ -47,6 +44,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     private lateinit var headerView: AccountHeaderView
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profile: IProfile
+    private var isDrawerFirstInit: Boolean = true
 
     override val viewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
     private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
@@ -63,7 +61,6 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         viewModel.playlistsLiveData.observe(this, Observer {
             fillDrawer(savedInstanceState, it)
-//            sharedViewModel.playlistId.setValidatedValue(it.first().id)
         })
 
         sharedViewModel.playlistId.observe(this, Observer { tag ->
@@ -130,11 +127,11 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                 }
 
         slider.apply {
+            if (itemAdapter.itemList.size() > 0) itemAdapter.itemList.clear(0)
             itemAdapter.add(
                     GmailDrawerItemPrimary().apply {
                         nameText = playlists.first().title
                         tag = playlists.first().id
-//                        isSelected = true
                         identifier = 0
                     },
                     DividerDrawerItem()
@@ -171,34 +168,37 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             onDrawerItemClickListener = { view, drawerItem, position ->
                 val tag = drawerItem.tag as String
                 if (drawerItem is Nameable) {
-                    viewModel.let {
-                        Log.d("debug", "onDrawerItemClickListener click = $drawerItem.")
-                        sharedViewModel.playlistId.setValidatedValue(tag)
-                        Log.d("debug", "onDrawerItemClickListener it.playlistId.value = $tag")
-                        Log.d("debug", "onDrawerItemClickListener ${supportFragmentManager.backStackEntryCount}")
-                    }
+                    Log.d("debug", "onDrawerItemClickListener click = $drawerItem.")
+                    sharedViewModel.playlistId.setValidatedValue(tag)
+                    Log.d("debug", "onDrawerItemClickListener it.playlistId.value = $tag")
+                    Log.d("debug", "onDrawerItemClickListener ${supportFragmentManager.backStackEntryCount}")
+
                     viewModel.toolbarTitleLiveData.value = drawerItem.name?.getText(this@MainActivity)
                 }
                 false
             }
             setSavedInstance(savedInstanceState)
         }
-        slider.setSelection(0, true)
+
+        if (isDrawerFirstInit) {
+            slider.setSelection(0, true)
+            isDrawerFirstInit = false
+        }
     }
 
     private fun updateToolBarTitle(name: String) {
-        when {
+        supportActionBar?.title = when {
             name.contains(getString(R.string.messages)) -> {
-                supportActionBar?.title = getString(R.string.messages)
+                getString(R.string.messages)
             }
             name.contains(getString(R.string.about)) -> {
-                supportActionBar?.title = getString(R.string.about)
+                getString(R.string.about)
             }
             name.contains(getString(R.string.about_channel)) -> {
-                supportActionBar?.title = getString(R.string.about_channel)
+                getString(R.string.about_channel)
             }
             else -> {
-                supportActionBar?.title = name
+                name
             }
         }
     }
@@ -272,7 +272,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         TransitionManager.beginDelayedTransition(root, transition)
 
-        networkIndicator.visibility = if (isShow) View.VISIBLE else View.GONE
+        networkIndicator.setVisibility(isShow)
     }
 
     companion object {

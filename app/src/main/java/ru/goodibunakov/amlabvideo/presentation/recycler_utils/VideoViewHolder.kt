@@ -6,40 +6,41 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_list.view.*
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 
-abstract class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+abstract class BaseViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
     abstract fun bind(item: VideoUIModel?)
 }
 
 class VideoItemViewHolder(
-        itemView: View,
+        containerView: View,
         private val onClickListener: OnClickListener
-) : BaseViewHolder(itemView) {
+) : BaseViewHolder(containerView) {
 
     override fun bind(item: VideoUIModel?) {
         item?.let {
             val requestOptions = RequestOptions()
                     .error(R.drawable.empty_photo)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-            Glide.with(itemView.context)
+            Glide.with(containerView.context)
                     .load(item.imageUrl)
                     .apply(requestOptions)
                     .thumbnail(0.1f)
                     .transition(DrawableTransitionOptions().crossFade())
-                    .into(itemView.imgThumbnail)
+                    .into(containerView.imgThumbnail)
 
-            itemView.txtTitle.text = item.title
-            itemView.txtPublishedAt.text = item.createdDate
+            containerView.txtTitle.text = item.title
+            containerView.txtPublishedAt.text = item.createdDate
 
-            itemView.setOnClickListener { onClickListener.onItemClick(item) }
+            containerView.setOnClickListener { onClickListener.onItemClick(item) }
         }
     }
 }
 
-class LoadingViewHolder(itemView: View) : BaseViewHolder(itemView) {
+class LoadingViewHolder(containerView: View) : BaseViewHolder(containerView) {
     override fun bind(item: VideoUIModel?) {}
 }

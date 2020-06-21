@@ -1,4 +1,4 @@
-package ru.goodibunakov.amlabvideo.api.dto.playlists
+package ru.goodibunakov.amlabvideo.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

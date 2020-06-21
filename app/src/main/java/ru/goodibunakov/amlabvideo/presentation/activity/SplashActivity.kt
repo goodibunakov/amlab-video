@@ -20,6 +20,7 @@ import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.BuildConfig
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
+import ru.goodibunakov.amlabvideo.presentation.utils.setVisibility
 import ru.goodibunakov.amlabvideo.presentation.utils.zoomIn
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SplashViewModel
 import java.util.concurrent.TimeUnit
@@ -98,7 +99,7 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
 
         TransitionManager.beginDelayedTransition(parentSplash, transition)
 
-        networkIndicator.visibility = if (isShow) View.VISIBLE else View.GONE
+        networkIndicator.setVisibility(isShow)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

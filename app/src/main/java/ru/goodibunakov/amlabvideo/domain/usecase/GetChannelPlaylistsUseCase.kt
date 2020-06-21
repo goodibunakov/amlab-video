@@ -29,7 +29,7 @@ class GetChannelPlaylistsUseCase(
                         }
         )
                 .firstOrError()
-                .doOnError { Log.d("debug", "jopa $it") }
+                .doOnError { Log.d("debug", "GetChannelPlaylistsUseCase error $it") }
                 .map { ToPlaylistsEntityMapper.map(it) }
                 .flatMap { Single.fromCallable { setNewVideosPlaylistToFirstPlace(it) } }
                 .toObservable()
@@ -47,7 +47,7 @@ class GetChannelPlaylistsUseCase(
 
     private fun setNewVideosPlaylistToFirstPlace(list: List<PlaylistsEntity>): List<PlaylistsEntity> {
         val newVideosPlaylistIndex = list.indexOfFirst { it.listId == PLAYLIST_NEW_VIDEO_ID }
-        return if (newVideosPlaylistIndex == 0) {
+        return if (newVideosPlaylistIndex == 0 || newVideosPlaylistIndex == -1) {
             list
         } else {
             val newVideosPlaylist = list.toMutableList().removeAt(newVideosPlaylistIndex)

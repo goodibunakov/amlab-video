@@ -4,6 +4,7 @@
 
     <string name="about">О приложении</string>
     <string name="update_playlists">Обновить плейлисты</string>
+    <string name="delete_all_messages">Удалить все сообщения</string>
     <string name="about_channel">О канале Amlab</string>
     <string name="messages">Сообщения</string>
 
@@ -55,6 +56,12 @@
 
     <string name="dialog_error_quota_title">Внимание!</string>
     <string name="dialog_error_quota_message">Лимит запросов к Youtube на сегодня исчерпан. Заходи завтра</string>
-    <string name="dialog_ok">Понятно</string>
+    <string name="dialog_warning_delete_all_messages">Удалить все сообщения?</string>
+    <string name="dialog_ok">Ок</string>
+    <string name="dialog_cancel">Нет</string>
+
+    <string name="error_delete_messages">Не удалось удалить сообщения</string>
+    <string name="no_messages">А тут ничего нет :)</string>
+    <string name="error_getting_messages">Ошибка загрузки сообщений</string>
 
 </resources>

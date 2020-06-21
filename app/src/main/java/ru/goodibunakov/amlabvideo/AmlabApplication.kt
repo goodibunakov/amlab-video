@@ -4,6 +4,8 @@ import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
 import com.onesignal.OneSignal
 import ru.goodibunakov.amlabvideo.api.ApiService
+import ru.goodibunakov.amlabvideo.data.NotificationOpenedHandler
+import ru.goodibunakov.amlabvideo.data.NotificationReceivedHandler
 import ru.goodibunakov.amlabvideo.data.database.AmlabDatabase
 import ru.goodibunakov.amlabvideo.data.repositories.ApiRepositoryImpl
 import ru.goodibunakov.amlabvideo.data.repositories.DatabaseRepositoryImpl
@@ -26,21 +28,26 @@ class AmlabApplication : MultiDexApplication() {
 
         if (BuildConfig.DEBUG) Stetho.initializeWithDefaults(this)
 
-        OneSignal.startInit(this)
-                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-                .unsubscribeWhenNotificationsAreDisabled(true)
-                .init()
-        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
-
-        apiRepository = ApiRepositoryImpl(this, ApiService.create(this.applicationContext))
-        databaseRepository = DatabaseRepositoryImpl(AmlabDatabase.getDatabase(this).dao())
+        apiRepository = ApiRepositoryImpl(this, ApiService.create(applicationContext))
+        databaseRepository = DatabaseRepositoryImpl(AmlabDatabase.getDatabase(this).dao(), applicationContext)
         viewModelFactory = ViewModelFactory(
                 GetChannelPlaylistsUseCase(apiRepository, databaseRepository),
                 GetNetworkStatusUseCase(apiRepository),
                 GetPlaylistVideosUseCase(apiRepository),
                 GetVideoDetailsUseCase(apiRepository),
                 GetAllVideosListUseCase(apiRepository),
-                GetAboutChannelUseCase(apiRepository)
+                GetAboutChannelUseCase(apiRepository),
+                GetMessagesUseCase(databaseRepository),
+                DeleteMessagesUseCase(databaseRepository)
         )
+
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .unsubscribeWhenNotificationsAreDisabled(true)
+                .setNotificationOpenedHandler(NotificationOpenedHandler(this))
+                .setNotificationReceivedHandler(NotificationReceivedHandler(SaveNotificationUseCase(databaseRepository)))
+                .init()
+        OneSignal.sendTag("amlab", "true")
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
     }
 }

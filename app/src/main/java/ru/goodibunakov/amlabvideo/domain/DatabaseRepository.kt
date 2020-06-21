@@ -2,7 +2,10 @@ package ru.goodibunakov.amlabvideo.domain
 
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
+import ru.goodibunakov.amlabvideo.data.model.MessageItem
 
 interface DatabaseRepository {
     /**
@@ -24,4 +27,19 @@ interface DatabaseRepository {
      * Получение плейлистов из БД
      */
     fun getPlaylists(): Maybe<PlaylistsDTO>
+
+    /**
+     * Сохранить notification в БД
+     */
+    fun saveNotification(messageItem: MessageItem): Completable
+
+    /**
+     * Удалить все сообщения
+     */
+    fun deleteAllNotifications(): Completable
+
+    /**
+     * Получение всех сообщений
+     */
+    fun getAllNotifications(): Observable<List<MessageItem>>
 }

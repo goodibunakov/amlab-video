@@ -1,6 +1,5 @@
 package ru.goodibunakov.amlabvideo.presentation.viewmodels
 
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,7 +12,7 @@ import ru.goodibunakov.amlabvideo.presentation.model.AboutChannelUIModel
 class AboutChannelViewModel(getAboutChannelUseCase: GetAboutChannelUseCase) : ViewModel() {
 
     val liveData = MutableLiveData<AboutChannelUIModel>()
-    val progressBarVisibilityLiveData = MutableLiveData<Int>()
+    val progressBarVisibilityLiveData = MutableLiveData<Boolean>()
     val error = MutableLiveData<Throwable?>().apply { this.value = null }
 
     private var disposable: Disposable = getAboutChannelUseCase.buildObservable()
@@ -21,13 +20,13 @@ class AboutChannelViewModel(getAboutChannelUseCase: GetAboutChannelUseCase) : Vi
             .map { ToAboutChannelUIMapper.map(it) }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
-                progressBarVisibilityLiveData.value = View.VISIBLE
+                progressBarVisibilityLiveData.value = true
             }
             .doOnError {
-                progressBarVisibilityLiveData.value = View.GONE
+                progressBarVisibilityLiveData.value = false
             }
             .doOnNext {
-                progressBarVisibilityLiveData.value = View.GONE
+                progressBarVisibilityLiveData.value = false
             }
             .subscribe({
                 liveData.value = it

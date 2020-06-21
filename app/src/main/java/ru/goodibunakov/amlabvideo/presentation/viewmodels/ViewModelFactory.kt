@@ -10,7 +10,9 @@ class ViewModelFactory(
         private val getPlaylistVideosUseCase: GetPlaylistVideosUseCase,
         private val getVideoDetailsUseCase: GetVideoDetailsUseCase,
         private val getAllVideosListUseCase: GetAllVideosListUseCase,
-        private val getAboutChannelUseCase: GetAboutChannelUseCase
+        private val getAboutChannelUseCase: GetAboutChannelUseCase,
+        private val getMessagesUseCase: GetMessagesUseCase,
+        private val deleteMessagesUseCase: DeleteMessagesUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -29,6 +31,9 @@ class ViewModelFactory(
 
         if (modelClass.isAssignableFrom(AboutChannelViewModel::class.java))
             return AboutChannelViewModel(getAboutChannelUseCase) as T
+
+        if (modelClass.isAssignableFrom(MessagesViewModel::class.java))
+            return MessagesViewModel(getMessagesUseCase, deleteMessagesUseCase) as T
 
         return super.create(modelClass)
     }

@@ -8,9 +8,10 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.api.QuotaErrorInterceptor.Companion.ACTION_QUOTA_EXCEEDED
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
-import ru.goodibunakov.amlabvideo.presentation.fragments.ErrorDialog
+import ru.goodibunakov.amlabvideo.presentation.fragments.WarningDialog
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.BaseActivityViewModel
 
 abstract class BaseActivity<T : BaseActivityViewModel> : AppCompatActivity() {
@@ -59,10 +60,14 @@ abstract class BaseActivity<T : BaseActivityViewModel> : AppCompatActivity() {
 
 
     private fun showQuotaErrorDialog() {
-        ErrorDialog.generate(this, DialogInterface.OnClickListener { _, which ->
-            if (which == DialogInterface.BUTTON_POSITIVE) {
-                finishAndRemoveTask()
-            }
-        }).show()
+        WarningDialog.generate(context = this,
+                title = R.string.dialog_error_quota_title,
+                message = R.string.dialog_error_quota_message,
+                showCancelButton = false,
+                listener = DialogInterface.OnClickListener { _, which ->
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        finishAndRemoveTask()
+                    }
+                }).show()
     }
 }

@@ -12,5 +12,4 @@ abstract class UseCase<in Data, out Response> {
      * Sets external data for correct case execution
      */
     open fun set(data: Data) {}
-
 }

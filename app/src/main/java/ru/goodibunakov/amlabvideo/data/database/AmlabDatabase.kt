@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTODatabase
+import ru.goodibunakov.amlabvideo.data.model.PlaylistsDTODatabase
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.DATABASE_NAME
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.DATABASE_VERSION
+import ru.goodibunakov.amlabvideo.data.model.MessageItem
+import ru.goodibunakov.amlabvideo.data.model.VideoItemModel
 
-@Database(entities = [PlaylistsDTODatabase::class], version = DATABASE_VERSION, exportSchema = true)
+@Database(entities = [PlaylistsDTODatabase::class, MessageItem::class, VideoItemModel::class], version = DATABASE_VERSION, exportSchema = true)
 abstract class AmlabDatabase : RoomDatabase() {
 
     abstract fun dao(): Dao
