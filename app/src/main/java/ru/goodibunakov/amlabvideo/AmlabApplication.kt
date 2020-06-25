@@ -47,7 +47,7 @@ class AmlabApplication : MultiDexApplication() {
                 .setNotificationOpenedHandler(NotificationOpenedHandler(this))
                 .setNotificationReceivedHandler(NotificationReceivedHandler(SaveNotificationUseCase(databaseRepository)))
                 .init()
-        OneSignal.sendTag("amlab", "true")
+//        OneSignal.sendTag("amlab", "true")
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
     }
 }

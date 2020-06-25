@@ -40,7 +40,7 @@ class DatabaseRepositoryImpl(private val dao: Dao, private val context: Context)
     }
 
     override fun saveNotification(messageItem: MessageItem): Completable {
-        Glide.with(context).downloadOnly().load(messageItem.image).submit().get()
+        if (messageItem.image.isNotEmpty()) Glide.with(context).downloadOnly().load(messageItem.image).submit().get()
         return dao.saveNotification(messageItem)
     }
 

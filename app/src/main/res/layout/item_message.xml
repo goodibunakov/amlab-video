@@ -24,7 +24,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="8dp"
             android:adjustViewBounds="true"
-            android:maxHeight="200dp"
+            android:scaleType="centerCrop"
+            android:maxHeight="210dp"
             tools:src="@drawable/empty_photo" />
 
         <com.google.android.material.textview.MaterialTextView

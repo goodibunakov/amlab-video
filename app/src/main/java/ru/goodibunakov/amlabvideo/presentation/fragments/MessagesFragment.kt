@@ -55,7 +55,7 @@ class MessagesFragment : Fragment() {
     private fun observeLiveData() {
         viewModel.messagesLiveData.observe(viewLifecycleOwner, Observer {
             messagesAdapter.addItems(it)
-            messagesRecycler.scrollToPosition(0)
+            messagesRecycler.smoothScrollToPosition(0)
         })
 
         viewModel.errorGetMessagesLiveData.observe(viewLifecycleOwner, Observer {
@@ -107,5 +107,4 @@ class MessagesFragment : Fragment() {
                     }).show()
         }
     }
-
 }

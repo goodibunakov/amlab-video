@@ -3,6 +3,7 @@ package ru.goodibunakov.amlabvideo.data
 import android.util.Log
 import com.onesignal.OSNotification
 import com.onesignal.OneSignal
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import ru.goodibunakov.amlabvideo.data.model.MessageItem
@@ -16,7 +17,7 @@ class NotificationReceivedHandler(
     private lateinit var disposable: Disposable
 
     override fun notificationReceived(notification: OSNotification?) {
-        Log.d("debug", "notification = ${notification?.payload}")
+        Log.d("debug", "NotificationReceivedHandler notification = ${notification?.payload}")
 
         val data = notification!!.payload
         data?.let {
@@ -31,13 +32,11 @@ class NotificationReceivedHandler(
             saveNotificationUseCase.set(message)
             disposable = saveNotificationUseCase.buildObservable()
                     .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         Log.d("debug", "notification saved to db = $it")
-                        disposeThis()
                     }, {
                         Log.d("debug", "notification error = $it")
-                        disposeThis()
                     })
 
         }

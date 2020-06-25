@@ -4,7 +4,10 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
@@ -22,6 +25,7 @@ import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
+import ru.goodibunakov.amlabvideo.data.NotificationOpenedHandler.Companion.INTENT_FROM_NOTIFICATION
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutChannelFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
@@ -37,6 +41,7 @@ import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
 /**
  * Переключение светлой-темной темы
  * https://proandroiddev.com/dark-mode-on-android-app-with-kotlin-dc759fc5f0e1
+ * https://proandroiddev.com/implementing-dark-theme-in-your-android-application-ec2b4fefb6e3
  */
 
 class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
@@ -44,7 +49,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     private lateinit var headerView: AccountHeaderView
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profile: IProfile
-    private var isDrawerFirstInit: Boolean = true
+    private var isDrawerFirstInit: Boolean = true //для установки активным первого пунтка в drawer если initDrawer вызван не после "обновить плейлисты"
 
     override val viewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
     private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
@@ -90,6 +95,32 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        onNewIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+        Log.d("debug", "fragment = $fragment")
+        val fromNotification = intent.getBooleanExtra(INTENT_FROM_NOTIFICATION, false)
+        Log.d("debug", "fromNotification = $fromNotification")
+        if (fromNotification) {
+            viewModel.drawerInitializedLiveData.observe(this, Observer {
+                if (it) {
+                    if (fragment == null || fragment !is MessagesFragment) {
+                        Log.d("debug", "setSelection(IDENTIFIER_MESSAGES, true)")
+                        slider.setSelectionAtPosition(-1, false)
+                        slider.setSelection(IDENTIFIER_MESSAGES, true)
+                        isDrawerFirstInit = false
+                    }
+                }
+            })
+        }
+    }
+
 
     private fun initDrawerAndToolbar() {
         setSupportActionBar(toolbar)
@@ -127,12 +158,15 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                 }
 
         slider.apply {
-            if (itemAdapter.itemList.size() > 0) itemAdapter.itemList.clear(0)
+            if (itemAdapter.itemList.size() > 0) {
+                itemAdapter.itemList.clear(0)
+            }
+
             itemAdapter.add(
                     GmailDrawerItemPrimary().apply {
                         nameText = playlists.first().title
                         tag = playlists.first().id
-                        identifier = 0
+                        identifier = IDENTIFIER_NEW_VIDEOS
                     },
                     DividerDrawerItem()
             )
@@ -151,18 +185,21 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                         tag = APP_MENU_ITEM + "_${getString(R.string.messages)}"
                         iconRes = R.drawable.message
                         isIconTinted = true
+                        identifier = IDENTIFIER_MESSAGES
                     },
                     GmailDrawerItemSecondary().apply {
                         nameRes = R.string.about_channel
                         tag = APP_MENU_ITEM + "_${getString(R.string.about_channel)}"
                         iconRes = R.drawable.youtube
                         isIconTinted = true
+                        identifier = IDENTIFIER_ABOUT_CHANNEL
                     },
                     GmailDrawerItemSecondary().apply {
                         nameRes = R.string.about
                         tag = APP_MENU_ITEM + "_${getString(R.string.about)}"
                         iconRes = R.drawable.information_outline
                         isIconTinted = true
+                        identifier = IDENTIFIER_ABOUT
                     }
             )
             onDrawerItemClickListener = { view, drawerItem, position ->
@@ -180,10 +217,13 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             setSavedInstance(savedInstanceState)
         }
 
-        if (isDrawerFirstInit) {
-            slider.setSelection(0, true)
+        val fromNotification = intent.getBooleanExtra(INTENT_FROM_NOTIFICATION, false)
+        if (isDrawerFirstInit && !fromNotification) {
+            slider.setSelection(IDENTIFIER_NEW_VIDEOS, true)
             isDrawerFirstInit = false
         }
+
+        viewModel.drawerInitializedLiveData.setValidatedValue(true)
     }
 
     private fun updateToolBarTitle(name: String) {
@@ -277,6 +317,10 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     companion object {
         const val APP_MENU_ITEM = "app_menu"
+        const val IDENTIFIER_NEW_VIDEOS = 0L
+        const val IDENTIFIER_MESSAGES = 100L
+        const val IDENTIFIER_ABOUT_CHANNEL = 101L
+        const val IDENTIFIER_ABOUT = 102L
 
         private const val TAG_VIDEO_FRAGMENT = "video_fragment"
         private const val TAG_ABOUT_FRAGMENT = "about_fragment"

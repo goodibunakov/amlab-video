@@ -10,7 +10,9 @@ class MainViewModel(
 ) : BaseActivityViewModel(getNetworkStatus, getChannelPlaylistsUseCase) {
 
 
-//    private var compositeDisposable = CompositeDisposable()
+    val drawerInitializedLiveData = MutableLiveData<Boolean>(false)
+
+    //    private var compositeDisposable = CompositeDisposable()
     val toolbarTitleLiveData = MutableLiveData<String>()
 
 //    init {

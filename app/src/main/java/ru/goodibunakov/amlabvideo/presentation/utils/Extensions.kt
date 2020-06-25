@@ -8,7 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.subjects.CompletableSubject
 
 
-fun MutableLiveData<String>.setValidatedValue(newValue: String) {
+fun <T>MutableLiveData<T>.setValidatedValue(newValue: T) {
     if (value != newValue) {
         value = newValue
     }
