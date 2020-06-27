@@ -23,10 +23,10 @@
             android:key="@string/pref_vk_key"
             android:title="ВКонтакте" />
 
-        <Preference
-            android:icon="@drawable/ic_telegram"
-            android:key="@string/pref_telegram_key"
-            android:title="Telegram чат" />
+<!--        <Preference-->
+<!--            android:icon="@drawable/ic_telegram"-->
+<!--            android:key="@string/pref_telegram_key"-->
+<!--            android:title="Telegram чат" />-->
 
         <Preference
             android:icon="@drawable/ic_instagram"
