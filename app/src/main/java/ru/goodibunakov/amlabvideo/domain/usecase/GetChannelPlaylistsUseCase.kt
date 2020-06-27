@@ -42,6 +42,7 @@ class GetChannelPlaylistsUseCase(
                     databaseRepository.updatePlaylists(it)
                 }
                 .map { ToPlaylistsEntityMapper.map(it) }
+                .flatMap { Maybe.fromCallable { setNewVideosPlaylistToFirstPlace(it) } }
     }
 
 
