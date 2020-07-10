@@ -1,9 +1,6 @@
 package ru.goodibunakov.amlabvideo.api
 
-import android.R.id.message
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper.getMainLooper
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.Gson

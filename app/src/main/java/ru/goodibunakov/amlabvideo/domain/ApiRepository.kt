@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import ru.goodibunakov.amlabvideo.api.dto.channel_details.BrandingDTO
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
-import ru.goodibunakov.amlabvideo.api.dto.video.Snippet
 import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
 import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
 import ru.goodibunakov.amlabvideo.api.dto.videos_all.AllVideosDTO

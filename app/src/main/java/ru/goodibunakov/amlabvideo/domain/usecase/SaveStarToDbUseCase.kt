@@ -1,7 +1,6 @@
 package ru.goodibunakov.amlabvideo.domain.usecase
 
 import io.reactivex.Observable
-import ru.goodibunakov.amlabvideo.api.dto.video.Snippet
 import ru.goodibunakov.amlabvideo.data.model.VideoItemModel
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
 import ru.goodibunakov.amlabvideo.domain.DatabaseRepository

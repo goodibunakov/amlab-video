@@ -42,7 +42,4 @@ class NotificationReceivedHandler(
         }
     }
 
-    private fun disposeThis() {
-        if (::disposable.isInitialized && !disposable.isDisposed) disposable.dispose()
-    }
 }

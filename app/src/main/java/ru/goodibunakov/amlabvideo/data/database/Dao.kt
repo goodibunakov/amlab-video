@@ -6,16 +6,15 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
-import ru.goodibunakov.amlabvideo.api.dto.video.Snippet
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.COLUMN_DATE
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.COLUMN_ID
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.COLUMN_PLAYLIST_ID
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.COLUMN_VIDEO_ID
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.TABLE_MESSAGES
-import ru.goodibunakov.amlabvideo.data.model.PlaylistsDTODatabase
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.TABLE_PLAYLISTS
 import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.TABLE_STAR
 import ru.goodibunakov.amlabvideo.data.model.MessageItem
+import ru.goodibunakov.amlabvideo.data.model.PlaylistsDTODatabase
 import ru.goodibunakov.amlabvideo.data.model.VideoItemModel
 
 @Dao

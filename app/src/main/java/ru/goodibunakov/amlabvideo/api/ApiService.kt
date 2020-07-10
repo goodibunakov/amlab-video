@@ -1,7 +1,6 @@
 package ru.goodibunakov.amlabvideo.api
 
 import android.content.Context
-import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
@@ -15,12 +14,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.goodibunakov.amlabvideo.api.dto.channel_details.BrandingDTO
-import ru.goodibunakov.amlabvideo.api.dto.error.QuotaErrorResponse
-import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
-import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
+import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
+import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
 import ru.goodibunakov.amlabvideo.api.dto.videos_all.AllVideosDTO
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**

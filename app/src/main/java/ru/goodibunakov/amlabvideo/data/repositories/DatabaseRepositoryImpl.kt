@@ -3,20 +3,17 @@ package ru.goodibunakov.amlabvideo.data.repositories
 import android.content.Context
 import android.util.Log
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
-import ru.goodibunakov.amlabvideo.api.dto.video.Snippet
 import ru.goodibunakov.amlabvideo.data.database.Dao
 import ru.goodibunakov.amlabvideo.data.mappers.ToDatabaseModelMapper
 import ru.goodibunakov.amlabvideo.data.mappers.ToPlaylistsDTOMapper
 import ru.goodibunakov.amlabvideo.data.model.MessageItem
 import ru.goodibunakov.amlabvideo.data.model.VideoItemModel
 import ru.goodibunakov.amlabvideo.domain.DatabaseRepository
-import java.util.*
 
 class DatabaseRepositoryImpl(private val dao: Dao, private val context: Context) : DatabaseRepository {
 

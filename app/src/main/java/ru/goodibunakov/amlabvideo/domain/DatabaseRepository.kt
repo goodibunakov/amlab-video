@@ -5,7 +5,6 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
-import ru.goodibunakov.amlabvideo.api.dto.video.Snippet
 import ru.goodibunakov.amlabvideo.data.model.MessageItem
 import ru.goodibunakov.amlabvideo.data.model.VideoItemModel
 

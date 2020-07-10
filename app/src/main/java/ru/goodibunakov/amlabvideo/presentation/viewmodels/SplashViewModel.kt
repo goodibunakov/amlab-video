@@ -1,6 +1,5 @@
 package ru.goodibunakov.amlabvideo.presentation.viewmodels
 
-import io.reactivex.disposables.CompositeDisposable
 import ru.goodibunakov.amlabvideo.domain.usecase.GetChannelPlaylistsUseCase
 import ru.goodibunakov.amlabvideo.domain.usecase.GetNetworkStatusUseCase
 

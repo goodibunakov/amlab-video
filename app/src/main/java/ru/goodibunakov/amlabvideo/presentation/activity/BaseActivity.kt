@@ -17,7 +17,7 @@ import ru.goodibunakov.amlabvideo.presentation.viewmodels.BaseActivityViewModel
 abstract class BaseActivity<T : BaseActivityViewModel> : AppCompatActivity() {
 
     protected abstract val viewModel: T
-    protected var broadcastReceiver: BroadcastReceiver? = null
+    private var broadcastReceiver: BroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
