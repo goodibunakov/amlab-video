@@ -5,12 +5,11 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -29,18 +28,19 @@ import kotlinx.android.synthetic.main.fragment_video.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.presentation.activity.MainActivity.Companion.APP_MENU_ITEM
-import ru.goodibunakov.amlabvideo.presentation.recycler_utils.InfiniteScrollListener
-import ru.goodibunakov.amlabvideo.presentation.recycler_utils.VideoAdapter
+import ru.goodibunakov.amlabvideo.presentation.interfaces.EmptyListener
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
+import ru.goodibunakov.amlabvideo.presentation.recycler_utils.InfiniteScrollListener
+import ru.goodibunakov.amlabvideo.presentation.recycler_utils.VideoAdapter
 import ru.goodibunakov.amlabvideo.presentation.utils.setVisibility
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.VideoFragmentViewModel
 import java.util.*
 
 
-class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoadMoreListener {
+class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, InfiniteScrollListener.OnLoadMoreListener, EmptyListener {
 
     private val sharedViewModel: SharedViewModel by activityViewModels { AmlabApplication.viewModelFactory }
     private val viewModel: VideoFragmentViewModel by viewModels { AmlabApplication.viewModelFactory }
@@ -51,6 +51,8 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
     private lateinit var onFullScreenListener: OnFullScreenListener
     private lateinit var infiniteScrollListener: InfiniteScrollListener
 
+    private lateinit var fragmentType: FragmentType
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
@@ -60,9 +62,10 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_video, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fragmentType = arguments?.getSerializable(EXTRA_TYPE) as FragmentType
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -75,14 +78,15 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
 
     private fun observeLiveData() {
         sharedViewModel.playlistId.observe(viewLifecycleOwner, Observer { playlistId ->
-            if (!playlistId.contains(APP_MENU_ITEM)){
-                viewModel.loadItems(playlistId)
-            }
+            Log.d("debug", "VideoFragment playlistId = $playlistId")
+            viewModel.loadItems(playlistId, fragmentType)
         })
 
         viewModel.videosLiveData.observe(viewLifecycleOwner, Observer {
             infiniteScrollListener.setLoaded()
+
             videoAdapter.addItems(it)
+            toggleVisibility(it.isEmpty())
         })
 
         viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, Observer {
@@ -99,7 +103,7 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer {
-            emptyText.setVisibility(it != null)
+            errorText.setVisibility(it != null)
         })
 
         viewModel.recyclerLoadMoreProcess.observe(viewLifecycleOwner, Observer {
@@ -108,6 +112,11 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
 
         viewModel.canLoadMoreLiveData.observe(viewLifecycleOwner, Observer {
             infiniteScrollListener.setCanLoadMore(it)
+        })
+
+        viewModel.videoItemStarChangedLiveData.observe(viewLifecycleOwner, Observer {
+            Log.d("debug", "videoItemStarred = $it")
+            videoAdapter.notifyItemChanged(it, fragmentType)
         })
     }
 
@@ -168,7 +177,7 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
 //    }
 
     private fun initRecyclerView() {
-        videoAdapter = VideoAdapter(this)
+        videoAdapter = VideoAdapter(this, this)
         val linearLayoutManager = LinearLayoutManager(requireContext())
         infiniteScrollListener = InfiniteScrollListener(linearLayoutManager, this@VideoFragment)
         recycler.apply {
@@ -205,6 +214,20 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
         if (videoItem.videoId != viewModel.videoIdSubject.value) viewModel.videoIdSubject.onNext(videoItem.videoId)
     }
 
+    override fun onStarClick(videoItem: VideoUIModel) {
+        viewModel.starClicked(videoItem)
+    }
+
+    override fun listIsEmpty() {
+        toggleVisibility(true)
+    }
+
+    private fun toggleVisibility(listIsEmpty: Boolean) {
+        playerView.setVisibility(!listIsEmpty)
+        infoLayout.setVisibility(!listIsEmpty)
+        emptyText.setVisibility(listIsEmpty)
+    }
+
     private fun initRateBottomSheet() {
         context?.let {
             RateBottomSheetManager(it)
@@ -223,5 +246,21 @@ class VideoFragment : Fragment(), OnClickListener, InfiniteScrollListener.OnLoad
     override fun onDestroyView() {
         if (::youTubePlayerDisposable.isInitialized && !youTubePlayerDisposable.isDisposed) youTubePlayerDisposable.dispose()
         super.onDestroyView()
+    }
+
+    companion object {
+
+        private const val EXTRA_TYPE = "extra_type"
+
+        fun newInstance(type: FragmentType): VideoFragment {
+            return VideoFragment().apply {
+                arguments = bundleOf(EXTRA_TYPE to type)
+            }
+        }
+    }
+
+    enum class FragmentType {
+        FROM_WEB,
+        FROM_DB
     }
 }

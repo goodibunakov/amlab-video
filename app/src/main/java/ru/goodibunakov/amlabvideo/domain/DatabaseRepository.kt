@@ -5,7 +5,9 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
+import ru.goodibunakov.amlabvideo.api.dto.video.Snippet
 import ru.goodibunakov.amlabvideo.data.model.MessageItem
+import ru.goodibunakov.amlabvideo.data.model.VideoItemModel
 
 interface DatabaseRepository {
     /**
@@ -42,4 +44,24 @@ interface DatabaseRepository {
      * Получение всех сообщений
      */
     fun getAllNotifications(): Observable<List<MessageItem>>
+
+    /**
+     * Сохранение выбранного видео в БД
+     */
+    fun saveStar(videoItemModel: VideoItemModel): Completable
+
+    /**
+     * Удаление выбранного видео из БД
+     */
+    fun deleteStar(videoId: String): Completable
+
+    /**
+     * Получение всех выбранных видео
+     */
+    fun getStars(): Single<List<VideoItemModel>>
+
+    /**
+     * Получение всех id выбранных видео
+     */
+    fun getStarIds(playlistId: String): Observable<List<String>>
 }

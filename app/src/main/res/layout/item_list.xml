@@ -4,25 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/item_twoline_height"
     android:foreground="?android:selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginLeft="@dimen/standard_margin"
         android:layout_marginTop="@dimen/standard_margin"
         android:layout_marginRight="@dimen/standard_margin"
-        android:layout_marginBottom="@dimen/standard_margin"
-        android:background="@color/toolBarColor"
-        android:minHeight="@dimen/thumbnail_height">
+        android:layout_marginBottom="@dimen/standard_margin">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgThumbnail"
             android:layout_width="@dimen/thumbnail_width"
             android:layout_height="@dimen/thumbnail_height"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/empty_photo" />
@@ -51,8 +48,8 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             app:layout_constraintLeft_toRightOf="@id/imgThumbnail"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Название длинное и очень интересное видео тыдыщ!" />
+            app:layout_constraintTop_toTopOf="@id/imgThumbnail"
+            tools:text="Название длинное и очень интересное видео тыдыщ! df dfg dfg dfg dfg dfg dfg dfgd fgd fgd fgd fgdfg dfg dfg" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtPublishedAt"
@@ -60,19 +57,24 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
+            android:layout_marginBottom="@dimen/standard_margin"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             app:layout_constraintLeft_toLeftOf="@id/txtTitle"
             app:layout_constraintTop_toBottomOf="@id/txtTitle"
             tools:text="2020-09-09" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/star"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:padding="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:src="@drawable/star_filled" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/star"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:adjustViewBounds="true"
+        android:layout_gravity="bottom|end"
+        android:background="@drawable/ripple_background"
+        tools:src="@drawable/star_filled" />
+
 </FrameLayout>

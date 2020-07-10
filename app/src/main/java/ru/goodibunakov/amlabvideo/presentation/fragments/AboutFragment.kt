@@ -35,7 +35,6 @@ class AboutFragment : PreferenceFragmentCompat() {
             }
             getString(R.string.pref_site_key),
             getString(R.string.pref_vk_key),
-            getString(R.string.pref_telegram_key),
             getString(R.string.pref_instagram_key),
             getString(R.string.pref_fb_key) -> {
                 val url = preference.key.toString()
@@ -54,7 +53,7 @@ class AboutFragment : PreferenceFragmentCompat() {
     private fun sendEmailToDeveloper() {
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("mailto:")
-        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("goodi@bk.ru"))
+        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("goodibunakov@gmail.com"))
         intent.putExtra(Intent.EXTRA_SUBJECT, "Amlab Android App ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})")
 //        intent.putExtra(Intent.EXTRA_TEXT, "Я хочу поговорить о...")
         try {

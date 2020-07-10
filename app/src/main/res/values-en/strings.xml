@@ -1,0 +1,58 @@
+<resources>
+
+    <string name="about">About application</string>
+    <string name="update_playlists">Update playlists</string>
+    <string name="delete_all_messages">Delete all messages</string>
+    <string name="about_channel">About Amlab</string>
+    <string name="messages">Messages</string>
+    <string name="stars">Favorite</string>
+
+    <string name="retry">Retry</string>
+
+    <string name="version">Version %1$s</string>
+
+    <string name="pref_developer_title">Developer</string>
+    <string name="pref_developer_summary">GooDi Mobile</string>
+    <string name="pref_share_title">Share the app</string>
+    <string name="pref_share_summary">Tell your friends about this app</string>
+    <string name="pref_rate_review_title">Rate it</string>
+    <string name="pref_rate_review_summary">Rate the app and leave feedback on GooglePlay</string>
+
+    <string name="share_to">Share</string>
+    <string name="open_with">To open with…</string>
+    <string name="subject">I recommend the Amlab application!</string>
+    <string name="message">You can download the Amlab Android app on </string>
+
+    <string name="network_indicator_no">No connection</string>
+    <string name="network_indicator_yes">Connection restored</string>
+
+    <string name="video_views_and_pass_from_publish_date">%1$s views • </string>
+
+    <string name="error_no_email_clients">No email clients found</string>
+
+    <string name="something_wrong">Something went wrong :(</string>
+
+    <string name="playlists_update_error">Failed to update playlists</string>
+    <string name="playlists_update_success">Playlists updated successfully</string>
+
+    <string name="rate_popup_ask_title">Do you like the app?</string>
+    <string name="rate_popup_ask_message">Do you like to use the app?</string>
+    <string name="rate_popup_ask_ok">Yes</string>
+    <string name="rate_popup_ask_no">No</string>
+    <string name="rate_popup_title">Rate this app</string>
+    <string name="rate_popup_message">Could you take a minute to rate this app? It does not take more than a minute.</string>
+    <string name="rate_popup_ok">Rate now</string>
+    <string name="rate_popup_later">Remind me later</string>
+    <string name="rate_popup_no">No thanks</string>
+
+    <string name="dialog_error_quota_title">Attention!</string>
+    <string name="dialog_error_quota_message">The limit on requests to Youtube has been reached for today. Come back tomorrow</string>
+    <string name="dialog_warning_delete_all_messages">Delete all messages?</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+
+    <string name="error_delete_messages">Failed to delete messages</string>
+    <string name="empty_list_text">There\'s nothing here :)</string>
+    <string name="error_getting_messages">Error loading messages</string>
+
+</resources>

@@ -36,14 +36,14 @@
             android:name="com.onesignal.NotificationOpened.DEFAULT"
             android:value="DISABLE" />
 
-<!--        <service-->
-<!--            android:name=".data.BackgroundNotificationExtenderService"-->
-<!--            android:exported="false"-->
-<!--            android:permission="android.permission.BIND_JOB_SERVICE">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.onesignal.NotificationExtender" />-->
-<!--            </intent-filter>-->
-<!--        </service>-->
+        <service
+            android:name=".data.notifications.BackgroundNotificationExtenderService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+            <intent-filter>
+                <action android:name="com.onesignal.NotificationExtender" />
+            </intent-filter>
+        </service>
 
     </application>
 

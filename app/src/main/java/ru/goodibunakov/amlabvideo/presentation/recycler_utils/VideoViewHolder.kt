@@ -36,6 +36,9 @@ class VideoItemViewHolder(
             containerView.txtTitle.text = item.title
             containerView.txtPublishedAt.text = item.createdDate
 
+            containerView.star.setImageResource(if (it.star) R.drawable.star_filled else R.drawable.star_outline)
+            containerView.star.setOnClickListener { onClickListener.onStarClick(item) }
+
             containerView.setOnClickListener { onClickListener.onItemClick(item) }
         }
     }

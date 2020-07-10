@@ -18,7 +18,7 @@ import ru.goodibunakov.amlabvideo.presentation.utils.setVisibility
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MessagesViewModel
 
 
-class MessagesFragment : Fragment() {
+class MessagesFragment : Fragment(R.layout.fragment_messages) {
 
     private val viewModel: MessagesViewModel by viewModels { AmlabApplication.viewModelFactory }
     private lateinit var messagesAdapter: MessagesAdapter
@@ -27,11 +27,6 @@ class MessagesFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_messages, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

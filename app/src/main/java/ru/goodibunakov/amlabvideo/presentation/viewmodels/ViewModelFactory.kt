@@ -12,7 +12,10 @@ class ViewModelFactory(
         private val getAllVideosListUseCase: GetAllVideosListUseCase,
         private val getAboutChannelUseCase: GetAboutChannelUseCase,
         private val getMessagesUseCase: GetMessagesUseCase,
-        private val deleteMessagesUseCase: DeleteMessagesUseCase
+        private val deleteMessagesUseCase: DeleteMessagesUseCase,
+        private val saveStarToDbUseCase: SaveStarToDbUseCase,
+        private val deleteStarFromDbUseCase: DeleteStarFromDbUseCase,
+        private val getStarsFromDbUseCase: GetStarsFromDbUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -27,7 +30,13 @@ class ViewModelFactory(
             return SharedViewModel() as T
 
         if (modelClass.isAssignableFrom(VideoFragmentViewModel::class.java))
-            return VideoFragmentViewModel(getPlaylistVideosUseCase, getVideoDetailsUseCase, getAllVideosListUseCase) as T
+            return VideoFragmentViewModel(
+                    getPlaylistVideosUseCase,
+                    getVideoDetailsUseCase,
+                    getAllVideosListUseCase,
+                    saveStarToDbUseCase,
+                    deleteStarFromDbUseCase,
+                    getStarsFromDbUseCase) as T
 
         if (modelClass.isAssignableFrom(AboutChannelViewModel::class.java))
             return AboutChannelViewModel(getAboutChannelUseCase) as T

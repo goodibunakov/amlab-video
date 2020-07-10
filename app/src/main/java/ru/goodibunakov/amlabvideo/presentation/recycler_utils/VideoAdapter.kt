@@ -5,10 +5,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.goodibunakov.amlabvideo.R
+import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
+import ru.goodibunakov.amlabvideo.presentation.interfaces.EmptyListener
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 
-class VideoAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<BaseViewHolder>() {
+class VideoAdapter(
+        private val onClickListener: OnClickListener,
+        private val emptyListener: EmptyListener
+) : RecyclerView.Adapter<BaseViewHolder>() {
 
     private val items: MutableList<VideoUIModel?> = mutableListOf()
 
@@ -54,6 +59,26 @@ class VideoAdapter(private val onClickListener: OnClickListener) : RecyclerView.
 
     override fun getItemViewType(position: Int): Int {
         return if (items[position] != null) VIEW_TYPE_ITEM else VIEW_TYPE_LOADING
+    }
+
+    fun notifyItemChanged(videoId: String, fragmentType: VideoFragment.FragmentType) {
+        Log.d("debug", "videoId = $videoId")
+        val clickedItem = items.firstOrNull { it?.videoId == videoId }
+        Log.d("debug", "clickedItem = $clickedItem")
+        when (fragmentType) {
+            VideoFragment.FragmentType.FROM_WEB -> {
+                clickedItem?.let {
+                    it.star = !it.star
+                    notifyItemChanged(items.indexOf(clickedItem))
+                }
+            }
+            VideoFragment.FragmentType.FROM_DB -> {
+                val itemPosition = items.indexOf(clickedItem)
+                items.remove(clickedItem)
+                notifyItemRemoved(itemPosition)
+                if (items.isEmpty()) emptyListener.listIsEmpty()
+            }
+        }
     }
 
     companion object {

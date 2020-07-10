@@ -25,7 +25,7 @@ import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
-import ru.goodibunakov.amlabvideo.data.NotificationOpenedHandler.Companion.INTENT_FROM_NOTIFICATION
+import ru.goodibunakov.amlabvideo.data.notifications.NotificationOpenedHandler.Companion.INTENT_FROM_NOTIFICATION
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutChannelFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
@@ -49,7 +49,8 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     private lateinit var headerView: AccountHeaderView
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profile: IProfile
-    private var isDrawerFirstInit: Boolean = true //для установки активным первого пунтка в drawer если initDrawer вызван не после "обновить плейлисты"
+    private var isDrawerFirstInit: Boolean = true //для установки активным первого пункта в drawer если initDrawer вызван не после "обновить плейлисты"
+    private var selectedItemPosition: Int = -1
 
     override val viewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
     private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
@@ -69,21 +70,26 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         })
 
         sharedViewModel.playlistId.observe(this, Observer { tag ->
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
             if (!tag.contains(APP_MENU_ITEM)) {
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, VideoFragment(), TAG_VIDEO_FRAGMENT)
+                fragmentTransaction
+                        .replace(R.id.fragmentContainer, VideoFragment.newInstance(VideoFragment.FragmentType.FROM_WEB), TAG_VIDEO_FRAGMENT)
                         .commit()
             } else if (tag.contains(getString(R.string.about))) {
-                supportFragmentManager.beginTransaction()
+                fragmentTransaction
                         .replace(R.id.fragmentContainer, AboutFragment(), TAG_ABOUT_FRAGMENT)
                         .commit()
             } else if (tag.contains(getString(R.string.messages))) {
-                supportFragmentManager.beginTransaction()
+                fragmentTransaction
                         .replace(R.id.fragmentContainer, MessagesFragment(), TAG_MESSAGES_FRAGMENT)
                         .commit()
             } else if (tag.contains(getString(R.string.about_channel))) {
-                supportFragmentManager.beginTransaction()
+                fragmentTransaction
                         .replace(R.id.fragmentContainer, AboutChannelFragment(), TAG_ABOUT_CHANNEL_FRAGMENT)
+                        .commit()
+            } else {
+                fragmentTransaction
+                        .replace(R.id.fragmentContainer, VideoFragment.newInstance(VideoFragment.FragmentType.FROM_DB), TAG_VIDEO_FRAGMENT)
                         .commit()
             }
         })
@@ -159,6 +165,8 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         slider.apply {
             if (itemAdapter.itemList.size() > 0) {
+                this.selectedItemPosition = selectedItemPosition
+                Log.d("debug", "this.selectedItemPosition = ${this.selectedItemPosition}")
                 itemAdapter.itemList.clear(0)
             }
 
@@ -180,6 +188,13 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             }
             itemAdapter.add(
                     DividerDrawerItem(),
+                    GmailDrawerItemSecondary().apply {
+                        nameRes = R.string.stars
+                        tag = APP_MENU_ITEM + "_${getString(R.string.stars)}"
+                        iconRes = R.drawable.star_filled
+                        isIconTinted = true
+                        identifier = IDENTIFIER_STARS
+                    },
                     GmailDrawerItemSecondary().apply {
                         nameRes = R.string.messages
                         tag = APP_MENU_ITEM + "_${getString(R.string.messages)}"
@@ -205,7 +220,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             onDrawerItemClickListener = { view, drawerItem, position ->
                 val tag = drawerItem.tag as String
                 if (drawerItem is Nameable) {
-                    Log.d("debug", "onDrawerItemClickListener click = $drawerItem.")
+                    Log.d("debug", "onDrawerItemClickListener playlistId.setValidatedValue")
                     sharedViewModel.playlistId.setValidatedValue(tag)
                     Log.d("debug", "onDrawerItemClickListener it.playlistId.value = $tag")
                     Log.d("debug", "onDrawerItemClickListener ${supportFragmentManager.backStackEntryCount}")
@@ -223,24 +238,18 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             isDrawerFirstInit = false
         }
 
+        //восстановление выделенного пункта после обновления плейлистов
+        if (this.selectedItemPosition != -1) {
+            slider.setSelectionAtPosition(-1, false)
+            slider.setSelectionAtPosition(this.selectedItemPosition, false)
+            isDrawerFirstInit = false
+        }
+
         viewModel.drawerInitializedLiveData.setValidatedValue(true)
     }
 
     private fun updateToolBarTitle(name: String) {
-        supportActionBar?.title = when {
-            name.contains(getString(R.string.messages)) -> {
-                getString(R.string.messages)
-            }
-            name.contains(getString(R.string.about)) -> {
-                getString(R.string.about)
-            }
-            name.contains(getString(R.string.about_channel)) -> {
-                getString(R.string.about_channel)
-            }
-            else -> {
-                name
-            }
-        }
+        supportActionBar?.title = name
     }
 
 
@@ -318,9 +327,10 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     companion object {
         const val APP_MENU_ITEM = "app_menu"
         const val IDENTIFIER_NEW_VIDEOS = 0L
-        const val IDENTIFIER_MESSAGES = 100L
-        const val IDENTIFIER_ABOUT_CHANNEL = 101L
-        const val IDENTIFIER_ABOUT = 102L
+        const val IDENTIFIER_STARS = 100L
+        const val IDENTIFIER_MESSAGES = 101L
+        const val IDENTIFIER_ABOUT_CHANNEL = 102L
+        const val IDENTIFIER_ABOUT = 103L
 
         private const val TAG_VIDEO_FRAGMENT = "video_fragment"
         private const val TAG_ABOUT_FRAGMENT = "about_fragment"

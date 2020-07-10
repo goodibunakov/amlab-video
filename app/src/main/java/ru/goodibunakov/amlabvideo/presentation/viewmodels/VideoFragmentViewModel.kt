@@ -8,9 +8,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import ru.goodibunakov.amlabvideo.domain.usecase.GetAllVideosListUseCase
-import ru.goodibunakov.amlabvideo.domain.usecase.GetPlaylistVideosUseCase
-import ru.goodibunakov.amlabvideo.domain.usecase.GetVideoDetailsUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.*
+import ru.goodibunakov.amlabvideo.presentation.activity.MainActivity
+import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
 import ru.goodibunakov.amlabvideo.presentation.mappers.ToVideoDetailsModelUIMapper
 import ru.goodibunakov.amlabvideo.presentation.mappers.ToVideoModelUIMapper
 import ru.goodibunakov.amlabvideo.presentation.model.VideoDetailsUI
@@ -19,7 +19,10 @@ import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 class VideoFragmentViewModel(
         private val getPlaylistVideosUseCase: GetPlaylistVideosUseCase,
         private val getVideoDetailsUseCase: GetVideoDetailsUseCase,
-        private val getAllVideosListUseCase: GetAllVideosListUseCase
+        private val getAllVideosListUseCase: GetAllVideosListUseCase,
+        private val saveStarToDbUseCase: SaveStarToDbUseCase,
+        private val deleteStarFromDbUseCase: DeleteStarFromDbUseCase,
+        private val getStarsFromDbUseCase: GetStarsFromDbUseCase
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -30,12 +33,38 @@ class VideoFragmentViewModel(
     val canLoadMoreLiveData = MutableLiveData<Boolean>(false)
     val error = SingleLiveEvent<Throwable?>().apply { this.value = null }
     var videoIdSubject = BehaviorSubject.createDefault("")
+    val videoItemStarChangedLiveData = MutableLiveData<String>()
 
     init {
         loadVideoDetails()
     }
 
-    private fun loadPlaylist(playlistId: String) {
+    fun loadItems(playlistId: String, fragmentType: VideoFragment.FragmentType) {
+        when (fragmentType) {
+            VideoFragment.FragmentType.FROM_DB -> loadPlaylistItemsFromDb()
+            VideoFragment.FragmentType.FROM_WEB -> loadPlaylistItems(playlistId)
+        }
+    }
+
+    private fun loadPlaylistItemsFromDb() {
+        getStarsFromDbUseCase.buildObservable()
+                .map { ToVideoModelUIMapper.map(it) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { progressBarVisibilityLiveData.value = true }
+                .doOnError { progressBarVisibilityLiveData.value = false }
+                .doOnNext { progressBarVisibilityLiveData.value = false }
+                .subscribe({
+                    videoIdSubject.onNext(it.firstOrNull()?.videoId ?: "")
+                    videosLiveData.value = it
+                    error.value = null
+                }, { error.value = it })
+                .addTo(compositeDisposable)
+    }
+
+    private fun loadPlaylistItems(playlistId: String) {
+        Log.d("debug", "VideoFragmentViewModel loadPlaylist started. playlistId = $playlistId")
+        if (playlistId.contains(MainActivity.APP_MENU_ITEM)) return
         getPlaylistVideosUseCase.set(playlistId)
         getPlaylistVideosUseCase.buildObservable()
                 .map { ToVideoModelUIMapper.map(it) }
@@ -43,34 +72,34 @@ class VideoFragmentViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     progressBarVisibilityLiveData.value = true
-                    Log.d("debug", "getPlaylistVideosUseCase doOnSubscribe")
+                    Log.d("debug", "VideoFragmentViewModel getPlaylistVideosUseCase doOnSubscribe")
                 }
                 .doOnError {
                     progressBarVisibilityLiveData.value = false
-                    Log.d("debug", "getPlaylistVideosUseCase doOnError")
+                    Log.d("debug", "VideoFragmentViewModel getPlaylistVideosUseCase doOnError")
                 }
                 .doOnNext {
                     progressBarVisibilityLiveData.value = false
                     canLoadMoreLiveData.value = getPlaylistVideosUseCase.canLoadMore()
-                    Log.d("debug", "getPlaylistVideosUseCase doOnNext")
+                    Log.d("debug", "VideoFragmentViewModel getPlaylistVideosUseCase doOnNext = $it")
                 }
                 .subscribe({
-                    Log.d("ddd", "loadPlaylist $it")
+                    Log.d("debug", "VideoFragmentViewModel loadPlaylist $it")
                     videoIdSubject.onNext(it.firstOrNull()?.videoId ?: "")
                     videosLiveData.value = it
                     error.value = null
                 }, {
                     error.value = it
-                    Log.d("ddd", "loadPlaylist error = ${it.localizedMessage}")
-                    Log.d("ddd", "loadPlaylist error = $it")
-                    Log.d("ddd", "loadPlaylist error = ${it.message}")
+                    Log.d("debug", "loadPlaylist error = ${it.localizedMessage}")
+                    Log.d("debug", "loadPlaylist error = $it")
+                    Log.d("debug", "loadPlaylist error = ${it.message}")
                 })
                 .addTo(compositeDisposable)
     }
 
     private fun loadMorePlaylist() {
         if (!getPlaylistVideosUseCase.canLoadMore()) return
-        getPlaylistVideosUseCase.loadMore()
+        getPlaylistVideosUseCase.buildObservable()
                 .map { ToVideoModelUIMapper.map(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -78,15 +107,15 @@ class VideoFragmentViewModel(
                 .doOnError { recyclerLoadMoreProcess.value = false }
                 .subscribe({
                     canLoadMoreLiveData.value = getPlaylistVideosUseCase.canLoadMore()
-                    Log.d("ddd", "loadPlaylist $it")
+                    Log.d("ddd", "VideoFragmentViewModel loadMorePlaylist $it")
                     recyclerLoadMoreProcess.value = false
                     videosLiveData.value = it
                     error.value = null
                 }, {
                     error.value = it
-                    Log.d("ddd", "loadPlaylist error = ${it.localizedMessage}")
-                    Log.d("ddd", "loadPlaylist error = $it")
-                    Log.d("ddd", "loadPlaylist error = ${it.message}")
+                    Log.d("ddd", "VideoFragmentViewModel loadMorePlaylist error = ${it.localizedMessage}")
+                    Log.d("ddd", "VideoFragmentViewModel loadMorePlaylist error = $it")
+                    Log.d("ddd", "VideoFragmentViewModel loadMorePlaylist error = ${it.message}")
                 })
                 .addTo(compositeDisposable)
     }
@@ -143,14 +172,13 @@ class VideoFragmentViewModel(
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap { id ->
-                    Log.d("ddd", "id = $id")
                     getVideoDetailsUseCase.set(id)
                     getVideoDetailsUseCase.buildObservable()
                 }
                 .map { ToVideoDetailsModelUIMapper.map(it) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.d("debug", "loadVideoDetails $it")
+//                    Log.d("debug", "loadVideoDetails $it")
                     videoDetails.value = it
                 }, {
                     Log.d("debug", "loadVideoDetails error = ${it.localizedMessage}")
@@ -164,11 +192,50 @@ class VideoFragmentViewModel(
         super.onCleared()
     }
 
-    fun loadItems(playlistId: String) {
-        loadPlaylist(playlistId)
-    }
+//    fun loadItems(playlistId: String) {
+//        Log.d("debug", "VideoFragmentViewModel loadItems")
+//        loadPlaylistItems(playlistId)
+//    }
 
     fun loadMoreItems() {
         loadMorePlaylist()
+    }
+
+    fun starClicked(videoItem: VideoUIModel) {
+        if (videoItem.star) {
+            deleteStarFromDb(videoItem.videoId)
+        } else {
+            saveStarToDb(videoItem.videoId)
+        }
+    }
+
+    private fun saveStarToDb(videoId: String) {
+        saveStarToDbUseCase.set(videoId)
+        saveStarToDbUseCase.buildObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Log.d("debug", "VideoFragmentViewModel saveStarToDb onNext = $it")
+                }, {
+                    Log.d("debug", "VideoFragmentViewModel saveStarToDb error = $it")
+                }, {
+                    videoItemStarChangedLiveData.value = videoId
+                })
+                .addTo(compositeDisposable)
+    }
+
+    private fun deleteStarFromDb(videoId: String) {
+        deleteStarFromDbUseCase.set(videoId)
+        deleteStarFromDbUseCase.buildObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Log.d("debug", "VideoFragmentViewModel deleteStarFromDb onNext = $it")
+                }, {
+                    Log.d("debug", "VideoFragmentViewModel deleteStarFromDb error = $it")
+                }, {
+                    videoItemStarChangedLiveData.value = videoId
+                })
+                .addTo(compositeDisposable)
     }
 }

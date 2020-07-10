@@ -11,8 +11,10 @@ object ToVideoEntityMapperForAllVideosList : Mapper<AllVideosDTO, List<VideoEnti
             VideoEntity(
                     title = it.snippet.title,
                     videoId = it.id.videoId,
+                    playlistId = "",
                     imageUrl = it.snippet.thumbnails.default.url,
-                    createdDate = it.snippet.publishedAt
+                    createdDate = it.snippet.publishedAt,
+                    star = false
             )
         }
     }

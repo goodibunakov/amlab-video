@@ -17,7 +17,8 @@ open class GmailDrawerItemSecondary: SecondaryDrawerItem() {
         themeDrawerItem(ctx, view, selected_color, animate, shapeAppearanceModel,
                 R.dimen.gmail_material_drawer_item_background_padding_top_bottom,
                 R.dimen.gmail_material_drawer_item_background_padding_start,
-                R.dimen.gmail_material_drawer_item_background_padding_end)
+                R.dimen.gmail_material_drawer_item_background_padding_end,
+                isSelected = isSelected)
     }
 
     override fun getShapeAppearanceModel(ctx: Context): ShapeAppearanceModel {

@@ -9,10 +9,12 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
+import ru.goodibunakov.amlabvideo.api.dto.video.Snippet
 import ru.goodibunakov.amlabvideo.data.database.Dao
 import ru.goodibunakov.amlabvideo.data.mappers.ToDatabaseModelMapper
 import ru.goodibunakov.amlabvideo.data.mappers.ToPlaylistsDTOMapper
 import ru.goodibunakov.amlabvideo.data.model.MessageItem
+import ru.goodibunakov.amlabvideo.data.model.VideoItemModel
 import ru.goodibunakov.amlabvideo.domain.DatabaseRepository
 import java.util.*
 
@@ -50,5 +52,27 @@ class DatabaseRepositoryImpl(private val dao: Dao, private val context: Context)
 
     override fun deleteAllNotifications(): Completable {
         return dao.deleteAllNotifications()
+    }
+
+    override fun saveStar(videoItemModel: VideoItemModel): Completable {
+        return dao.saveStar(videoItemModel)
+                .doOnSubscribe { Log.d("debug", "DatabaseRepositoryImpl saveStar OnSubscribe") }
+                .doOnComplete { Log.d("debug", "DatabaseRepositoryImpl saveStar onComplete") }
+                .doOnError { Log.d("debug", "DatabaseRepositoryImpl saveStar onError = $it") }
+    }
+
+    override fun deleteStar(videoId: String): Completable {
+        return dao.deleteStar(videoId)
+    }
+
+    override fun getStars(): Single<List<VideoItemModel>> {
+        return dao.getStars()
+                .doOnSubscribe { Log.d("debug", "DatabaseRepositoryImpl getStars OnSubscribe") }
+                .doOnSuccess { Log.d("debug", "DatabaseRepositoryImpl getStars onSuccess") }
+                .doOnError { Log.d("debug", "DatabaseRepositoryImpl getStars onError = $it") }
+    }
+
+    override fun getStarIds(playlistId: String): Observable<List<String>> {
+        return dao.getStarIds(playlistId)
     }
 }

@@ -4,8 +4,8 @@ import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
 import com.onesignal.OneSignal
 import ru.goodibunakov.amlabvideo.api.ApiService
-import ru.goodibunakov.amlabvideo.data.NotificationOpenedHandler
-import ru.goodibunakov.amlabvideo.data.NotificationReceivedHandler
+import ru.goodibunakov.amlabvideo.data.notifications.NotificationOpenedHandler
+import ru.goodibunakov.amlabvideo.data.notifications.NotificationReceivedHandler
 import ru.goodibunakov.amlabvideo.data.database.AmlabDatabase
 import ru.goodibunakov.amlabvideo.data.repositories.ApiRepositoryImpl
 import ru.goodibunakov.amlabvideo.data.repositories.DatabaseRepositoryImpl
@@ -17,7 +17,6 @@ import ru.goodibunakov.amlabvideo.presentation.viewmodels.ViewModelFactory
 class AmlabApplication : MultiDexApplication() {
 
     companion object {
-        //        lateinit var fileRepository: FileRepository
         lateinit var apiRepository: ApiRepository
         lateinit var databaseRepository: DatabaseRepository
         lateinit var viewModelFactory: ViewModelFactory
@@ -33,12 +32,15 @@ class AmlabApplication : MultiDexApplication() {
         viewModelFactory = ViewModelFactory(
                 GetChannelPlaylistsUseCase(apiRepository, databaseRepository),
                 GetNetworkStatusUseCase(apiRepository),
-                GetPlaylistVideosUseCase(apiRepository),
+                GetPlaylistVideosUseCase(apiRepository, databaseRepository),
                 GetVideoDetailsUseCase(apiRepository),
                 GetAllVideosListUseCase(apiRepository),
                 GetAboutChannelUseCase(apiRepository),
                 GetMessagesUseCase(databaseRepository),
-                DeleteMessagesUseCase(databaseRepository)
+                DeleteMessagesUseCase(databaseRepository),
+                SaveStarToDbUseCase(apiRepository, databaseRepository),
+                DeleteStarFromDbUseCase(databaseRepository),
+                GetStarsFromDbUseCase(databaseRepository)
         )
 
         OneSignal.startInit(this)

@@ -1,4 +1,4 @@
-package ru.goodibunakov.amlabvideo.data
+package ru.goodibunakov.amlabvideo.data.notifications
 
 import com.onesignal.NotificationExtenderService
 import com.onesignal.OSNotificationReceivedResult

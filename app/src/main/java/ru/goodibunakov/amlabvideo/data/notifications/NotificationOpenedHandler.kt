@@ -1,4 +1,4 @@
-package ru.goodibunakov.amlabvideo.data
+package ru.goodibunakov.amlabvideo.data.notifications
 
 import android.content.Context
 import android.content.Intent

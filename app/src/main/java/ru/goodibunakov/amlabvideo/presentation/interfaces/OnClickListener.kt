@@ -4,4 +4,5 @@ import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 
 interface OnClickListener  {
     fun onItemClick(videoItem: VideoUIModel)
+    fun onStarClick(videoItem: VideoUIModel)
 }

@@ -12,6 +12,8 @@ import ru.goodibunakov.amlabvideo.api.dto.playlists.PlaylistsDTO
 import ru.goodibunakov.amlabvideo.api.dto.video.VideoDTO
 import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
 import ru.goodibunakov.amlabvideo.api.dto.videos_all.AllVideosDTO
+import ru.goodibunakov.amlabvideo.data.mappers.ToVideoItemModelMapper
+import ru.goodibunakov.amlabvideo.data.model.VideoItemModel
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
 
 
@@ -25,6 +27,7 @@ class ApiRepositoryImpl(
      */
 
     private var playlistsList: PlaylistsDTO? = null
+    private var playlistItems: MutableList<VideoItemModel> = mutableListOf()
     var networkConnected = BehaviorSubject.createDefault(ConnectedStatus.UNKNOWN)
 
     init {
@@ -77,12 +80,25 @@ class ApiRepositoryImpl(
     override fun getPlaylistVideos(playlistId: String, pageToken: String?): Observable<VideoDTO> {
         return networkConnected
                 .filter { it == ConnectedStatus.YES }
-                .flatMap { apiService.getPlaylistVideos(playlistId = playlistId, pageToken = pageToken ?: "") }
+                .flatMap {
+                    apiService.getPlaylistVideos(playlistId = playlistId, pageToken = pageToken
+                            ?: "")
+                }
+                .doOnNext { playlistItems.addAll(ToVideoItemModelMapper.map(it)) }
     }
 
     override fun getVideoDetails(id: String): Observable<VideoDetailsDTO> {
         return networkConnected
                 .filter { it == ConnectedStatus.YES }
                 .flatMap { apiService.getVideoDetails(id = id) }
+    }
+
+    override fun clearPlaylistItems() {
+        playlistItems.clear()
+    }
+
+    override fun getItemById(videoId: String): VideoItemModel? {
+        return playlistItems.firstOrNull { it.videoId == videoId }
+                ?.copy(star = true)
     }
 }

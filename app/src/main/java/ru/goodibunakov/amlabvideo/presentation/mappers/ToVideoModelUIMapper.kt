@@ -14,8 +14,10 @@ object ToVideoModelUIMapper : Mapper<List<VideoEntity>, List<VideoUIModel>> {
             VideoUIModel(
                     title = it.title,
                     videoId = it.videoId,
+                    playlistId = it.playlistId,
                     imageUrl = it.imageUrl,
-                    createdDate = convertDate(it.createdDate)
+                    createdDate = convertDate(it.createdDate),
+                    star = it.star
             )
         }
     }
