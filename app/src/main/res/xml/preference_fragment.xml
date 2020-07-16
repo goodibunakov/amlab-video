@@ -23,11 +23,6 @@
             android:key="@string/pref_vk_key"
             android:title="ВКонтакте" />
 
-<!--        <Preference-->
-<!--            android:icon="@drawable/ic_telegram"-->
-<!--            android:key="@string/pref_telegram_key"-->
-<!--            android:title="Telegram чат" />-->
-
         <Preference
             android:icon="@drawable/ic_instagram"
             android:key="@string/pref_instagram_key"
@@ -43,6 +38,7 @@
     <PreferenceCategory>
 
         <Preference
+            android:icon="@drawable/ic_goodi"
             android:key="@string/pref_developer_title"
             android:summary="@string/pref_developer_summary"
             android:title="@string/pref_developer_title" />
