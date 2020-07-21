@@ -23,8 +23,8 @@ class GetChannelPlaylistsUseCase(
                             databaseRepository.insertPlaylists(it)
                                     .subscribe({
                                         Log.d("debug", "GetChannelPlaylistsUseCase insert completed")
-                                    }, {
-                                        Log.d("debug", "GetChannelPlaylistsUseCase insert error = $it")
+                                    }, { throwable ->
+                                        Log.d("debug", "GetChannelPlaylistsUseCase insert error = $throwable")
                                     })
                         }
         )
