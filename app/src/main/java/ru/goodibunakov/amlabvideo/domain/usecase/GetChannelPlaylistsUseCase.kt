@@ -51,8 +51,9 @@ class GetChannelPlaylistsUseCase(
         return if (newVideosPlaylistIndex == 0 || newVideosPlaylistIndex == -1) {
             list
         } else {
-            val newVideosPlaylist = list.toMutableList().removeAt(newVideosPlaylistIndex)
-            list.toMutableList().apply { add(0, newVideosPlaylist) }
+            val listForEdit = list.toMutableList()
+            val newVideosPlaylist = listForEdit.removeAt(newVideosPlaylistIndex)
+            listForEdit.apply { add(0, newVideosPlaylist) }
         }
     }
 
