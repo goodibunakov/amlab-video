@@ -6,5 +6,5 @@ import androidx.lifecycle.ViewModel
 class SharedViewModel : ViewModel() {
 
     var playlistId: MutableLiveData<String> = MutableLiveData()
-
+    val isInPictureInPictureMode: MutableLiveData<Boolean> = MutableLiveData(false)
 }

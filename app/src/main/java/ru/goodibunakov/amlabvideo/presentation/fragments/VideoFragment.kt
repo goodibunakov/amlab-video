@@ -1,13 +1,18 @@
 package ru.goodibunakov.amlabvideo.presentation.fragments
 
+import android.app.PictureInPictureParams
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.NonNull
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -23,6 +28,7 @@ import com.perfomer.blitz.setTimeAgo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_video.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
@@ -117,10 +123,21 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
             Log.d("debug", "videoItemStarred = $it")
             videoAdapter.notifyItemChanged(it, fragmentType)
         })
+
+        sharedViewModel.isInPictureInPictureMode.observe(viewLifecycleOwner, Observer { isInPictureInPictureMode ->
+            if (isInPictureInPictureMode) {
+                onFullScreenListener.enterFullScreen()
+                playerView.getPlayerUiController().showUi(false)
+            } else {
+                onFullScreenListener.exitFullScreen()
+                playerView.getPlayerUiController().showUi(true)
+            }
+        })
     }
 
     private fun initPlayerView() {
         lifecycle.addObserver(playerView)
+        initPictureInPicture(playerView)
         playerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
                 youTubePlayerDisposable = viewModel.videoIdSubject
@@ -142,6 +159,27 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
 //                removeCustomActionsFromPlayer()
             }
         })
+    }
+
+    private fun initPictureInPicture(playerView: YouTubePlayerView?) {
+        var supportsPIP = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            supportsPIP = requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+        }
+        if (!supportsPIP) return
+
+        val pictureInPictureIcon = ImageView(requireContext())
+        pictureInPictureIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_picture_in_picture_24dp))
+
+        pictureInPictureIcon.setOnClickListener { view: View? ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                if (supportsPIP) {
+                    requireActivity().enterPictureInPictureMode()
+                }
+            }
+        }
+
+        playerView?.getPlayerUiController()?.addView(pictureInPictureIcon)
     }
 
     /**

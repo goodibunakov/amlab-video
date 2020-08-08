@@ -56,6 +56,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
 
     private var isFullscreen = false
+    private var isPipActive = false
     private lateinit var fullScreenHelper: FullScreenHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -352,7 +353,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
 
         if (supportFragmentManager.findFragmentById(R.id.fragmentContainer) is VideoFragment) {
-            if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT && !isPipActive) {
                 exitFullScreen()
             } else {
                 if (root.isDrawerOpen(slider)) root.closeDrawer(slider)
@@ -382,6 +383,8 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     }
 
     override fun enterFullScreen() {
+        if (isFullscreen) return
+
         isFullscreen = true
         fullScreenHelper.enterFullScreen()
     }
@@ -397,5 +400,11 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         } else {
             Snackbar.make(root, getString(R.string.playlists_update_success), Snackbar.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        isPipActive = isInPictureInPictureMode
+        sharedViewModel.isInPictureInPictureMode.value = isInPictureInPictureMode
     }
 }
