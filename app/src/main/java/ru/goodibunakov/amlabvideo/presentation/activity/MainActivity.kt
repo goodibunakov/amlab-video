@@ -13,7 +13,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
-import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import com.google.android.material.snackbar.Snackbar
@@ -66,11 +65,11 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         initDrawerAndToolbar()
 
-        viewModel.playlistsLiveData.observe(this, Observer {
+        viewModel.playlistsLiveData.observe(this, {
             fillDrawer(savedInstanceState, it)
         })
 
-        sharedViewModel.playlistId.observe(this, Observer { tag ->
+        sharedViewModel.playlistId.observe(this, { tag ->
             val fragmentTransaction = supportFragmentManager.beginTransaction()
             if (!tag.contains(APP_MENU_ITEM)) {
                 fragmentTransaction
@@ -95,9 +94,9 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             }
         })
 
-        viewModel.toolbarTitleLiveData.observe(this, Observer { updateToolBarTitle(it) })
+        viewModel.toolbarTitleLiveData.observe(this, { updateToolBarTitle(it) })
 
-        viewModel.playlistsUpdatedLiveData.observe(this, Observer {
+        viewModel.playlistsUpdatedLiveData.observe(this, {
             showPlaylistUpdated(it)
         })
     }
@@ -115,7 +114,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         val fromNotification = intent.getBooleanExtra(INTENT_FROM_NOTIFICATION, false)
         Log.d("debug", "fromNotification = $fromNotification")
         if (fromNotification) {
-            viewModel.drawerInitializedLiveData.observe(this, Observer {
+            viewModel.drawerInitializedLiveData.observe(this, {
                 if (it) {
                     if (fragment == null || fragment !is MessagesFragment) {
                         Log.d("debug", "setSelection(IDENTIFIER_MESSAGES, true)")
@@ -265,13 +264,13 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.menuUpdatePlaylists -> {
                 viewModel.updatePlaylistsToDatabase()
-                return true
+                true
             }
             else -> {
-                return actionBarDrawerToggle.onOptionsItemSelected(item)
+                actionBarDrawerToggle.onOptionsItemSelected(item)
             }
         }
     }

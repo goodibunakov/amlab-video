@@ -9,7 +9,6 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import com.google.android.material.snackbar.Snackbar
@@ -44,9 +43,9 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Log.d("debug", "animationDisposable oncomplete")
-                    viewModel.playlistsLiveData.observe(this, Observer {
+                    viewModel.playlistsLiveData.observe(this, {
                         if (it.isNotEmpty()) {
-                            viewModel.errorQuotaLiveData.observe(this, Observer { errorQuotaExists ->
+                            viewModel.errorQuotaLiveData.observe(this, { errorQuotaExists ->
                                 if (!errorQuotaExists) {
                                     val intent = Intent(this, MainActivity::class.java)
                                     startActivity(intent)
@@ -62,7 +61,7 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
 
         version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
 
-        viewModel.error.observe(this, Observer {
+        viewModel.error.observe(this, {
             it?.let {
                 Snackbar.make(parentSplash, "Ошибка: ${it.localizedMessage}", Snackbar.LENGTH_SHORT).show()
             }

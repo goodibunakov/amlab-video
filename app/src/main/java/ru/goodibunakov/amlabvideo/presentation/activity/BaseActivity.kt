@@ -6,7 +6,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.api.QuotaErrorInterceptor.Companion.ACTION_QUOTA_EXCEEDED
@@ -22,17 +21,17 @@ abstract class BaseActivity<T : BaseActivityViewModel> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.networkLiveData.observe(this, Observer {
+        viewModel.networkLiveData.observe(this, {
             showNetworkAvailable(it)
         })
 
-        viewModel.responseQuotaReceiver.observe(this, Observer {
+        viewModel.responseQuotaReceiver.observe(this, {
             unregisterReceiver()
             broadcastReceiver = it
             registerReceiver()
         })
 
-        viewModel.errorQuotaLiveData.observe(this, Observer {
+        viewModel.errorQuotaLiveData.observe(this, {
             if (it) showQuotaErrorDialog()
         })
     }
@@ -64,7 +63,7 @@ abstract class BaseActivity<T : BaseActivityViewModel> : AppCompatActivity() {
                 title = R.string.dialog_error_quota_title,
                 message = R.string.dialog_error_quota_message,
                 showCancelButton = false,
-                listener = DialogInterface.OnClickListener { _, which ->
+                listener = { _, which ->
                     if (which == DialogInterface.BUTTON_POSITIVE) {
                         finishAndRemoveTask()
                     }

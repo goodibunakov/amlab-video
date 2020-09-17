@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,26 +47,26 @@ class MessagesFragment : Fragment(R.layout.fragment_messages) {
     }
 
     private fun observeLiveData() {
-        viewModel.messagesLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.messagesLiveData.observe(viewLifecycleOwner, {
             messagesAdapter.addItems(it)
             messagesRecycler.smoothScrollToPosition(0)
         })
 
-        viewModel.errorGetMessagesLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.errorGetMessagesLiveData.observe(viewLifecycleOwner, {
             errorText.setVisibility(it != null)
         })
 
-        viewModel.progressbarLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.progressbarLiveData.observe(viewLifecycleOwner, {
             progressBar.setVisibility(it)
         })
 
-        viewModel.errorDeleteMessagesLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.errorDeleteMessagesLiveData.observe(viewLifecycleOwner, {
             it?.let {
                 Snackbar.make(root, R.string.error_delete_messages, Snackbar.LENGTH_SHORT).show()
             }
         })
 
-        viewModel.emptyMessagesLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.emptyMessagesLiveData.observe(viewLifecycleOwner, {
             emptyText.setVisibility(it)
         })
     }
@@ -93,7 +92,7 @@ class MessagesFragment : Fragment(R.layout.fragment_messages) {
                     title = R.string.dialog_error_quota_title,
                     message = R.string.dialog_warning_delete_all_messages,
                     showCancelButton = true,
-                    listener = DialogInterface.OnClickListener { dialog, which ->
+                    listener = { dialog, which ->
                         if (which == DialogInterface.BUTTON_POSITIVE) {
                             viewModel.deleteAllMessages()
                         } else {

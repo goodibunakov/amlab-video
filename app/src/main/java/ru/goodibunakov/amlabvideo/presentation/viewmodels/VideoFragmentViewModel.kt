@@ -30,7 +30,7 @@ class VideoFragmentViewModel(
     val progressBarVisibilityLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
     val videoDetails = MutableLiveData<VideoDetailsUI>()
     val recyclerLoadMoreProcess = MutableLiveData<Boolean>()
-    val canLoadMoreLiveData = MutableLiveData<Boolean>(false)
+    val canLoadMoreLiveData = MutableLiveData(false)
     val error = SingleLiveEvent<Throwable?>().apply { this.value = null }
     var videoIdSubject = BehaviorSubject.createDefault("")
     val videoItemStarChangedLiveData = MutableLiveData<String>()

@@ -1,6 +1,5 @@
 package ru.goodibunakov.amlabvideo.presentation.fragments
 
-import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -12,13 +11,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.NonNull
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -82,23 +79,23 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
     }
 
     private fun observeLiveData() {
-        sharedViewModel.playlistId.observe(viewLifecycleOwner, Observer { playlistId ->
+        sharedViewModel.playlistId.observe(viewLifecycleOwner, { playlistId ->
             Log.d("debug", "VideoFragment playlistId = $playlistId")
             viewModel.loadItems(playlistId, fragmentType)
         })
 
-        viewModel.videosLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.videosLiveData.observe(viewLifecycleOwner, {
             infiniteScrollListener.setLoaded()
 
             videoAdapter.addItems(it)
             toggleVisibility(it.isEmpty())
         })
 
-        viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, {
             progressBar.setVisibility(it)
         })
 
-        viewModel.videoDetails.observe(viewLifecycleOwner, Observer {
+        viewModel.videoDetails.observe(viewLifecycleOwner, {
             infoTitle.text = it.title
             infoDetails.text = String.format(
                     Locale.getDefault(),
@@ -107,24 +104,24 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
             infoTimeAgo.setTimeAgo(it.publishedAtDate)
         })
 
-        viewModel.error.observe(viewLifecycleOwner, Observer {
+        viewModel.error.observe(viewLifecycleOwner, {
             errorText.setVisibility(it != null)
         })
 
-        viewModel.recyclerLoadMoreProcess.observe(viewLifecycleOwner, Observer {
+        viewModel.recyclerLoadMoreProcess.observe(viewLifecycleOwner, {
             if (it) videoAdapter.addNull() else videoAdapter.removeNull()
         })
 
-        viewModel.canLoadMoreLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.canLoadMoreLiveData.observe(viewLifecycleOwner, {
             infiniteScrollListener.setCanLoadMore(it)
         })
 
-        viewModel.videoItemStarChangedLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.videoItemStarChangedLiveData.observe(viewLifecycleOwner, {
             Log.d("debug", "videoItemStarred = $it")
             videoAdapter.notifyItemChanged(it, fragmentType)
         })
 
-        sharedViewModel.isInPictureInPictureMode.observe(viewLifecycleOwner, Observer { isInPictureInPictureMode ->
+        sharedViewModel.isInPictureInPictureMode.observe(viewLifecycleOwner, { isInPictureInPictureMode ->
             if (isInPictureInPictureMode) {
                 onFullScreenListener.enterFullScreen()
                 playerView.getPlayerUiController().showUi(false)
@@ -190,8 +187,8 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         val customAction1Icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_fast_rewind_white_24dp)
         val customAction2Icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_fast_forward_white_24dp)
         if (customAction1Icon != null && customAction2Icon != null) {
-            playerView.getPlayerUiController().setCustomAction1(customAction1Icon, View.OnClickListener { Toast.makeText(requireActivity(), "custom action1 clicked", Toast.LENGTH_SHORT).show() })
-            playerView.getPlayerUiController().setCustomAction2(customAction2Icon, View.OnClickListener { Toast.makeText(requireActivity(), "custom action2 clicked", Toast.LENGTH_SHORT).show() })
+            playerView.getPlayerUiController().setCustomAction1(customAction1Icon) { Toast.makeText(requireActivity(), "custom action1 clicked", Toast.LENGTH_SHORT).show() }
+            playerView.getPlayerUiController().setCustomAction2(customAction2Icon) { Toast.makeText(requireActivity(), "custom action2 clicked", Toast.LENGTH_SHORT).show() }
         }
     }
 

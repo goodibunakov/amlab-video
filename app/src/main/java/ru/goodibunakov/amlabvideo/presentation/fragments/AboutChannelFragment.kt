@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -24,17 +23,17 @@ class AboutChannelFragment : Fragment(R.layout.fragment_about_channel) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, {
             progress.setVisibility(it)
         })
 
-        viewModel.error.observe(viewLifecycleOwner, Observer {
+        viewModel.error.observe(viewLifecycleOwner, {
             emptyText.setVisibility(it != null)
             header.setVisibility(it == null)
             contentView.setVisibility(it == null)
         })
 
-        viewModel.liveData.observe(viewLifecycleOwner, Observer {
+        viewModel.liveData.observe(viewLifecycleOwner, {
             val requestOptions = RequestOptions()
                     .error(R.drawable.empty_photo)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)

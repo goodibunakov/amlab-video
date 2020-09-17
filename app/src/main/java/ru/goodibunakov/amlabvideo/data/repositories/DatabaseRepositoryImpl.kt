@@ -31,6 +31,7 @@ class DatabaseRepositoryImpl(private val dao: Dao, private val context: Context)
         return dao.getPlaylists()
                 .map { ToPlaylistsDTOMapper.map(it) }
                 .doOnError { Log.d("debug", "database getPlaylists error = $it") }
+            .doOnSuccess { Log.d("debug", "DatabaseRepositoryImpl getCurrency doOnSuccess $it ") }
                 .doOnComplete { Log.d("debug", "database getPlaylists onComplete") }
     }
 
