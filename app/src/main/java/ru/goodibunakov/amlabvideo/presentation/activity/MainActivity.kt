@@ -281,7 +281,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         //add the values which need to be saved from the drawer to the bundle
         outState = slider.saveInstanceState(outState)
         //add the values which need to be saved from the accountHeader to the bundle
-        outState = headerView.saveInstanceState(outState)
+        if (::headerView.isInitialized) outState = headerView.saveInstanceState(outState)
         super.onSaveInstanceState(outState)
     }
 
