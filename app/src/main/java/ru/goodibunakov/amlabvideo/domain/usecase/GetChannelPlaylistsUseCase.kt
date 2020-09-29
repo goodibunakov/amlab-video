@@ -40,6 +40,7 @@ class GetChannelPlaylistsUseCase(
                 .firstElement()
                 .doOnSuccess {
                     databaseRepository.updatePlaylists(it)
+                        .subscribe({},{})
                 }
                 .map { ToPlaylistsEntityMapper.map(it) }
                 .flatMap { Maybe.fromCallable { setNewVideosPlaylistToFirstPlace(it) } }

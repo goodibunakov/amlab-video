@@ -26,7 +26,7 @@ interface Dao {
     @Query("DELETE FROM $TABLE_PLAYLISTS")
     fun deletePlaylists(): Completable
 
-    @Update(entity = PlaylistsDTODatabase::class)
+    @Update(entity = PlaylistsDTODatabase::class, onConflict = OnConflictStrategy.REPLACE)
     fun updatePlaylists(playlists: PlaylistsDTODatabase): Maybe<Int>
 
     @Query("SELECT * FROM $TABLE_PLAYLISTS")
