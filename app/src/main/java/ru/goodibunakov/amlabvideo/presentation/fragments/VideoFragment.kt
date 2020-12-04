@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -16,6 +17,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -98,9 +100,9 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         viewModel.videoDetails.observe(viewLifecycleOwner, {
             infoTitle.text = it.title
             infoDetails.text = String.format(
-                    Locale.getDefault(),
-                    getString(R.string.video_views_and_pass_from_publish_date),
-                    it.viewCount)
+                Locale.getDefault(),
+                getString(R.string.video_views_and_pass_from_publish_date),
+                it.viewCount)
             infoTimeAgo.setTimeAgo(it.publishedAtDate)
         })
 
@@ -138,10 +140,10 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         playerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
                 youTubePlayerDisposable = viewModel.videoIdSubject
-                        .filter { it.isNotEmpty() }
-                        .subscribe({
-                            youTubePlayer.cueVideo(it, 0f)
-                        }, {})
+                    .filter { it.isNotEmpty() }
+                    .subscribe({
+                        youTubePlayer.cueVideo(it, 0f)
+                    }, {})
             }
         })
         playerView.addFullScreenListener(object : YouTubePlayerFullScreenListener {
@@ -265,16 +267,24 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
     private fun initRateBottomSheet() {
         context?.let {
             RateBottomSheetManager(it)
-                    .setInstallDays(3) // 3 by default
-                    .setLaunchTimes(5) // 5 by default
-                    .setRemindInterval(2) // 2 by default
-                    .setShowAskBottomSheet(true) // True by default
-                    .setShowLaterButton(true) // True by default
-                    .setShowCloseButtonIcon(true) // True by default
-                    .monitor()
+                .setInstallDays(3) // 3 by default
+                .setLaunchTimes(5) // 5 by default
+                .setRemindInterval(2) // 2 by default
+                .setShowAskBottomSheet(true) // True by default
+                .setShowLaterButton(true) // True by default
+                .setShowCloseButtonIcon(true) // True by default
+                .monitor()
         }
 
-        Handler().postDelayed({ RateBottomSheet.showRateBottomSheetIfMeetsConditions(this) }, 3500)
+
+        Handler(Looper.getMainLooper())
+            .postDelayed(
+                {
+                    if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                        RateBottomSheet.showRateBottomSheetIfMeetsConditions(this)
+                    }
+                }, 3500)
+
     }
 
     override fun onDestroyView() {

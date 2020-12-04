@@ -8,8 +8,8 @@ object ToAboutChannelEntityMapper : Mapper<BrandingDTO, AboutChannelEntity> {
 
     override fun map(from: BrandingDTO): AboutChannelEntity {
         return AboutChannelEntity(
-                from.items[0].brandingSettings.channel.description,
-                from.items[0].brandingSettings.image.bannerMobileMediumHdImageUrl
+            from.items[0].brandingSettings.channel.description,
+            from.items[0].brandingSettings.image.bannerExternalUrl
         )
     }
 }

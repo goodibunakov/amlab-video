@@ -35,14 +35,14 @@ class AboutChannelFragment : Fragment(R.layout.fragment_about_channel) {
 
         viewModel.liveData.observe(viewLifecycleOwner, {
             val requestOptions = RequestOptions()
-                    .error(R.drawable.empty_photo)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
             Glide.with(header.context)
-                    .load(it.headerUrl)
-                    .apply(requestOptions)
-                    .thumbnail(0.1f)
-                    .transition(DrawableTransitionOptions().crossFade())
-                    .into(header)
+                .load(it.headerUrl)
+                .apply(requestOptions)
+                .thumbnail(0.1f)
+                .error(R.drawable.empty_photo)
+                .transition(DrawableTransitionOptions().crossFade())
+                .into(header)
             description.text = it.description
         })
     }

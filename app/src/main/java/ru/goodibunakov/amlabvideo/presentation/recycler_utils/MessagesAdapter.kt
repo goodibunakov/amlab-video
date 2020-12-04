@@ -52,14 +52,15 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>
                 if (item.image.isNotEmpty()) {
                     containerView.messageImage.visibility = View.VISIBLE
                     val requestOptions = RequestOptions()
-                            .error(R.drawable.empty_photo)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                     Glide.with(containerView.context)
-                            .load(item.image)
-                            .apply(requestOptions)
-                            .thumbnail(0.1f)
-                            .transition(DrawableTransitionOptions().crossFade())
-                            .into(containerView.messageImage)
+                        .load(item.image)
+                        .apply(requestOptions)
+                        .thumbnail(0.1f)
+                        .placeholder(R.drawable.empty_photo)
+                        .error(R.drawable.empty_photo)
+                        .transition(DrawableTransitionOptions().crossFade())
+                        .into(containerView.messageImage)
                 } else {
                     containerView.messageImage.visibility = View.GONE
                 }
