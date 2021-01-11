@@ -5,7 +5,6 @@ import com.facebook.stetho.Stetho
 import com.onesignal.OneSignal
 import ru.goodibunakov.amlabvideo.api.ApiService
 import ru.goodibunakov.amlabvideo.data.notifications.NotificationOpenedHandler
-import ru.goodibunakov.amlabvideo.data.notifications.NotificationReceivedHandler
 import ru.goodibunakov.amlabvideo.data.database.AmlabDatabase
 import ru.goodibunakov.amlabvideo.data.repositories.ApiRepositoryImpl
 import ru.goodibunakov.amlabvideo.data.repositories.DatabaseRepositoryImpl
@@ -30,26 +29,26 @@ class AmlabApplication : MultiDexApplication() {
         apiRepository = ApiRepositoryImpl(this, ApiService.create(applicationContext))
         databaseRepository = DatabaseRepositoryImpl(AmlabDatabase.getDatabase(this).dao(), applicationContext)
         viewModelFactory = ViewModelFactory(
-                GetChannelPlaylistsUseCase(apiRepository, databaseRepository),
-                GetNetworkStatusUseCase(apiRepository),
-                GetPlaylistVideosUseCase(apiRepository, databaseRepository),
-                GetVideoDetailsUseCase(apiRepository),
-                GetAllVideosListUseCase(apiRepository),
-                GetAboutChannelUseCase(apiRepository),
-                GetMessagesUseCase(databaseRepository),
-                DeleteMessagesUseCase(databaseRepository),
-                SaveStarToDbUseCase(apiRepository, databaseRepository),
-                DeleteStarFromDbUseCase(databaseRepository),
-                GetStarsFromDbUseCase(databaseRepository)
+            GetChannelPlaylistsUseCase(apiRepository, databaseRepository),
+            GetNetworkStatusUseCase(apiRepository),
+            GetPlaylistVideosUseCase(apiRepository, databaseRepository),
+            GetVideoDetailsUseCase(apiRepository),
+            GetAllVideosListUseCase(apiRepository),
+            GetAboutChannelUseCase(apiRepository),
+            GetMessagesUseCase(databaseRepository),
+            DeleteMessagesUseCase(databaseRepository),
+            SaveStarToDbUseCase(apiRepository, databaseRepository),
+            DeleteStarFromDbUseCase(databaseRepository),
+            GetStarsFromDbUseCase(databaseRepository)
         )
 
-        OneSignal.startInit(this)
-                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-                .unsubscribeWhenNotificationsAreDisabled(true)
-                .setNotificationOpenedHandler(NotificationOpenedHandler(this))
-                .setNotificationReceivedHandler(NotificationReceivedHandler(SaveNotificationUseCase(databaseRepository)))
-                .init()
-//        OneSignal.sendTag("amlab", "true")
+        OneSignal.initWithContext(this)
+        OneSignal.unsubscribeWhenNotificationsAreDisabled(true)
+        OneSignal.setNotificationOpenedHandler(NotificationOpenedHandler(this))
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
+        OneSignal.setAppId("472232b8-fd21-4270-bf9c-77df1c14da6f")
     }
+
+    fun getSaveNotificationUseCase() = SaveNotificationUseCase(databaseRepository)
+
 }

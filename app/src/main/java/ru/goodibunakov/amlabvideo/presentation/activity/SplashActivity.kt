@@ -9,6 +9,7 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import com.google.android.material.snackbar.Snackbar
@@ -19,7 +20,6 @@ import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.BuildConfig
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
-import ru.goodibunakov.amlabvideo.presentation.utils.setVisibility
 import ru.goodibunakov.amlabvideo.presentation.utils.zoomIn
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SplashViewModel
 import java.util.concurrent.TimeUnit
@@ -98,7 +98,7 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
 
         TransitionManager.beginDelayedTransition(parentSplash, transition)
 
-        networkIndicator.setVisibility(isShow)
+        networkIndicator.isVisible = isShow
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

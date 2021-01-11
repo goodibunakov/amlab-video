@@ -3,6 +3,7 @@ package ru.goodibunakov.amlabvideo.presentation.fragments
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -13,7 +14,6 @@ import kotlinx.android.synthetic.main.fragment_messages.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.presentation.recycler_utils.MessagesAdapter
-import ru.goodibunakov.amlabvideo.presentation.utils.setVisibility
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MessagesViewModel
 
 
@@ -53,11 +53,11 @@ class MessagesFragment : Fragment(R.layout.fragment_messages) {
         })
 
         viewModel.errorGetMessagesLiveData.observe(viewLifecycleOwner, {
-            errorText.setVisibility(it != null)
+            errorText.isVisible = it != null
         })
 
         viewModel.progressbarLiveData.observe(viewLifecycleOwner, {
-            progressBar.setVisibility(it)
+            progressBar.isVisible = it
         })
 
         viewModel.errorDeleteMessagesLiveData.observe(viewLifecycleOwner, {
@@ -67,7 +67,7 @@ class MessagesFragment : Fragment(R.layout.fragment_messages) {
         })
 
         viewModel.emptyMessagesLiveData.observe(viewLifecycleOwner, {
-            emptyText.setVisibility(it)
+            emptyText.isVisible = it
         })
     }
 
@@ -89,16 +89,16 @@ class MessagesFragment : Fragment(R.layout.fragment_messages) {
     private fun showWarningDialog() {
         if (messagesAdapter.itemCount > 0) {
             WarningDialog.generate(context = requireContext(),
-                    title = R.string.dialog_error_quota_title,
-                    message = R.string.dialog_warning_delete_all_messages,
-                    showCancelButton = true,
-                    listener = { dialog, which ->
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            viewModel.deleteAllMessages()
-                        } else {
-                            dialog.cancel()
-                        }
-                    }).show()
+                title = R.string.dialog_error_quota_title,
+                message = R.string.dialog_warning_delete_all_messages,
+                showCancelButton = true,
+                listener = { dialog, which ->
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        viewModel.deleteAllMessages()
+                    } else {
+                        dialog.cancel()
+                    }
+                }).show()
         }
     }
 }

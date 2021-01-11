@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
@@ -321,7 +322,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         TransitionManager.beginDelayedTransition(root, transition)
 
-        networkIndicator.setVisibility(isShow)
+        networkIndicator.isVisible = isShow
     }
 
     companion object {

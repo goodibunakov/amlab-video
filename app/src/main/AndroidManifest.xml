@@ -13,14 +13,16 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
         <activity
-            android:name="ru.goodibunakov.amlabvideo.presentation.activity.SplashActivity"
+            android:name=".presentation.activity.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".presentation.activity.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
@@ -38,14 +40,8 @@
             android:name="com.onesignal.NotificationOpened.DEFAULT"
             android:value="DISABLE" />
 
-        <service
-            android:name=".data.notifications.BackgroundNotificationExtenderService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE">
-            <intent-filter>
-                <action android:name="com.onesignal.NotificationExtender" />
-            </intent-filter>
-        </service>
+        <meta-data android:name="com.onesignal.NotificationServiceExtension"
+            android:value="ru.goodibunakov.amlabvideo.data.notifications.NotificationReceivedHandler" />
 
     </application>
 

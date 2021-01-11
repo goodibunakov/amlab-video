@@ -27,7 +27,3 @@ fun View.zoomIn(duration: Long = 1000L): Completable {
                 }
     }
 }
-
-fun View.setVisibility(visible: Boolean) {
-    visibility = if (visible) View.VISIBLE else View.GONE
-}

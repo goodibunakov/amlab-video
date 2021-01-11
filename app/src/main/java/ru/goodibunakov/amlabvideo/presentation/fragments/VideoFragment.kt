@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -38,7 +39,6 @@ import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 import ru.goodibunakov.amlabvideo.presentation.recycler_utils.InfiniteScrollListener
 import ru.goodibunakov.amlabvideo.presentation.recycler_utils.VideoAdapter
-import ru.goodibunakov.amlabvideo.presentation.utils.setVisibility
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.VideoFragmentViewModel
 import java.util.*
@@ -94,7 +94,7 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         })
 
         viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, {
-            progressBar.setVisibility(it)
+            progressBar.isVisible = it
         })
 
         viewModel.videoDetails.observe(viewLifecycleOwner, {
@@ -107,7 +107,7 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         })
 
         viewModel.error.observe(viewLifecycleOwner, {
-            errorText.setVisibility(it != null)
+            errorText.isVisible = it != null
         })
 
         viewModel.recyclerLoadMoreProcess.observe(viewLifecycleOwner, {
@@ -259,9 +259,9 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
     }
 
     private fun toggleVisibility(listIsEmpty: Boolean) {
-        playerView.setVisibility(!listIsEmpty)
-        infoLayout.setVisibility(!listIsEmpty)
-        emptyText.setVisibility(listIsEmpty)
+        playerView.isVisible = !listIsEmpty
+        infoLayout.isVisible = !listIsEmpty
+        emptyText.isVisible = listIsEmpty
     }
 
     private fun initRateBottomSheet() {
