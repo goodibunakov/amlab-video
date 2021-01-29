@@ -36,14 +36,8 @@
     <string name="playlists_update_success">Playlists updated successfully</string>
 
     <string name="rate_popup_ask_title">Do you like the app?</string>
-    <string name="rate_popup_ask_message">Do you like to use the app?</string>
     <string name="rate_popup_ask_ok">Yes</string>
     <string name="rate_popup_ask_no">No</string>
-    <string name="rate_popup_title">Rate this app</string>
-    <string name="rate_popup_message">Could you take a minute to rate this app? It does not take more than a minute.</string>
-    <string name="rate_popup_ok">Rate now</string>
-    <string name="rate_popup_later">Remind me later</string>
-    <string name="rate_popup_no">No thanks</string>
 
     <string name="dialog_error_quota_title">Attention!</string>
     <string name="dialog_error_quota_message">The limit on requests to Youtube has been reached for today. Come back tomorrow</string>

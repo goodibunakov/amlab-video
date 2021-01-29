@@ -1,12 +1,13 @@
 package ru.goodibunakov.amlabvideo.presentation.fragments
 
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -18,12 +19,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mikhaellopez.ratebottomsheet.RateBottomSheet
-import com.mikhaellopez.ratebottomsheet.RateBottomSheetManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.perfomer.blitz.setTimeAgo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -77,7 +77,6 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         initPlayerView()
         initRecyclerView()
         observeLiveData()
-        initRateBottomSheet()
     }
 
     private fun observeLiveData() {
@@ -132,6 +131,33 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
                 playerView.getPlayerUiController().showUi(true)
             }
         })
+
+        viewModel.showInAppReviewLiveData.observe(viewLifecycleOwner, { show ->
+            if (show) {
+                showInAppReview()
+            }
+        })
+    }
+
+    private fun showInAppReview() {
+        val reviewManager = ReviewManagerFactory.create(requireContext())
+        val request = reviewManager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val reviewInfo = task.result
+                val flow = reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
+                flow.addOnCompleteListener { }
+            } else {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.rate_popup_ask_title)
+                    .setPositiveButton(R.string.rate_popup_ask_ok) { _, _ ->
+                        val rateReviewIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.googleplay_url)))
+                        startActivity(rateReviewIntent)
+                    }
+                    .setNegativeButton(R.string.rate_popup_ask_no) { _, _ -> }
+                    .show()
+            }
+        }
     }
 
     private fun initPlayerView() {
@@ -262,29 +288,6 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         playerView.isVisible = !listIsEmpty
         infoLayout.isVisible = !listIsEmpty
         emptyText.isVisible = listIsEmpty
-    }
-
-    private fun initRateBottomSheet() {
-        context?.let {
-            RateBottomSheetManager(it)
-                .setInstallDays(3) // 3 by default
-                .setLaunchTimes(5) // 5 by default
-                .setRemindInterval(2) // 2 by default
-                .setShowAskBottomSheet(true) // True by default
-                .setShowLaterButton(true) // True by default
-                .setShowCloseButtonIcon(true) // True by default
-                .monitor()
-        }
-
-
-        Handler(Looper.getMainLooper())
-            .postDelayed(
-                {
-                    if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                        RateBottomSheet.showRateBottomSheetIfMeetsConditions(this)
-                    }
-                }, 3500)
-
     }
 
     override fun onDestroyView() {
