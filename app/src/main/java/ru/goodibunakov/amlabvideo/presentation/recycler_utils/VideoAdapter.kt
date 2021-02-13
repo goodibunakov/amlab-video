@@ -4,7 +4,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.goodibunakov.amlabvideo.R
+import androidx.viewbinding.ViewBinding
+import ru.goodibunakov.amlabvideo.databinding.ItemListBinding
+import ru.goodibunakov.amlabvideo.databinding.ItemListLoadingBinding
 import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
 import ru.goodibunakov.amlabvideo.presentation.interfaces.EmptyListener
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
@@ -13,18 +15,18 @@ import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 class VideoAdapter(
         private val onClickListener: OnClickListener,
         private val emptyListener: EmptyListener
-) : RecyclerView.Adapter<BaseViewHolder>() {
+) : RecyclerView.Adapter<BaseViewHolder<ViewBinding>>() {
 
     private val items: MutableList<VideoUIModel?> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ViewBinding> {
         return when (viewType) {
             VIEW_TYPE_ITEM -> {
-                val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
+                val itemView = ItemListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 VideoItemViewHolder(itemView, onClickListener)
             }
             else -> {
-                val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list_loading, parent, false)
+                val itemView = ItemListLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 LoadingViewHolder(itemView)
             }
         }
@@ -53,7 +55,7 @@ class VideoAdapter(
         return items.size
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<ViewBinding>, position: Int) {
         holder.bind(items[position])
     }
 

@@ -10,9 +10,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.perfomer.blitz.setTimeAgo
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_message.view.*
 import ru.goodibunakov.amlabvideo.R
+import ru.goodibunakov.amlabvideo.databinding.ItemMessageBinding
 import ru.goodibunakov.amlabvideo.presentation.model.MessageUIItem
 
 class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>() {
@@ -21,7 +20,7 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessagesViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
+        val itemView = ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MessagesViewHolder(itemView)
     }
 
@@ -45,29 +44,31 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>
         }
     }
 
-    inner class MessagesViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    inner class MessagesViewHolder(private val binding: ItemMessageBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MessageUIItem?) {
             item?.let {
                 if (item.image.isNotEmpty()) {
-                    containerView.messageImage.visibility = View.VISIBLE
+                    binding.messageImage.visibility = View.VISIBLE
                     val requestOptions = RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    Glide.with(containerView.context)
+                    Glide.with(binding.root.context)
                         .load(item.image)
                         .apply(requestOptions)
                         .thumbnail(0.1f)
                         .placeholder(R.drawable.empty_photo)
                         .error(R.drawable.empty_photo)
                         .transition(DrawableTransitionOptions().crossFade())
-                        .into(containerView.messageImage)
+                        .into(binding.messageImage)
                 } else {
-                    containerView.messageImage.visibility = View.GONE
+                    binding.messageImage.visibility = View.GONE
                 }
 
-                containerView.messageTitle.text = item.title
-                containerView.messageBody.text = item.body
-                containerView.messageDate.setTimeAgo(time = item.dateReceived, showSeconds = false, autoUpdate = false)
+                with(binding) {
+                    messageTitle.text = item.title
+                    messageBody.text = item.body
+                    messageDate.setTimeAgo(time = item.dateReceived, showSeconds = false, autoUpdate = false)
+                }
             }
         }
     }

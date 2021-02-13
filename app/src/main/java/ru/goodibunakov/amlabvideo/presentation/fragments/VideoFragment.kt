@@ -1,7 +1,6 @@
 package ru.goodibunakov.amlabvideo.presentation.fragments
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -22,6 +21,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.perfomer.blitz.setTimeAgo
@@ -30,9 +30,9 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_video.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
+import ru.goodibunakov.amlabvideo.databinding.FragmentVideoBinding
 import ru.goodibunakov.amlabvideo.presentation.interfaces.EmptyListener
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.interfaces.OnFullScreenListener
@@ -48,6 +48,7 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
 
     private val sharedViewModel: SharedViewModel by activityViewModels { AmlabApplication.viewModelFactory }
     private val viewModel: VideoFragmentViewModel by viewModels { AmlabApplication.viewModelFactory }
+    private val binding by viewBinding(FragmentVideoBinding::bind)
 
     private lateinit var videoAdapter: VideoAdapter
     private lateinit var youTubePlayerDisposable: Disposable
@@ -93,20 +94,22 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         })
 
         viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, {
-            progressBar.isVisible = it
+            binding.progressBar.isVisible = it
         })
 
         viewModel.videoDetails.observe(viewLifecycleOwner, {
-            infoTitle.text = it.title
-            infoDetails.text = String.format(
-                Locale.getDefault(),
-                getString(R.string.video_views_and_pass_from_publish_date),
-                it.viewCount)
-            infoTimeAgo.setTimeAgo(it.publishedAtDate)
+            with(binding) {
+                infoTitle.text = it.title
+                infoDetails.text = String.format(
+                    Locale.getDefault(),
+                    getString(R.string.video_views_and_pass_from_publish_date),
+                    it.viewCount)
+                infoTimeAgo.setTimeAgo(it.publishedAtDate)
+            }
         })
 
         viewModel.error.observe(viewLifecycleOwner, {
-            errorText.isVisible = it != null
+            binding.errorText.isVisible = it != null
         })
 
         viewModel.recyclerLoadMoreProcess.observe(viewLifecycleOwner, {
@@ -125,10 +128,10 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         sharedViewModel.isInPictureInPictureMode.observe(viewLifecycleOwner, { isInPictureInPictureMode ->
             if (isInPictureInPictureMode) {
                 onFullScreenListener.enterFullScreen()
-                playerView.getPlayerUiController().showUi(false)
+                binding.playerView.getPlayerUiController().showUi(false)
             } else {
                 onFullScreenListener.exitFullScreen()
-                playerView.getPlayerUiController().showUi(true)
+                binding.playerView.getPlayerUiController().showUi(true)
             }
         })
 
@@ -161,9 +164,9 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
     }
 
     private fun initPlayerView() {
-        lifecycle.addObserver(playerView)
-        initPictureInPicture(playerView)
-        playerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+        lifecycle.addObserver(binding.playerView)
+        initPictureInPicture(binding.playerView)
+        binding.playerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
                 youTubePlayerDisposable = viewModel.videoIdSubject
                     .filter { it.isNotEmpty() }
@@ -172,7 +175,7 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
                     }, {})
             }
         })
-        playerView.addFullScreenListener(object : YouTubePlayerFullScreenListener {
+        binding.playerView.addFullScreenListener(object : YouTubePlayerFullScreenListener {
             override fun onYouTubePlayerEnterFullScreen() {
                 onFullScreenListener.enterFullScreen()
 //                addCustomActionsToPlayer()
@@ -215,14 +218,14 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         val customAction1Icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_fast_rewind_white_24dp)
         val customAction2Icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_fast_forward_white_24dp)
         if (customAction1Icon != null && customAction2Icon != null) {
-            playerView.getPlayerUiController().setCustomAction1(customAction1Icon) { Toast.makeText(requireActivity(), "custom action1 clicked", Toast.LENGTH_SHORT).show() }
-            playerView.getPlayerUiController().setCustomAction2(customAction2Icon) { Toast.makeText(requireActivity(), "custom action2 clicked", Toast.LENGTH_SHORT).show() }
+            binding.playerView.getPlayerUiController().setCustomAction1(customAction1Icon) { Toast.makeText(requireActivity(), "custom action1 clicked", Toast.LENGTH_SHORT).show() }
+            binding.playerView.getPlayerUiController().setCustomAction2(customAction2Icon) { Toast.makeText(requireActivity(), "custom action2 clicked", Toast.LENGTH_SHORT).show() }
         }
     }
 
     private fun removeCustomActionsFromPlayer() {
-        playerView.getPlayerUiController().showCustomAction1(false)
-        playerView.getPlayerUiController().showCustomAction2(false)
+        binding.playerView.getPlayerUiController().showCustomAction1(false)
+        binding.playerView.getPlayerUiController().showCustomAction2(false)
     }
 
 //    /**
@@ -242,11 +245,11 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         videoAdapter = VideoAdapter(this, this)
         val linearLayoutManager = LinearLayoutManager(requireContext())
         infiniteScrollListener = InfiniteScrollListener(linearLayoutManager, this@VideoFragment)
-        recycler.apply {
+        binding.recycler.apply {
             setHasFixedSize(true)
             adapter = videoAdapter
             layoutManager = linearLayoutManager
-            addItemDecoration(DividerItemDecoration(recycler.context, DividerItemDecoration.VERTICAL))
+            addItemDecoration(DividerItemDecoration(binding.recycler.context, DividerItemDecoration.VERTICAL))
             itemAnimator = DefaultItemAnimator()
             addOnScrollListener(infiniteScrollListener)
         }
@@ -257,17 +260,17 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
     }
 
     fun exitFullScreen() {
-        playerView.exitFullScreen()
+        binding.playerView.exitFullScreen()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        playerView.getPlayerUiController().getMenu()?.dismiss()
+        binding.playerView.getPlayerUiController().getMenu()?.dismiss()
 
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            playerView.exitFullScreen()
+            binding.playerView.exitFullScreen()
         } else {
-            playerView.enterFullScreen()
+            binding.playerView.enterFullScreen()
         }
     }
 
@@ -285,9 +288,11 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
     }
 
     private fun toggleVisibility(listIsEmpty: Boolean) {
-        playerView.isVisible = !listIsEmpty
-        infoLayout.isVisible = !listIsEmpty
-        emptyText.isVisible = listIsEmpty
+        with(binding) {
+            playerView.isVisible = !listIsEmpty
+            infoLayout.isVisible = !listIsEmpty
+            emptyText.isVisible = listIsEmpty
+        }
     }
 
     override fun onDestroyView() {

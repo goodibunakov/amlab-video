@@ -20,6 +20,7 @@ abstract class BaseActivity<T : BaseActivityViewModel> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(layoutResId())
 
         viewModel.networkLiveData.observe(this, {
             showNetworkAvailable(it)
@@ -59,14 +60,18 @@ abstract class BaseActivity<T : BaseActivityViewModel> : AppCompatActivity() {
 
 
     private fun showQuotaErrorDialog() {
-        WarningDialog.generate(context = this,
-                title = R.string.dialog_error_quota_title,
-                message = R.string.dialog_error_quota_message,
-                showCancelButton = false,
-                listener = { _, which ->
-                    if (which == DialogInterface.BUTTON_POSITIVE) {
-                        finishAndRemoveTask()
-                    }
-                }).show()
+        WarningDialog.generate(
+            context = this,
+            title = R.string.dialog_error_quota_title,
+            message = R.string.dialog_error_quota_message,
+            showCancelButton = false,
+            listener = { _, which ->
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    finishAndRemoveTask()
+                }
+            }
+        ).show()
     }
+
+    abstract fun layoutResId(): Int
 }

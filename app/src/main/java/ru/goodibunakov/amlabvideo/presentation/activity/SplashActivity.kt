@@ -12,14 +12,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_splash.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.BuildConfig
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
+import ru.goodibunakov.amlabvideo.databinding.ActivitySplashBinding
 import ru.goodibunakov.amlabvideo.presentation.utils.zoomIn
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SplashViewModel
 import java.util.concurrent.TimeUnit
@@ -31,14 +32,14 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
 
     override val viewModel: SplashViewModel by viewModels { AmlabApplication.viewModelFactory }
 
+    private val binding by viewBinding(ActivitySplashBinding::bind, R.id.activity_splash_root)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_splash)
-
-        animationDisposable = logo.zoomIn()
+        animationDisposable = binding.logo.zoomIn()
                 .delay(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -59,11 +60,11 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
                     Log.d("debug", "animationDisposable error = $it")
                 })
 
-        version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
+        binding.version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
 
         viewModel.error.observe(this, {
             it?.let {
-                Snackbar.make(parentSplash, "Ошибка: ${it.localizedMessage}", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, "Ошибка: ${it.localizedMessage}", Snackbar.LENGTH_SHORT).show()
             }
         })
     }
@@ -74,9 +75,9 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
             ConnectedStatus.NO -> R.color.colorError
             else -> android.R.color.black
         }
-        networkIndicator.setBackgroundColor(ContextCompat.getColor(this, indicatorColor))
+        binding.networkIndicator.setBackgroundColor(ContextCompat.getColor(this, indicatorColor))
 
-        networkIndicator.text = when (isAvailable) {
+        binding.networkIndicator.text = when (isAvailable) {
             ConnectedStatus.YES -> getString(R.string.network_indicator_yes)
             ConnectedStatus.NO -> getString(R.string.network_indicator_no)
             else -> ""
@@ -96,9 +97,9 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
                     if (!isShow) startDelay = 500
                 }
 
-        TransitionManager.beginDelayedTransition(parentSplash, transition)
+        TransitionManager.beginDelayedTransition(binding.root, transition)
 
-        networkIndicator.isVisible = isShow
+        binding.networkIndicator.isVisible = isShow
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -117,4 +118,6 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
         if (::animationDisposable.isInitialized && !animationDisposable.isDisposed) animationDisposable.dispose()
         super.onDestroy()
     }
+
+    override fun layoutResId() = R.layout.activity_splash
 }

@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/parentSplash"
+    android:id="@+id/activity_splash_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/toolBarColor"
@@ -12,6 +12,7 @@
         android:id="@+id/networkIndicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:background="@color/colorSuccess"
         android:gravity="center"
         android:paddingStart="8dp"
@@ -20,7 +21,6 @@
         android:paddingBottom="4dp"
         android:text="@string/network_indicator_no"
         android:textColor="@color/colorOnSuccess"
-        android:layout_gravity="bottom"
         android:visibility="gone"
         tools:visibility="visible" />
 

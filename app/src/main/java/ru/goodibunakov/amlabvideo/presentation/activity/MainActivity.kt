@@ -16,17 +16,18 @@ import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.materialdrawer.holder.ImageHolder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.*
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
-import kotlinx.android.synthetic.main.activity_main.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
 import ru.goodibunakov.amlabvideo.data.notifications.NotificationOpenedHandler.Companion.INTENT_FROM_NOTIFICATION
 import ru.goodibunakov.amlabvideo.data.repositories.ConnectedStatus
+import ru.goodibunakov.amlabvideo.databinding.ActivityMainBinding
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutChannelFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.AboutFragment
 import ru.goodibunakov.amlabvideo.presentation.fragments.MessagesFragment
@@ -54,6 +55,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     override val viewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
     private val sharedViewModel: SharedViewModel by viewModels { AmlabApplication.viewModelFactory }
+    private val binding by viewBinding(ActivityMainBinding::bind, R.id.activity_main_root)
 
     private var isFullscreen = false
     private var isPipActive = false
@@ -61,8 +63,8 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        fullScreenHelper = FullScreenHelper(this, appBarLayout)
+
+        fullScreenHelper = FullScreenHelper(this, binding.appBarLayout)
 
         initDrawerAndToolbar()
 
@@ -119,8 +121,8 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                 if (it) {
                     if (fragment == null || fragment !is MessagesFragment) {
                         Log.d("debug", "setSelection(IDENTIFIER_MESSAGES, true)")
-                        slider.setSelectionAtPosition(-1, false)
-                        slider.setSelection(IDENTIFIER_MESSAGES, true)
+                        binding.slider.setSelectionAtPosition(-1, false)
+                        binding.slider.setSelection(IDENTIFIER_MESSAGES, true)
                         isDrawerFirstInit = false
                     }
                 }
@@ -130,17 +132,17 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
 
     private fun initDrawerAndToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 
-        actionBarDrawerToggle = ActionBarDrawerToggle(this, root, toolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.activityMainRoot, binding.toolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
         actionBarDrawerToggle.isDrawerSlideAnimationEnabled = true
-        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.activityMainRoot) { view, insets ->
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                rootLayout.updatePadding(top = insets.systemWindowInsetTop)
+                binding.rootLayout.updatePadding(top = insets.systemWindowInsetTop)
             } else {
-                slider.insetForeground = null
+                binding.slider.insetForeground = null
             }
             insets
         }
@@ -157,14 +159,14 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         // Create the AccountHeader
         headerView = AccountHeaderView(this, compact = true)
                 .apply {
-                    attachToSliderView(slider)
+                    attachToSliderView(binding.slider)
                     headerBackground = ImageHolder(R.drawable.drawer_header)
                     addProfiles(profile)
                     withSavedInstance(savedInstanceState)
                     selectionListEnabledForSingleProfile = false
                 }
 
-        slider.apply {
+        binding.slider.apply {
             if (itemAdapter.itemList.size() > 0) {
                 this.selectedItemPosition = selectedItemPosition
                 Log.d("debug", "this.selectedItemPosition = ${this.selectedItemPosition}")
@@ -235,14 +237,14 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         val fromNotification = intent.getBooleanExtra(INTENT_FROM_NOTIFICATION, false)
         if (isDrawerFirstInit && !fromNotification) {
-            slider.setSelection(IDENTIFIER_NEW_VIDEOS, true)
+            binding.slider.setSelection(IDENTIFIER_NEW_VIDEOS, true)
             isDrawerFirstInit = false
         }
 
         //восстановление выделенного пункта после обновления плейлистов
         if (this.selectedItemPosition != -1) {
-            slider.setSelectionAtPosition(-1, false)
-            slider.setSelectionAtPosition(this.selectedItemPosition, false)
+            binding.slider.setSelectionAtPosition(-1, false)
+            binding.slider.setSelectionAtPosition(this.selectedItemPosition, false)
             isDrawerFirstInit = false
         }
 
@@ -280,7 +282,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
         //add the values which need to be saved from the drawer to the bundle
-        outState = slider.saveInstanceState(outState)
+        outState = binding.slider.saveInstanceState(outState)
         //add the values which need to be saved from the accountHeader to the bundle
         if (::headerView.isInitialized) outState = headerView.saveInstanceState(outState)
         super.onSaveInstanceState(outState)
@@ -293,9 +295,9 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             ConnectedStatus.NO -> R.color.colorError
             else -> android.R.color.black
         }
-        networkIndicator.setBackgroundColor(ContextCompat.getColor(this, indicatorColor))
+        binding.networkIndicator.setBackgroundColor(ContextCompat.getColor(this, indicatorColor))
 
-        networkIndicator.text = when (isAvailable) {
+        binding.networkIndicator.text = when (isAvailable) {
             ConnectedStatus.YES -> getString(R.string.network_indicator_yes)
             ConnectedStatus.NO -> getString(R.string.network_indicator_no)
             else -> ""
@@ -303,12 +305,12 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         if (isAvailable == ConnectedStatus.YES) {
             showNetworkIndicator(false)
-            fragmentContainer.visibility = View.VISIBLE
-            noInternet.visibility = View.GONE
+            binding.fragmentContainer.visibility = View.VISIBLE
+            binding.noInternet.visibility = View.GONE
         } else {
             showNetworkIndicator(true)
-            fragmentContainer.visibility = View.INVISIBLE
-            noInternet.visibility = View.VISIBLE
+            binding.fragmentContainer.visibility = View.INVISIBLE
+            binding.noInternet.visibility = View.VISIBLE
         }
     }
 
@@ -320,9 +322,9 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                     if (!isShow) startDelay = 700
                 }
 
-        TransitionManager.beginDelayedTransition(root, transition)
+        TransitionManager.beginDelayedTransition(binding.activityMainRoot, transition)
 
-        networkIndicator.isVisible = isShow
+        binding.networkIndicator.isVisible = isShow
     }
 
     companion object {
@@ -347,7 +349,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        toolbar?.menu?.close()
+        binding.toolbar.menu?.close()
 
         actionBarDrawerToggle.onConfigurationChanged(newConfig)
 
@@ -356,7 +358,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT && !isPipActive) {
                 exitFullScreen()
             } else {
-                if (root.isDrawerOpen(slider)) root.closeDrawer(slider)
+                if (binding.activityMainRoot.isDrawerOpen(binding.slider)) binding.activityMainRoot.closeDrawer(binding.slider)
                 enterFullScreen()
             }
         }
@@ -364,8 +366,8 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     override fun onBackPressed() {
         when {
-            root.isDrawerOpen(slider) -> {
-                root.closeDrawer(slider)
+            binding.activityMainRoot.isDrawerOpen(binding.slider) -> {
+                binding.activityMainRoot.closeDrawer(binding.slider)
             }
             isFullscreen -> {
                 val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
@@ -396,9 +398,9 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     private fun showPlaylistUpdated(throwable: Throwable?) {
         if (throwable != null) {
-            Snackbar.make(root, getString(R.string.playlists_update_error), Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.activityMainRoot, getString(R.string.playlists_update_error), Snackbar.LENGTH_SHORT).show()
         } else {
-            Snackbar.make(root, getString(R.string.playlists_update_success), Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.activityMainRoot, getString(R.string.playlists_update_success), Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -407,4 +409,6 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         isPipActive = isInPictureInPictureMode
         sharedViewModel.isInPictureInPictureMode.value = isInPictureInPictureMode
     }
+
+    override fun layoutResId() = R.layout.activity_main
 }

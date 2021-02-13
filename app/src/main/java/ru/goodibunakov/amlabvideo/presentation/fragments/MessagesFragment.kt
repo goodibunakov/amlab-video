@@ -9,10 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_messages.*
 import ru.goodibunakov.amlabvideo.AmlabApplication
 import ru.goodibunakov.amlabvideo.R
+import ru.goodibunakov.amlabvideo.databinding.FragmentMessagesBinding
 import ru.goodibunakov.amlabvideo.presentation.recycler_utils.MessagesAdapter
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.MessagesViewModel
 
@@ -20,6 +21,8 @@ import ru.goodibunakov.amlabvideo.presentation.viewmodels.MessagesViewModel
 class MessagesFragment : Fragment(R.layout.fragment_messages) {
 
     private val viewModel: MessagesViewModel by viewModels { AmlabApplication.viewModelFactory }
+
+    private val binding by viewBinding(FragmentMessagesBinding::bind)
     private lateinit var messagesAdapter: MessagesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,11 +40,11 @@ class MessagesFragment : Fragment(R.layout.fragment_messages) {
     private fun initRecyclerView() {
         messagesAdapter = MessagesAdapter()
         val linearLayoutManager = LinearLayoutManager(requireContext())
-        messagesRecycler.apply {
+        binding.messagesRecycler.apply {
             setHasFixedSize(true)
             adapter = messagesAdapter
             layoutManager = linearLayoutManager
-            addItemDecoration(DividerItemDecoration(messagesRecycler.context, DividerItemDecoration.VERTICAL))
+            addItemDecoration(DividerItemDecoration(binding.messagesRecycler.context, DividerItemDecoration.VERTICAL))
             itemAnimator = DefaultItemAnimator()
         }
     }
@@ -49,25 +52,25 @@ class MessagesFragment : Fragment(R.layout.fragment_messages) {
     private fun observeLiveData() {
         viewModel.messagesLiveData.observe(viewLifecycleOwner, {
             messagesAdapter.addItems(it)
-            messagesRecycler.smoothScrollToPosition(0)
+            binding.messagesRecycler.smoothScrollToPosition(0)
         })
 
         viewModel.errorGetMessagesLiveData.observe(viewLifecycleOwner, {
-            errorText.isVisible = it != null
+            binding.errorText.isVisible = it != null
         })
 
         viewModel.progressbarLiveData.observe(viewLifecycleOwner, {
-            progressBar.isVisible = it
+            binding.progressBar.isVisible = it
         })
 
         viewModel.errorDeleteMessagesLiveData.observe(viewLifecycleOwner, {
             it?.let {
-                Snackbar.make(root, R.string.error_delete_messages, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, R.string.error_delete_messages, Snackbar.LENGTH_SHORT).show()
             }
         })
 
         viewModel.emptyMessagesLiveData.observe(viewLifecycleOwner, {
-            emptyText.isVisible = it
+            binding.emptyText.isVisible = it
         })
     }
 
