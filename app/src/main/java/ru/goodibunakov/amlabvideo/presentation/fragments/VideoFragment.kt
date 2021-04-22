@@ -1,5 +1,6 @@
 package ru.goodibunakov.amlabvideo.presentation.fragments
 
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -199,10 +200,10 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         val pictureInPictureIcon = ImageView(requireContext())
         pictureInPictureIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_picture_in_picture_24dp))
 
-        pictureInPictureIcon.setOnClickListener { view: View? ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        pictureInPictureIcon.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (supportsPIP) {
-                    requireActivity().enterPictureInPictureMode()
+                    requireActivity().enterPictureInPictureMode(PictureInPictureParams.Builder().build())
                 }
             }
         }

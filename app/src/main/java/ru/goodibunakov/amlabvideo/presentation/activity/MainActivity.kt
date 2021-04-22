@@ -138,7 +138,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.activityMainRoot, binding.toolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
         actionBarDrawerToggle.isDrawerSlideAnimationEnabled = true
-        ViewCompat.setOnApplyWindowInsetsListener(binding.activityMainRoot) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.activityMainRoot) { _, insets ->
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 binding.rootLayout.updatePadding(top = insets.systemWindowInsetTop)
             } else {

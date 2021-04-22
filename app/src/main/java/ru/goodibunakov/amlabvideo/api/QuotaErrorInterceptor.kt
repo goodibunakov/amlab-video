@@ -42,7 +42,7 @@ class QuotaErrorInterceptor(
         val request = chain.request()
         val response = chain.proceed(request)
         if (response.code == 403) {
-            var quotaErrorResponse: QuotaErrorResponse? = null
+            val quotaErrorResponse: QuotaErrorResponse?
             val responseString = response.body?.string()
             return try {
                 quotaErrorResponse = gson.fromJson(responseString, QuotaErrorResponse::class.java)

@@ -11,7 +11,7 @@ import ru.goodibunakov.amlabvideo.presentation.model.AboutChannelUIModel
 
 class AboutChannelViewModel(getAboutChannelUseCase: GetAboutChannelUseCase) : ViewModel() {
 
-    val liveData = MutableLiveData<AboutChannelUIModel>()
+    val liveData = MutableLiveData<AboutChannelUIModel?>()
     val progressBarVisibilityLiveData = MutableLiveData<Boolean>()
     val error = MutableLiveData<Throwable?>().apply { this.value = null }
 

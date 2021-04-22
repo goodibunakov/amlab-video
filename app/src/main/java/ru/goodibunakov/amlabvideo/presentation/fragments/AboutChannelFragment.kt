@@ -37,6 +37,8 @@ class AboutChannelFragment : Fragment(R.layout.fragment_about_channel) {
         })
 
         viewModel.liveData.observe(viewLifecycleOwner, {
+            if (it == null) return@observe
+
             val requestOptions = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
             Glide.with(binding.header.context)

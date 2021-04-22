@@ -73,5 +73,5 @@ abstract class BaseActivity<T : BaseActivityViewModel> : AppCompatActivity() {
         ).show()
     }
 
-    abstract fun layoutResId(): Int
+    protected abstract fun layoutResId(): Int
 }
