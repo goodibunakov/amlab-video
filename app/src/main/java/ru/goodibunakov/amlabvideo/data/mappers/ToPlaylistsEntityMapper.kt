@@ -9,9 +9,10 @@ object ToPlaylistsEntityMapper : Mapper<PlaylistsDTO, List<PlaylistsEntity>> {
     override fun map(from: PlaylistsDTO): List<PlaylistsEntity> {
         return from.items.map {
             PlaylistsEntity(
-                    it.id,
-                    it.snippet.title,
-                    it.snippet.thumbnails.standard.url)
+                it.id,
+                it.snippet.title,
+                it.snippet.thumbnails.standard?.url ?: ""
+            )
         }
     }
 }

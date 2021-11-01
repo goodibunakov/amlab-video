@@ -16,5 +16,5 @@ data class Thumbnails(
         @SerializedName("medium")
         val medium: Medium,
         @SerializedName("standard")
-        val standard: Standard
+        val standard: Standard?
 )
