@@ -1,6 +1,6 @@
 package ru.goodibunakov.amlabvideo.domain.entity
 
 data class AboutChannelEntity(
-        val description: String,
-        val headerUrl: String
+    val description: String,
+    val headerUrl: String
 )

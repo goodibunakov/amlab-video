@@ -27,8 +27,8 @@ import ru.goodibunakov.amlabvideo.api.dto.error.QuotaErrorResponse
  */
 
 class QuotaErrorInterceptor(
-        private val broadcastManager: LocalBroadcastManager,
-        val gson: Gson
+    private val broadcastManager: LocalBroadcastManager,
+    val gson: Gson
 ) : Interceptor {
 
     companion object {
@@ -46,13 +46,17 @@ class QuotaErrorInterceptor(
             val responseString = response.body?.string()
             return try {
                 quotaErrorResponse = gson.fromJson(responseString, QuotaErrorResponse::class.java)
-                Log.d("debug", "QuotaErrorInterceptor intercept quotaErrorResponse = $quotaErrorResponse")
+                Log.d(
+                    "debug",
+                    "QuotaErrorInterceptor intercept quotaErrorResponse = $quotaErrorResponse"
+                )
                 if (quotaErrorResponse != null
-                        && (quotaErrorResponse.error.errors[0].reason == REASON_QUOTA_EXCEEDED
-                                || quotaErrorResponse.error.errors[0].reason == REASON_DAILY_LIMIT_EXCEEDED)) {
+                    && (quotaErrorResponse.error.errors[0].reason == REASON_QUOTA_EXCEEDED
+                        || quotaErrorResponse.error.errors[0].reason == REASON_DAILY_LIMIT_EXCEEDED)
+                ) {
                     Log.d("debug", "QuotaErrorInterceptor intercept sendBroadcast")
                     val intent = Intent(ACTION_QUOTA_EXCEEDED)
-                            .apply { putExtra(EXTRA_QUOTA_EXCEEDED, quotaErrorResponse) }
+                        .apply { putExtra(EXTRA_QUOTA_EXCEEDED, quotaErrorResponse) }
 
 
                     val a = broadcastManager.sendBroadcast(intent)

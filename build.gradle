@@ -9,8 +9,9 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         gradlePluginPortal()
+        jcenter()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_version"
@@ -19,15 +20,15 @@ buildscript {
         classpath "com.google.firebase:firebase-crashlytics-gradle:$firebase_crashlytics_gradle_version"
         classpath "com.google.firebase:perf-plugin:$firebase_perf_plugin_version"
         //noinspection GradleDependency
-        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.9, 0.99.99]'
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.10, 0.99.99]'
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
+        jcenter()
     }
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {

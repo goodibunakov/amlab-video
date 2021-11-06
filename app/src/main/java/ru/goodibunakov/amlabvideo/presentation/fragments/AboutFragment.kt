@@ -22,8 +22,10 @@ class AboutFragment : PreferenceFragmentCompat() {
                 val shareIntent = Intent(Intent.ACTION_SEND)
                 shareIntent.type = "text/plain"
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject))
-                shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.message) +
-                        " " + getString(R.string.googleplay_url))
+                shareIntent.putExtra(
+                    Intent.EXTRA_TEXT, getString(R.string.message) +
+                        " " + getString(R.string.googleplay_url)
+                )
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.share_to)))
                 true
             }
@@ -54,13 +56,16 @@ class AboutFragment : PreferenceFragmentCompat() {
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("mailto:")
         intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("goodibunakov@gmail.com"))
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Amlab Android App ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})")
-//        intent.putExtra(Intent.EXTRA_TEXT, "Я хочу поговорить о...")
+        intent.putExtra(
+            Intent.EXTRA_SUBJECT,
+            "Amlab Android App ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
+        )
         try {
             startActivity(Intent.createChooser(intent, "Отправить письмо..."))
         } catch (ex: ActivityNotFoundException) {
             view?.let {
-                Snackbar.make(it, getString(R.string.error_no_email_clients), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(it, getString(R.string.error_no_email_clients), Snackbar.LENGTH_SHORT)
+                    .show()
             }
         }
     }

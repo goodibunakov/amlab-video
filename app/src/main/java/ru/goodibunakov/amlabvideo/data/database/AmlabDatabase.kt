@@ -10,7 +10,11 @@ import ru.goodibunakov.amlabvideo.data.database.DatabaseConstants.DATABASE_VERSI
 import ru.goodibunakov.amlabvideo.data.model.MessageItem
 import ru.goodibunakov.amlabvideo.data.model.VideoItemModel
 
-@Database(entities = [PlaylistsDTODatabase::class, MessageItem::class, VideoItemModel::class], version = DATABASE_VERSION, exportSchema = true)
+@Database(
+    entities = [PlaylistsDTODatabase::class, MessageItem::class, VideoItemModel::class],
+    version = DATABASE_VERSION,
+    exportSchema = true
+)
 abstract class AmlabDatabase : RoomDatabase() {
 
     abstract fun dao(): Dao
@@ -27,9 +31,10 @@ abstract class AmlabDatabase : RoomDatabase() {
             }
             synchronized(this) {
                 val instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        AmlabDatabase::class.java,
-                        DATABASE_NAME).build()
+                    context.applicationContext,
+                    AmlabDatabase::class.java,
+                    DATABASE_NAME
+                ).build()
                 INSTANCE = instance
                 return instance
             }

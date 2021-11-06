@@ -21,8 +21,8 @@ class MessagesViewModel(
     private val compositeDisposable = CompositeDisposable()
     val messagesLiveData = MutableLiveData<List<MessageUIItem>>()
     val emptyMessagesLiveData = MutableLiveData(false)
-    val errorDeleteMessagesLiveData = MutableLiveData<Throwable>()
-    val errorGetMessagesLiveData = MutableLiveData<Throwable>(null)
+    val errorDeleteMessagesLiveData = MutableLiveData<Throwable?>()
+    val errorGetMessagesLiveData = MutableLiveData<Throwable?>(null)
     val progressbarLiveData = MutableLiveData<Boolean>()
 
     init {

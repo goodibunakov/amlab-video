@@ -4,9 +4,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-class InfiniteScrollListener(private val linearLayoutManager: LinearLayoutManager,
-                             private val listener: OnLoadMoreListener?)
-    : RecyclerView.OnScrollListener() {
+class InfiniteScrollListener(
+    private val linearLayoutManager: LinearLayoutManager,
+    private val listener: OnLoadMoreListener?
+) : RecyclerView.OnScrollListener() {
 
     private var loading = false
     private var canLoadMore = false

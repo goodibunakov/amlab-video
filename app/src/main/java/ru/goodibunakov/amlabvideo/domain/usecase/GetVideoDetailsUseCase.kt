@@ -5,7 +5,9 @@ import ru.goodibunakov.amlabvideo.api.dto.video_details.VideoDetailsDTO
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
 import ru.goodibunakov.amlabvideo.domain.UseCase
 
-class GetVideoDetailsUseCase(private val apiRepository: ApiRepository) : UseCase<String, VideoDetailsDTO>() {
+class GetVideoDetailsUseCase(
+    private val apiRepository: ApiRepository
+) : UseCase<String, VideoDetailsDTO>() {
 
     private var videoId = ""
 

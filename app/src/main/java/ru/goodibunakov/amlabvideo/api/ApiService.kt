@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -130,17 +129,15 @@ interface ApiService {
                             level = HttpLoggingInterceptor.Level.BODY
                         }
                         addInterceptor(httpLoggingInterceptor)
-                        addInterceptor(object : Interceptor {
-                            override fun intercept(chain: Interceptor.Chain): Response {
-                                val original = chain.request()
-                                val originalHttpUrl = original.url
-                                val url = originalHttpUrl.newBuilder()
-                                        .addQueryParameter("key", YOUTUBE_APIKEY)
-                                        .build()
-                                val requestBuilder = original.newBuilder().url(url)
-                                val request = requestBuilder.build()
-                                return chain.proceed(request)
-                            }
+                        addInterceptor(Interceptor { chain ->
+                            val original = chain.request()
+                            val originalHttpUrl = original.url
+                            val url = originalHttpUrl.newBuilder()
+                                .addQueryParameter("key", YOUTUBE_APIKEY)
+                                .build()
+                            val requestBuilder = original.newBuilder().url(url)
+                            val request = requestBuilder.build()
+                            chain.proceed(request)
                         })
                         addInterceptor(
                                 QuotaErrorInterceptor(LocalBroadcastManager.getInstance(context), gson)

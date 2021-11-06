@@ -11,39 +11,39 @@ import ru.goodibunakov.amlabvideo.domain.UseCase
 import ru.goodibunakov.amlabvideo.domain.entity.PlaylistsEntity
 
 class GetChannelPlaylistsUseCase(
-        private val apiRepository: ApiRepository,
-        private val databaseRepository: DatabaseRepository
+    private val apiRepository: ApiRepository,
+    private val databaseRepository: DatabaseRepository
 ) : UseCase<Unit, List<PlaylistsEntity>>() {
 
     override fun buildObservable(): Observable<out List<PlaylistsEntity>> {
         return Observable.concat(
-                databaseRepository.getPlaylists().toObservable(),
-                apiRepository.getPlayLists()
-                        .doOnNext {
-                            databaseRepository.insertPlaylists(it)
-                                    .subscribe({
-                                        Log.d("debug", "GetChannelPlaylistsUseCase insert completed")
-                                    }, { throwable ->
-                                        Log.d("debug", "GetChannelPlaylistsUseCase insert error = $throwable")
-                                    })
-                        }
+            databaseRepository.getPlaylists().toObservable(),
+            apiRepository.getPlayLists()
+                .doOnNext {
+                    databaseRepository.insertPlaylists(it)
+                        .subscribe({
+                            Log.d("debug", "GetChannelPlaylistsUseCase insert completed")
+                        }, { throwable ->
+                            Log.d("debug", "GetChannelPlaylistsUseCase insert error = $throwable")
+                        })
+                }
         )
-                .firstOrError()
-                .doOnError { Log.d("debug", "GetChannelPlaylistsUseCase error $it") }
-                .map { ToPlaylistsEntityMapper.map(it) }
-                .flatMap { Single.fromCallable { setNewVideosPlaylistToFirstPlace(it) } }
-                .toObservable()
+            .firstOrError()
+            .doOnError { Log.d("debug", "GetChannelPlaylistsUseCase error $it") }
+            .map { ToPlaylistsEntityMapper.map(it) }
+            .flatMap { Single.fromCallable { setNewVideosPlaylistToFirstPlace(it) } }
+            .toObservable()
     }
 
     fun updatePlaylistsToDatabase(): Maybe<List<PlaylistsEntity>> {
         return apiRepository.getPlayLists()
-                .firstElement()
-                .doOnSuccess {
-                    databaseRepository.updatePlaylists(it)
-                        .subscribe({},{})
-                }
-                .map { ToPlaylistsEntityMapper.map(it) }
-                .flatMap { Maybe.fromCallable { setNewVideosPlaylistToFirstPlace(it) } }
+            .firstElement()
+            .doOnSuccess {
+                databaseRepository.updatePlaylists(it)
+                    .subscribe({}, {})
+            }
+            .map { ToPlaylistsEntityMapper.map(it) }
+            .flatMap { Maybe.fromCallable { setNewVideosPlaylistToFirstPlace(it) } }
     }
 
 

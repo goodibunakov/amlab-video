@@ -5,7 +5,9 @@ import ru.goodibunakov.amlabvideo.data.model.MessageItem
 import ru.goodibunakov.amlabvideo.domain.DatabaseRepository
 import ru.goodibunakov.amlabvideo.domain.UseCase
 
-class SaveNotificationUseCase(private val databaseRepository: DatabaseRepository) : UseCase<MessageItem, Unit>() {
+class SaveNotificationUseCase(
+    private val databaseRepository: DatabaseRepository
+) : UseCase<MessageItem, Unit>() {
 
     private var message: MessageItem? = null
 

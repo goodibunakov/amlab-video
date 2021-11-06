@@ -7,8 +7,9 @@ import ru.goodibunakov.amlabvideo.domain.DatabaseRepository
 import ru.goodibunakov.amlabvideo.domain.UseCase
 
 class SaveStarToDbUseCase(
-        private val apiRepository: ApiRepository,
-        private val databaseRepository: DatabaseRepository) : UseCase<String, Unit>() {
+    private val apiRepository: ApiRepository,
+    private val databaseRepository: DatabaseRepository
+) : UseCase<String, Unit>() {
 
     private var videoId: String? = null
 
@@ -19,7 +20,7 @@ class SaveStarToDbUseCase(
         }
         return if (itemById != null) {
             databaseRepository.saveStar(itemById!!)
-                    .toObservable()
+                .toObservable()
         } else {
             Observable.error(Throwable("No such item"))
         }
