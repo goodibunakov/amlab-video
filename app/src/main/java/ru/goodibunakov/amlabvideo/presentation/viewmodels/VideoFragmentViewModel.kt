@@ -191,7 +191,6 @@ class VideoFragmentViewModel(
             .map { ToVideoDetailsModelUIMapper.map(it) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-//                    Log.d("debug", "loadVideoDetails $it")
                 videoDetails.value = it
             }, {
                 Log.d("debug", "loadVideoDetails error = ${it.localizedMessage}")

@@ -6,7 +6,7 @@ data class Statistics(
     @SerializedName("commentCount")
     val commentCount: String,
     @SerializedName("dislikeCount")
-    val dislikeCount: String,
+    val dislikeCount: String? = "",
     @SerializedName("favoriteCount")
     val favoriteCount: String,
     @SerializedName("likeCount")

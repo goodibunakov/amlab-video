@@ -15,7 +15,7 @@ object ToVideoDetailsModelUIMapper : Mapper<VideoDetailsDTO, VideoDetailsUI> {
                 likeCount = item.statistics.likeCount,
                 commentCount = item.statistics.commentCount,
                 favoriteCount = item.statistics.favoriteCount,
-                dislikeCount = item.statistics.dislikeCount,
+                dislikeCount = item.statistics.dislikeCount ?: "",
                 title = item.snippet.title,
                 description = item.snippet.description,
                 publishedAt = item.snippet.publishedAt,

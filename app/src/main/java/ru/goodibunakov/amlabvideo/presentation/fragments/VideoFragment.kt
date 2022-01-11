@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -45,7 +44,10 @@ import ru.goodibunakov.amlabvideo.presentation.viewmodels.VideoFragmentViewModel
 import java.util.*
 
 
-class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, InfiniteScrollListener.OnLoadMoreListener, EmptyListener {
+class VideoFragment : Fragment(R.layout.fragment_video),
+    OnClickListener,
+    InfiniteScrollListener.OnLoadMoreListener,
+    EmptyListener {
 
     private val sharedViewModel: SharedViewModel by activityViewModels { AmlabApplication.viewModelFactory }
     private val viewModel: VideoFragmentViewModel by viewModels { AmlabApplication.viewModelFactory }
@@ -99,12 +101,14 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         })
 
         viewModel.videoDetails.observe(viewLifecycleOwner, {
+            Log.d("debug", "videoDetails = $it")
             with(binding) {
                 infoTitle.text = it.title
                 infoDetails.text = String.format(
                     Locale.getDefault(),
                     getString(R.string.video_views_and_pass_from_publish_date),
-                    it.viewCount)
+                    it.viewCount
+                )
                 infoTimeAgo.setTimeAgo(it.publishedAtDate)
             }
         })
@@ -126,15 +130,15 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
             videoAdapter.notifyItemChanged(it, fragmentType)
         })
 
-        sharedViewModel.isInPictureInPictureMode.observe(viewLifecycleOwner, { isInPictureInPictureMode ->
-            if (isInPictureInPictureMode) {
-                onFullScreenListener.enterFullScreen()
-                binding.playerView.getPlayerUiController().showUi(false)
-            } else {
-                onFullScreenListener.exitFullScreen()
-                binding.playerView.getPlayerUiController().showUi(true)
-            }
-        })
+        sharedViewModel.isInPictureInPictureMode.observe(
+            viewLifecycleOwner,
+            { isInPictureInPictureMode ->
+                if (isInPictureInPictureMode) {
+                    onFullScreenListener.enterFullScreen()
+                } else {
+                    onFullScreenListener.exitFullScreen()
+                }
+            })
 
         viewModel.showInAppReviewLiveData.observe(viewLifecycleOwner, { show ->
             if (show) {
@@ -155,7 +159,10 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.rate_popup_ask_title)
                     .setPositiveButton(R.string.rate_popup_ask_ok) { _, _ ->
-                        val rateReviewIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.googleplay_url)))
+                        val rateReviewIntent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(getString(R.string.googleplay_url))
+                        )
                         startActivity(rateReviewIntent)
                     }
                     .setNegativeButton(R.string.rate_popup_ask_no) { _, _ -> }
@@ -179,13 +186,11 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
         binding.playerView.addFullScreenListener(object : YouTubePlayerFullScreenListener {
             override fun onYouTubePlayerEnterFullScreen() {
                 onFullScreenListener.enterFullScreen()
-//                addCustomActionsToPlayer()
             }
 
             override fun onYouTubePlayerExitFullScreen() {
                 if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) return
                 onFullScreenListener.exitFullScreen()
-//                removeCustomActionsFromPlayer()
             }
         })
     }
@@ -193,54 +198,32 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
     private fun initPictureInPicture(playerView: YouTubePlayerView?) {
         var supportsPIP = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            supportsPIP = requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+            supportsPIP =
+                requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
         }
         if (!supportsPIP) return
 
         val pictureInPictureIcon = ImageView(requireContext())
-        pictureInPictureIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_picture_in_picture_24dp))
+        pictureInPictureIcon.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.ic_picture_in_picture_24dp
+            )
+        )
 
         pictureInPictureIcon.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (supportsPIP) {
-                    requireActivity().enterPictureInPictureMode(PictureInPictureParams.Builder().build())
+                    requireActivity().enterPictureInPictureMode(
+                        PictureInPictureParams.Builder().build()
+                    )
                 }
             }
         }
 
-        playerView?.getPlayerUiController()?.addView(pictureInPictureIcon)
+//        playerView?.addView(pictureInPictureIcon)
     }
 
-    /**
-     * This method adds a new custom action to the player.
-     * Custom actions are shown next to the Play/Pause button in the middle of the player.
-     */
-    private fun addCustomActionsToPlayer() {
-        val customAction1Icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_fast_rewind_white_24dp)
-        val customAction2Icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_fast_forward_white_24dp)
-        if (customAction1Icon != null && customAction2Icon != null) {
-            binding.playerView.getPlayerUiController().setCustomAction1(customAction1Icon) { Toast.makeText(requireActivity(), "custom action1 clicked", Toast.LENGTH_SHORT).show() }
-            binding.playerView.getPlayerUiController().setCustomAction2(customAction2Icon) { Toast.makeText(requireActivity(), "custom action2 clicked", Toast.LENGTH_SHORT).show() }
-        }
-    }
-
-    private fun removeCustomActionsFromPlayer() {
-        binding.playerView.getPlayerUiController().showCustomAction1(false)
-        binding.playerView.getPlayerUiController().showCustomAction2(false)
-    }
-
-//    /**
-//     * Set a click listener on the "Play next video" button
-//     */
-//    private open fun setPlayNextVideoButtonClickListener(youTubePlayer: YouTubePlayer) {
-//        val playNextVideoButton: Button = findViewById(R.id.next_video_button)
-//        playNextVideoButton.setOnClickListener({ view ->
-//            YouTubePlayerUtils.loadOrCueVideo(
-//                    youTubePlayer, lifecycle,
-//                    VideoIdsProvider.getNextVideoId(), 0f
-//            )
-//        })
-//    }
 
     private fun initRecyclerView() {
         videoAdapter = VideoAdapter(this, this)
@@ -250,7 +233,12 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
             setHasFixedSize(true)
             adapter = videoAdapter
             layoutManager = linearLayoutManager
-            addItemDecoration(DividerItemDecoration(binding.recycler.context, DividerItemDecoration.VERTICAL))
+            addItemDecoration(
+                DividerItemDecoration(
+                    binding.recycler.context,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
             itemAnimator = DefaultItemAnimator()
             addOnScrollListener(infiniteScrollListener)
         }
@@ -266,7 +254,6 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        binding.playerView.getPlayerUiController().getMenu()?.dismiss()
 
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             binding.playerView.exitFullScreen()
@@ -277,7 +264,9 @@ class VideoFragment : Fragment(R.layout.fragment_video), OnClickListener, Infini
 
     override fun onItemClick(videoItem: VideoUIModel) {
         Log.d("debug", "clicked $videoItem")
-        if (videoItem.videoId != viewModel.videoIdSubject.value) viewModel.videoIdSubject.onNext(videoItem.videoId)
+        if (videoItem.videoId != viewModel.videoIdSubject.value) viewModel.videoIdSubject.onNext(
+            videoItem.videoId
+        )
     }
 
     override fun onStarClick(videoItem: VideoUIModel) {
