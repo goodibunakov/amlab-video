@@ -21,8 +21,8 @@ android {
         applicationId "ru.goodibunakov.amlabvideo"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 13
-        versionName "1.3.0"
+        versionCode 14
+        versionName "1.3.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         archivesBaseName = "amlab-$versionName($versionCode)"
@@ -67,7 +67,7 @@ dependencies {
 
     //Android
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.annotation:annotation:1.3.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
@@ -76,7 +76,7 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.4.0'
     implementation 'androidx.fragment:fragment-ktx:1.4.0'
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
-    implementation 'com.google.android.material:material:1.6.0-alpha01'
+    implementation 'com.google.android.material:material:1.6.0-alpha02'
 
     // Kotlin
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -113,14 +113,14 @@ dependencies {
 
     //Firebase
     implementation 'com.google.firebase:firebase-analytics:20.0.2'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.6'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.7'
     implementation 'com.google.firebase:firebase-perf:20.0.4'
 
     // Room
-    implementation 'androidx.room:room-runtime:2.4.0'
-    implementation 'androidx.room:room-ktx:2.4.0'
-    implementation 'androidx.room:room-rxjava2:2.4.0'
-    kapt 'androidx.room:room-compiler:2.4.0'
+    implementation 'androidx.room:room-runtime:2.4.1'
+    implementation 'androidx.room:room-ktx:2.4.1'
+    implementation 'androidx.room:room-rxjava2:2.4.1'
+    kapt 'androidx.room:room-compiler:2.4.1'
 
     //Self-updating string with relative time in TextView
     implementation 'com.github.perfomer:blitz:1.0.9'
