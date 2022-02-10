@@ -26,6 +26,11 @@ class GetPlaylistVideosUseCase(
             }
             .map { ToVideoEntityMapper.map(it) }
             .map { it.distinct() }
+            .map {
+                it.filter { videoEntity ->
+                    videoEntity.title != "Private video"
+                }
+            }
             .flatMap { setStars(it) }
     }
 

@@ -75,43 +75,43 @@ interface ApiService {
 
     @GET("search?")
     fun getAllVideos(
-            @Query("part") part: String = "snippet",
-            @Query("type") type: String = "video",
-            @Query("order") order: String = "date",
-            @Query("channelId") channelId: String = CHANNEL_ID,
-            @Query("maxResults") maxResults: Int = 50,
-            @Query("pageToken") pageToken: String = ""
+        @Query("part") part: String = "snippet",
+        @Query("type") type: String = "video",
+        @Query("order") order: String = "date",
+        @Query("channelId") channelId: String = CHANNEL_ID,
+        @Query("maxResults") maxResults: Int = 50,
+        @Query("pageToken") pageToken: String = ""
     ): Observable<AllVideosDTO>
 
     @GET("playlists?")
     fun getPlaylists(
-            @Query("part") part: String = "snippet",
-            @Query("order") order: String = "date",
-            @Query("channelId") channelId: String = CHANNEL_ID,
-            @Query("maxResults") maxResults: Int = 50,
-            @Query("pageToken") pageToken: String = ""
+        @Query("part") part: String = "snippet",
+        @Query("order") order: String = "date",
+        @Query("channelId") channelId: String = CHANNEL_ID,
+        @Query("maxResults") maxResults: Int = 50,
+        @Query("pageToken") pageToken: String = ""
     ): Observable<PlaylistsDTO>
 
     @GET("playlistItems?")
     fun getPlaylistVideos(
-            @Query("part") part: String = "snippet,contentDetails,id",
-            @Query("order") order: String = "date",
-            @Query("playlistId") playlistId: String,
-            @Query("maxResults") maxResults: Int = 50,
-            @Query("pageToken") pageToken: String = ""
+        @Query("part") part: String = "snippet,contentDetails,id",
+        @Query("order") order: String = "date",
+        @Query("playlistId") playlistId: String,
+        @Query("maxResults") maxResults: Int = 50,
+        @Query("pageToken") pageToken: String = ""
     ): Observable<VideoDTO>
 
     @GET("videos?")
     fun getVideoDetails(
-            @Query("part") part: String = "snippet,contentDetails,statistics",
-            @Query("id") id: String
+        @Query("part") part: String = "snippet,contentDetails,statistics",
+        @Query("id") id: String
     ): Observable<VideoDetailsDTO>
 
     //    https://www.googleapis.com/youtube/v3/channels?part=brandingSettings&id=UC_adZIRDiLC3eLIq24HBmRA&key=AIzaSyB8XPLOU4IPt99fJHiDhvNjoywzqpA3JT8
     @GET("channels?")
     fun getChannelDetails(
-            @Query("part") part: String = "brandingSettings",
-            @Query("id") id: String = CHANNEL_ID
+        @Query("part") part: String = "brandingSettings",
+        @Query("id") id: String = CHANNEL_ID
     ): Observable<BrandingDTO>
 
 
@@ -124,33 +124,33 @@ interface ApiService {
             val gson = GsonBuilder().setLenient().create()
 
             val httpClient = OkHttpClient.Builder()
-                    .apply {
-                        val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-                            level = HttpLoggingInterceptor.Level.BODY
-                        }
-                        addInterceptor(httpLoggingInterceptor)
-                        addInterceptor(Interceptor { chain ->
-                            val original = chain.request()
-                            val originalHttpUrl = original.url
-                            val url = originalHttpUrl.newBuilder()
-                                .addQueryParameter("key", YOUTUBE_APIKEY)
-                                .build()
-                            val requestBuilder = original.newBuilder().url(url)
-                            val request = requestBuilder.build()
-                            chain.proceed(request)
-                        })
-                        addInterceptor(
-                                QuotaErrorInterceptor(LocalBroadcastManager.getInstance(context), gson)
-                        )
-                        connectTimeout(50, TimeUnit.SECONDS)
-                        readTimeout(50, TimeUnit.SECONDS)
+                .apply {
+                    val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
+                        level = HttpLoggingInterceptor.Level.BODY
                     }
+                    addInterceptor(httpLoggingInterceptor)
+                    addInterceptor(Interceptor { chain ->
+                        val original = chain.request()
+                        val originalHttpUrl = original.url
+                        val url = originalHttpUrl.newBuilder()
+                            .addQueryParameter("key", YOUTUBE_APIKEY)
+                            .build()
+                        val requestBuilder = original.newBuilder().url(url)
+                        val request = requestBuilder.build()
+                        chain.proceed(request)
+                    })
+                    addInterceptor(
+                        QuotaErrorInterceptor(LocalBroadcastManager.getInstance(context), gson)
+                    )
+                    connectTimeout(50, TimeUnit.SECONDS)
+                    readTimeout(50, TimeUnit.SECONDS)
+                }
             val retrofit = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(httpClient.build())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build()
+                .baseUrl(BASE_URL)
+                .client(httpClient.build())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
             return retrofit.create(ApiService::class.java)
         }
     }
