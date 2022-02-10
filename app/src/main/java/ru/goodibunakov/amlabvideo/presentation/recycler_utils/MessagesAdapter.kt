@@ -20,7 +20,8 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessagesViewHolder {
-        val itemView = ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemView =
+            ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MessagesViewHolder(itemView)
     }
 
@@ -44,7 +45,8 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>
         }
     }
 
-    inner class MessagesViewHolder(private val binding: ItemMessageBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MessagesViewHolder(private val binding: ItemMessageBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MessageUIItem?) {
             item?.let {
@@ -67,7 +69,11 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>
                 with(binding) {
                     messageTitle.text = item.title
                     messageBody.text = item.body
-                    messageDate.setTimeAgo(time = item.dateReceived, showSeconds = false, autoUpdate = false)
+                    messageDate.setTimeAgo(
+                        time = item.dateReceived,
+                        showSeconds = false,
+                        autoUpdate = false
+                    )
                 }
             }
         }

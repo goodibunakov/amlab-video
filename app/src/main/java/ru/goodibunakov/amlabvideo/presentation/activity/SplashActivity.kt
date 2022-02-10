@@ -1,5 +1,6 @@
 package ru.goodibunakov.amlabvideo.presentation.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -26,6 +27,7 @@ import ru.goodibunakov.amlabvideo.presentation.viewmodels.SplashViewModel
 import java.util.concurrent.TimeUnit
 
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<SplashViewModel>() {
 
     private lateinit var animationDisposable: Disposable
@@ -36,37 +38,42 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
         super.onCreate(savedInstanceState)
 
         animationDisposable = binding.logo.zoomIn()
-                .delay(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Log.d("debug", "animationDisposable oncomplete")
-                    viewModel.playlistsLiveData.observe(this, {
-                        if (it.isNotEmpty()) {
-                            viewModel.errorQuotaLiveData.observe(this, { errorQuotaExists ->
-                                if (!errorQuotaExists) {
-                                    val intent = Intent(this, MainActivity::class.java)
-                                    startActivity(intent)
-                                    overridePendingTransition(R.anim.open_next, R.anim.close_main)
-                                    finish()
-                                }
-                            })
+            .delay(500, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Log.d("debug", "animationDisposable oncomplete")
+                viewModel.playlistsLiveData.observe(this) {
+                    if (it.isNotEmpty()) {
+                        viewModel.errorQuotaLiveData.observe(this) { errorQuotaExists ->
+                            if (!errorQuotaExists) {
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                                overridePendingTransition(R.anim.open_next, R.anim.close_main)
+                                finish()
+                            }
                         }
-                    })
-                },{
-                    Log.d("debug", "animationDisposable error = $it")
-                })
+                    }
+                }
+            }, {
+                Log.d("debug", "animationDisposable error = $it")
+            })
 
-        binding.version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
+        binding.version.text =
+            String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
 
-        viewModel.error.observe(this, {
+        viewModel.error.observe(this) {
             it?.let {
-                Snackbar.make(binding.root, "Ошибка: ${it.localizedMessage}", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, "Ошибка: ${it.localizedMessage}", Snackbar.LENGTH_SHORT)
+                    .show()
             }
-        })
+        }
     }
 
     override fun showNetworkAvailable(isAvailable: ConnectedStatus) {
@@ -91,11 +98,11 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
 
     private fun showNetworkIndicator(isShow: Boolean) {
         val transition = Slide(Gravity.BOTTOM)
-                .apply {
-                    duration = 500
-                    addTarget(R.id.networkIndicator)
-                    if (!isShow) startDelay = 500
-                }
+            .apply {
+                duration = 500
+                addTarget(R.id.networkIndicator)
+                if (!isShow) startDelay = 500
+            }
 
         TransitionManager.beginDelayedTransition(binding.root, transition)
 
@@ -106,10 +113,10 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
             window.decorView.systemUiVisibility = (
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            or View.SYSTEM_UI_FLAG_FULLSCREEN
-                            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 
         }
     }

@@ -20,6 +20,7 @@
         android:layout_height="70dp"
         android:layout_below="@id/playerView"
         app:cardBackgroundColor="@color/toolBarColor"
+        app:strokeWidth="0dp"
         app:cardCornerRadius="0dp"
         app:cardElevation="2dp">
 
@@ -74,6 +75,7 @@
                 android:background="@color/dividerColor" />
 
         </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView

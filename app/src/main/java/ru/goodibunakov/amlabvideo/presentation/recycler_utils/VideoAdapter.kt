@@ -13,8 +13,8 @@ import ru.goodibunakov.amlabvideo.presentation.interfaces.OnClickListener
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 
 class VideoAdapter(
-        private val onClickListener: OnClickListener,
-        private val emptyListener: EmptyListener
+    private val onClickListener: OnClickListener,
+    private val emptyListener: EmptyListener
 ) : RecyclerView.Adapter<BaseViewHolder<ViewBinding>>() {
 
     private val items: MutableList<VideoUIModel?> = mutableListOf()
@@ -22,11 +22,16 @@ class VideoAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ViewBinding> {
         return when (viewType) {
             VIEW_TYPE_ITEM -> {
-                val itemView = ItemListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                val itemView =
+                    ItemListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 VideoItemViewHolder(itemView, onClickListener)
             }
             else -> {
-                val itemView = ItemListLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                val itemView = ItemListLoadingBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
                 LoadingViewHolder(itemView)
             }
         }

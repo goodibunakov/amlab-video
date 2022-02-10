@@ -44,34 +44,40 @@ class MessagesFragment : Fragment(R.layout.fragment_messages) {
             setHasFixedSize(true)
             adapter = messagesAdapter
             layoutManager = linearLayoutManager
-            addItemDecoration(DividerItemDecoration(binding.messagesRecycler.context, DividerItemDecoration.VERTICAL))
+            addItemDecoration(
+                DividerItemDecoration(
+                    binding.messagesRecycler.context,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
             itemAnimator = DefaultItemAnimator()
         }
     }
 
     private fun observeLiveData() {
-        viewModel.messagesLiveData.observe(viewLifecycleOwner, {
+        viewModel.messagesLiveData.observe(viewLifecycleOwner) {
             messagesAdapter.addItems(it)
             binding.messagesRecycler.smoothScrollToPosition(0)
-        })
+        }
 
-        viewModel.errorGetMessagesLiveData.observe(viewLifecycleOwner, {
+        viewModel.errorGetMessagesLiveData.observe(viewLifecycleOwner) {
             binding.errorText.isVisible = it != null
-        })
+        }
 
-        viewModel.progressbarLiveData.observe(viewLifecycleOwner, {
+        viewModel.progressbarLiveData.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
-        })
+        }
 
-        viewModel.errorDeleteMessagesLiveData.observe(viewLifecycleOwner, {
+        viewModel.errorDeleteMessagesLiveData.observe(viewLifecycleOwner) {
             it?.let {
-                Snackbar.make(binding.root, R.string.error_delete_messages, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, R.string.error_delete_messages, Snackbar.LENGTH_SHORT)
+                    .show()
             }
-        })
+        }
 
-        viewModel.emptyMessagesLiveData.observe(viewLifecycleOwner, {
+        viewModel.emptyMessagesLiveData.observe(viewLifecycleOwner) {
             binding.emptyText.isVisible = it
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

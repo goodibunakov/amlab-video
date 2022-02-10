@@ -5,17 +5,17 @@ import androidx.lifecycle.ViewModelProvider
 import ru.goodibunakov.amlabvideo.domain.usecase.*
 
 class ViewModelFactory(
-        private val getChannelPlaylistsUseCase: GetChannelPlaylistsUseCase,
-        private val getNetworkStatusUseCase: GetNetworkStatusUseCase,
-        private val getPlaylistVideosUseCase: GetPlaylistVideosUseCase,
-        private val getVideoDetailsUseCase: GetVideoDetailsUseCase,
-        private val getAllVideosListUseCase: GetAllVideosListUseCase,
-        private val getAboutChannelUseCase: GetAboutChannelUseCase,
-        private val getMessagesUseCase: GetMessagesUseCase,
-        private val deleteMessagesUseCase: DeleteMessagesUseCase,
-        private val saveStarToDbUseCase: SaveStarToDbUseCase,
-        private val deleteStarFromDbUseCase: DeleteStarFromDbUseCase,
-        private val getStarsFromDbUseCase: GetStarsFromDbUseCase
+    private val getChannelPlaylistsUseCase: GetChannelPlaylistsUseCase,
+    private val getNetworkStatusUseCase: GetNetworkStatusUseCase,
+    private val getPlaylistVideosUseCase: GetPlaylistVideosUseCase,
+    private val getVideoDetailsUseCase: GetVideoDetailsUseCase,
+    private val getAllVideosListUseCase: GetAllVideosListUseCase,
+    private val getAboutChannelUseCase: GetAboutChannelUseCase,
+    private val getMessagesUseCase: GetMessagesUseCase,
+    private val deleteMessagesUseCase: DeleteMessagesUseCase,
+    private val saveStarToDbUseCase: SaveStarToDbUseCase,
+    private val deleteStarFromDbUseCase: DeleteStarFromDbUseCase,
+    private val getStarsFromDbUseCase: GetStarsFromDbUseCase
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -31,12 +31,13 @@ class ViewModelFactory(
 
         if (modelClass.isAssignableFrom(VideoFragmentViewModel::class.java))
             return VideoFragmentViewModel(
-                    getPlaylistVideosUseCase,
-                    getVideoDetailsUseCase,
-                    getAllVideosListUseCase,
-                    saveStarToDbUseCase,
-                    deleteStarFromDbUseCase,
-                    getStarsFromDbUseCase) as T
+                getPlaylistVideosUseCase,
+                getVideoDetailsUseCase,
+                getAllVideosListUseCase,
+                saveStarToDbUseCase,
+                deleteStarFromDbUseCase,
+                getStarsFromDbUseCase
+            ) as T
 
         if (modelClass.isAssignableFrom(AboutChannelViewModel::class.java))
             return AboutChannelViewModel(getAboutChannelUseCase) as T

@@ -26,17 +26,17 @@ class AboutChannelFragment : Fragment(R.layout.fragment_about_channel) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, {
+        viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, {
+        viewModel.error.observe(viewLifecycleOwner) {
             binding.emptyText.isVisible = it != null
             binding.header.isVisible = it == null
             binding.contentView.isVisible = it == null
-        })
+        }
 
-        viewModel.liveData.observe(viewLifecycleOwner, {
+        viewModel.liveData.observe(viewLifecycleOwner) {
             if (it == null) return@observe
 
             val requestOptions = RequestOptions()
@@ -49,6 +49,6 @@ class AboutChannelFragment : Fragment(R.layout.fragment_about_channel) {
                 .transition(DrawableTransitionOptions().crossFade())
                 .into(binding.header)
             binding.description.text = it.description
-        })
+        }
     }
 }

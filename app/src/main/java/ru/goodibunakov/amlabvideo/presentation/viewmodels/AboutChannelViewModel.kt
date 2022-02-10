@@ -16,24 +16,24 @@ class AboutChannelViewModel(getAboutChannelUseCase: GetAboutChannelUseCase) : Vi
     val error = MutableLiveData<Throwable?>().apply { this.value = null }
 
     private var disposable: Disposable = getAboutChannelUseCase.buildObservable()
-            .subscribeOn(Schedulers.io())
-            .map { ToAboutChannelUIMapper.map(it) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe {
-                progressBarVisibilityLiveData.value = true
-            }
-            .doOnError {
-                progressBarVisibilityLiveData.value = false
-            }
-            .doOnNext {
-                progressBarVisibilityLiveData.value = false
-            }
-            .subscribe({
-                liveData.value = it
-                error.value = null
-            }, {
-                error.value = it
-            })
+        .subscribeOn(Schedulers.io())
+        .map { ToAboutChannelUIMapper.map(it) }
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe {
+            progressBarVisibilityLiveData.value = true
+        }
+        .doOnError {
+            progressBarVisibilityLiveData.value = false
+        }
+        .doOnNext {
+            progressBarVisibilityLiveData.value = false
+        }
+        .subscribe({
+            liveData.value = it
+            error.value = null
+        }, {
+            error.value = it
+        })
 
     override fun onCleared() {
         if (!disposable.isDisposed) disposable.dispose()

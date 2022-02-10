@@ -22,19 +22,19 @@ abstract class BaseActivity<T : BaseActivityViewModel> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutResId())
 
-        viewModel.networkLiveData.observe(this, {
+        viewModel.networkLiveData.observe(this) {
             showNetworkAvailable(it)
-        })
+        }
 
-        viewModel.responseQuotaReceiver.observe(this, {
+        viewModel.responseQuotaReceiver.observe(this) {
             unregisterReceiver()
             broadcastReceiver = it
             registerReceiver()
-        })
+        }
 
-        viewModel.errorQuotaLiveData.observe(this, {
+        viewModel.errorQuotaLiveData.observe(this) {
             if (it) showQuotaErrorDialog()
-        })
+        }
     }
 
     override fun onStop() {

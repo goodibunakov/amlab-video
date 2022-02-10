@@ -84,23 +84,23 @@ class VideoFragment : Fragment(R.layout.fragment_video),
     }
 
     private fun observeLiveData() {
-        sharedViewModel.playlistId.observe(viewLifecycleOwner, { playlistId ->
+        sharedViewModel.playlistId.observe(viewLifecycleOwner) { playlistId ->
             Log.d("debug", "VideoFragment playlistId = $playlistId")
             viewModel.loadItems(playlistId, fragmentType)
-        })
+        }
 
-        viewModel.videosLiveData.observe(viewLifecycleOwner, {
+        viewModel.videosLiveData.observe(viewLifecycleOwner) {
             infiniteScrollListener.setLoaded()
 
             videoAdapter.addItems(it)
             toggleVisibility(it.isEmpty())
-        })
+        }
 
-        viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner, {
+        viewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
-        })
+        }
 
-        viewModel.videoDetails.observe(viewLifecycleOwner, {
+        viewModel.videoDetails.observe(viewLifecycleOwner) {
             Log.d("debug", "videoDetails = $it")
             with(binding) {
                 infoTitle.text = it.title
@@ -111,40 +111,40 @@ class VideoFragment : Fragment(R.layout.fragment_video),
                 )
                 infoTimeAgo.setTimeAgo(it.publishedAtDate)
             }
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, {
+        viewModel.error.observe(viewLifecycleOwner) {
             binding.errorText.isVisible = it != null
-        })
+        }
 
-        viewModel.recyclerLoadMoreProcess.observe(viewLifecycleOwner, {
+        viewModel.recyclerLoadMoreProcess.observe(viewLifecycleOwner) {
             if (it) videoAdapter.addNull() else videoAdapter.removeNull()
-        })
+        }
 
-        viewModel.canLoadMoreLiveData.observe(viewLifecycleOwner, {
+        viewModel.canLoadMoreLiveData.observe(viewLifecycleOwner) {
             infiniteScrollListener.setCanLoadMore(it)
-        })
+        }
 
-        viewModel.videoItemStarChangedLiveData.observe(viewLifecycleOwner, {
+        viewModel.videoItemStarChangedLiveData.observe(viewLifecycleOwner) {
             Log.d("debug", "videoItemStarred = $it")
             videoAdapter.notifyItemChanged(it, fragmentType)
-        })
+        }
 
         sharedViewModel.isInPictureInPictureMode.observe(
-            viewLifecycleOwner,
-            { isInPictureInPictureMode ->
-                if (isInPictureInPictureMode) {
-                    onFullScreenListener.enterFullScreen()
-                } else {
-                    onFullScreenListener.exitFullScreen()
-                }
-            })
+            viewLifecycleOwner
+        ) { isInPictureInPictureMode ->
+            if (isInPictureInPictureMode) {
+                onFullScreenListener.enterFullScreen()
+            } else {
+                onFullScreenListener.exitFullScreen()
+            }
+        }
 
-        viewModel.showInAppReviewLiveData.observe(viewLifecycleOwner, { show ->
+        viewModel.showInAppReviewLiveData.observe(viewLifecycleOwner) { show ->
             if (show) {
                 showInAppReview()
             }
-        })
+        }
     }
 
     private fun showInAppReview() {

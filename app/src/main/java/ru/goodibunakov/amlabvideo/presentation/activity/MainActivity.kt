@@ -50,7 +50,8 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
     private lateinit var headerView: AccountHeaderView
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profile: IProfile
-    private var isDrawerFirstInit: Boolean = true //для установки активным первого пункта в drawer если initDrawer вызван не после "обновить плейлисты"
+    private var isDrawerFirstInit: Boolean =
+        true //для установки активным первого пункта в drawer если initDrawer вызван не после "обновить плейлисты"
     private var selectedItemPosition: Int = -1
 
     override val viewModel: MainViewModel by viewModels { AmlabApplication.viewModelFactory }
@@ -68,40 +69,52 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         initDrawerAndToolbar()
 
-        viewModel.playlistsLiveData.observe(this, {
+        viewModel.playlistsLiveData.observe(this) {
             fillDrawer(savedInstanceState, it)
-        })
+        }
 
-        sharedViewModel.playlistId.observe(this, { tag ->
+        sharedViewModel.playlistId.observe(this) { tag ->
             val fragmentTransaction = supportFragmentManager.beginTransaction()
             if (!tag.contains(APP_MENU_ITEM)) {
                 fragmentTransaction
-                        .replace(R.id.fragmentContainer, VideoFragment.newInstance(VideoFragment.FragmentType.FROM_WEB), TAG_VIDEO_FRAGMENT)
-                        .commit()
+                    .replace(
+                        R.id.fragmentContainer,
+                        VideoFragment.newInstance(VideoFragment.FragmentType.FROM_WEB),
+                        TAG_VIDEO_FRAGMENT
+                    )
+                    .commit()
             } else if (tag.contains(getString(R.string.about))) {
                 fragmentTransaction
-                        .replace(R.id.fragmentContainer, AboutFragment(), TAG_ABOUT_FRAGMENT)
-                        .commit()
+                    .replace(R.id.fragmentContainer, AboutFragment(), TAG_ABOUT_FRAGMENT)
+                    .commit()
             } else if (tag.contains(getString(R.string.messages))) {
                 fragmentTransaction
-                        .replace(R.id.fragmentContainer, MessagesFragment(), TAG_MESSAGES_FRAGMENT)
-                        .commit()
+                    .replace(R.id.fragmentContainer, MessagesFragment(), TAG_MESSAGES_FRAGMENT)
+                    .commit()
             } else if (tag.contains(getString(R.string.about_channel))) {
                 fragmentTransaction
-                        .replace(R.id.fragmentContainer, AboutChannelFragment(), TAG_ABOUT_CHANNEL_FRAGMENT)
-                        .commit()
+                    .replace(
+                        R.id.fragmentContainer,
+                        AboutChannelFragment(),
+                        TAG_ABOUT_CHANNEL_FRAGMENT
+                    )
+                    .commit()
             } else {
                 fragmentTransaction
-                        .replace(R.id.fragmentContainer, VideoFragment.newInstance(VideoFragment.FragmentType.FROM_DB), TAG_VIDEO_FRAGMENT)
-                        .commit()
+                    .replace(
+                        R.id.fragmentContainer,
+                        VideoFragment.newInstance(VideoFragment.FragmentType.FROM_DB),
+                        TAG_VIDEO_FRAGMENT
+                    )
+                    .commit()
             }
-        })
+        }
 
         viewModel.toolbarTitleLiveData.observe(this, { updateToolBarTitle(it) })
 
-        viewModel.playlistsUpdatedLiveData.observe(this, {
+        viewModel.playlistsUpdatedLiveData.observe(this) {
             showPlaylistUpdated(it)
-        })
+        }
     }
 
     override fun onResume() {
@@ -117,7 +130,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         val fromNotification = intent.getBooleanExtra(INTENT_FROM_NOTIFICATION, false)
         Log.d("debug", "fromNotification = $fromNotification")
         if (fromNotification) {
-            viewModel.drawerInitializedLiveData.observe(this, {
+            viewModel.drawerInitializedLiveData.observe(this) {
                 if (it) {
                     if (fragment == null || fragment !is MessagesFragment) {
                         Log.d("debug", "setSelection(IDENTIFIER_MESSAGES, true)")
@@ -126,7 +139,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                         isDrawerFirstInit = false
                     }
                 }
-            })
+            }
         }
     }
 
@@ -136,7 +149,13 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 
-        actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.activityMainRoot, binding.toolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
+        actionBarDrawerToggle = ActionBarDrawerToggle(
+            this,
+            binding.activityMainRoot,
+            binding.toolbar,
+            com.mikepenz.materialdrawer.R.string.material_drawer_open,
+            com.mikepenz.materialdrawer.R.string.material_drawer_close
+        )
         actionBarDrawerToggle.isDrawerSlideAnimationEnabled = true
         ViewCompat.setOnApplyWindowInsetsListener(binding.activityMainRoot) { _, insets ->
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -158,13 +177,13 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
         // Create the AccountHeader
         headerView = AccountHeaderView(this, compact = true)
-                .apply {
-                    attachToSliderView(binding.slider)
-                    headerBackground = ImageHolder(R.drawable.drawer_header)
-                    addProfiles(profile)
-                    withSavedInstance(savedInstanceState)
-                    selectionListEnabledForSingleProfile = false
-                }
+            .apply {
+                attachToSliderView(binding.slider)
+                headerBackground = ImageHolder(R.drawable.drawer_header)
+                addProfiles(profile)
+                withSavedInstance(savedInstanceState)
+                selectionListEnabledForSingleProfile = false
+            }
 
         binding.slider.apply {
             if (itemAdapter.itemList.size() > 0) {
@@ -174,51 +193,51 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             }
 
             itemAdapter.add(
-                    GmailDrawerItemPrimary().apply {
-                        nameText = playlists.first().title
-                        tag = playlists.first().id
-                        identifier = IDENTIFIER_NEW_VIDEOS
-                    },
-                    DividerDrawerItem()
+                GmailDrawerItemPrimary().apply {
+                    nameText = playlists.first().title
+                    tag = playlists.first().id
+                    identifier = IDENTIFIER_NEW_VIDEOS
+                },
+                DividerDrawerItem()
             )
             playlists.drop(1).map {
                 itemAdapter.add(
-                        GmailDrawerItemSecondary().apply {
-                            nameText = it.title
-                            tag = it.id
-                        }
+                    GmailDrawerItemSecondary().apply {
+                        nameText = it.title
+                        tag = it.id
+                    }
                 )
             }
             itemAdapter.add(
-                    DividerDrawerItem(),
-                    GmailDrawerItemSecondary().apply {
-                        nameRes = R.string.stars
-                        tag = APP_MENU_ITEM + "_${getString(R.string.stars)}"
-                        iconRes = R.drawable.star_filled
-                        isIconTinted = true
-                        identifier = IDENTIFIER_STARS
-                    },
-                    GmailDrawerItemSecondary().apply {
-                        nameRes = R.string.messages
-                        tag = APP_MENU_ITEM + "_${getString(R.string.messages)}"
-                        iconRes = R.drawable.message
-                        isIconTinted = true
-                        identifier = IDENTIFIER_MESSAGES
-                    },
-                    GmailDrawerItemSecondary().apply {
-                        nameRes = R.string.about_channel
-                        tag = APP_MENU_ITEM + "_${getString(R.string.about_channel)}"
-                        iconRes = R.drawable.youtube
-                        isIconTinted = true
-                        identifier = IDENTIFIER_ABOUT_CHANNEL
-                    },
-                    GmailDrawerItemSecondary().apply {
-                        nameRes = R.string.about
-                        tag = APP_MENU_ITEM + "_${getString(R.string.about)}"
-                        iconRes = R.drawable.information_outline
-                        isIconTinted = true
-                        identifier = IDENTIFIER_ABOUT
-                    }
+                DividerDrawerItem(),
+                GmailDrawerItemSecondary().apply {
+                    nameRes = R.string.stars
+                    tag = APP_MENU_ITEM + "_${getString(R.string.stars)}"
+                    iconRes = R.drawable.star_filled
+                    isIconTinted = true
+                    identifier = IDENTIFIER_STARS
+                },
+                GmailDrawerItemSecondary().apply {
+                    nameRes = R.string.messages
+                    tag = APP_MENU_ITEM + "_${getString(R.string.messages)}"
+                    iconRes = R.drawable.message
+                    isIconTinted = true
+                    identifier = IDENTIFIER_MESSAGES
+                },
+                GmailDrawerItemSecondary().apply {
+                    nameRes = R.string.about_channel
+                    tag = APP_MENU_ITEM + "_${getString(R.string.about_channel)}"
+                    iconRes = R.drawable.youtube
+                    isIconTinted = true
+                    identifier = IDENTIFIER_ABOUT_CHANNEL
+                },
+                GmailDrawerItemSecondary().apply {
+                    nameRes = R.string.about
+                    tag = APP_MENU_ITEM + "_${getString(R.string.about)}"
+                    iconRes = R.drawable.information_outline
+                    isIconTinted = true
+                    identifier = IDENTIFIER_ABOUT
+                }
             )
             onDrawerItemClickListener = { view, drawerItem, position ->
                 val tag = drawerItem.tag as String
@@ -226,9 +245,13 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                     Log.d("debug", "onDrawerItemClickListener playlistId.setValidatedValue")
                     sharedViewModel.playlistId.setValidatedValue(tag)
                     Log.d("debug", "onDrawerItemClickListener it.playlistId.value = $tag")
-                    Log.d("debug", "onDrawerItemClickListener ${supportFragmentManager.backStackEntryCount}")
+                    Log.d(
+                        "debug",
+                        "onDrawerItemClickListener ${supportFragmentManager.backStackEntryCount}"
+                    )
 
-                    viewModel.toolbarTitleLiveData.value = drawerItem.name?.getText(this@MainActivity)
+                    viewModel.toolbarTitleLiveData.value =
+                        drawerItem.name?.getText(this@MainActivity)
                 }
                 false
             }
@@ -316,11 +339,11 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     private fun showNetworkIndicator(isShow: Boolean) {
         val transition = Slide(Gravity.BOTTOM)
-                .apply {
-                    duration = 500
-                    addTarget(R.id.networkIndicator)
-                    if (!isShow) startDelay = 700
-                }
+            .apply {
+                duration = 500
+                addTarget(R.id.networkIndicator)
+                if (!isShow) startDelay = 700
+            }
 
         TransitionManager.beginDelayedTransition(binding.activityMainRoot, transition)
 
@@ -358,7 +381,9 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT && !isPipActive) {
                 exitFullScreen()
             } else {
-                if (binding.activityMainRoot.isDrawerOpen(binding.slider)) binding.activityMainRoot.closeDrawer(binding.slider)
+                if (binding.activityMainRoot.isDrawerOpen(binding.slider)) binding.activityMainRoot.closeDrawer(
+                    binding.slider
+                )
                 enterFullScreen()
             }
         }
@@ -370,7 +395,8 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
                 binding.activityMainRoot.closeDrawer(binding.slider)
             }
             isFullscreen -> {
-                val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+                val currentFragment =
+                    supportFragmentManager.findFragmentById(R.id.fragmentContainer)
                 if (currentFragment is VideoFragment) {
                     currentFragment.exitFullScreen()
                     isFullscreen = false
@@ -398,13 +424,24 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     private fun showPlaylistUpdated(throwable: Throwable?) {
         if (throwable != null) {
-            Snackbar.make(binding.activityMainRoot, getString(R.string.playlists_update_error), Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(
+                binding.activityMainRoot,
+                getString(R.string.playlists_update_error),
+                Snackbar.LENGTH_SHORT
+            ).show()
         } else {
-            Snackbar.make(binding.activityMainRoot, getString(R.string.playlists_update_success), Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(
+                binding.activityMainRoot,
+                getString(R.string.playlists_update_success),
+                Snackbar.LENGTH_SHORT
+            ).show()
         }
     }
 
-    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration?
+    ) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         isPipActive = isInPictureInPictureMode
         sharedViewModel.isInPictureInPictureMode.value = isInPictureInPictureMode

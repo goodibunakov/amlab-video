@@ -8,7 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.subjects.CompletableSubject
 
 
-fun <T>MutableLiveData<T>.setValidatedValue(newValue: T) {
+fun <T> MutableLiveData<T>.setValidatedValue(newValue: T) {
     if (value != newValue) {
         value = newValue
     }
@@ -18,12 +18,12 @@ fun View.zoomIn(duration: Long = 1000L): Completable {
     val animationSubject = CompletableSubject.create()
     return animationSubject.doOnSubscribe {
         ViewCompat.animate(this)
-                .setDuration(duration)
-                .scaleXBy(.2f)
-                .scaleYBy(.2f)
-                .setInterpolator(BounceInterpolator())
-                .withEndAction {
-                    animationSubject.onComplete()
-                }
+            .setDuration(duration)
+            .scaleXBy(.2f)
+            .scaleYBy(.2f)
+            .setInterpolator(BounceInterpolator())
+            .withEndAction {
+                animationSubject.onComplete()
+            }
     }
 }

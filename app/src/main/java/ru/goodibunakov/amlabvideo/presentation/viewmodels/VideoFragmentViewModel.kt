@@ -126,7 +126,10 @@ class VideoFragmentViewModel(
                 error.value = null
             }, {
                 error.value = it
-                Log.d("ddd", "VideoFragmentViewModel loadMorePlaylist error = ${it.localizedMessage}")
+                Log.d(
+                    "ddd",
+                    "VideoFragmentViewModel loadMorePlaylist error = ${it.localizedMessage}"
+                )
                 Log.d("ddd", "VideoFragmentViewModel loadMorePlaylist error = $it")
                 Log.d("ddd", "VideoFragmentViewModel loadMorePlaylist error = ${it.message}")
             })

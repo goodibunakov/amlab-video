@@ -14,8 +14,8 @@ import ru.goodibunakov.amlabvideo.presentation.mappers.ToMessageUIItemMapper
 import ru.goodibunakov.amlabvideo.presentation.model.MessageUIItem
 
 class MessagesViewModel(
-        private val getMessagesUseCase: GetMessagesUseCase,
-        private val deleteMessagesUseCase: DeleteMessagesUseCase
+    private val getMessagesUseCase: GetMessagesUseCase,
+    private val deleteMessagesUseCase: DeleteMessagesUseCase
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -32,48 +32,48 @@ class MessagesViewModel(
 
     private fun getAllMessages() {
         getMessagesUseCase.buildObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .flatMap { list ->
-                    Observable.fromIterable(list)
-                            .map { item -> ToMessageUIItemMapper.map(item) }
-                            .toList()
-                            .toObservable()
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { progressbarLiveData.value = true }
-                .doOnNext { progressbarLiveData.value = false }
-                .doOnError { progressbarLiveData.value = false  }
-                .subscribe({
-                    Log.d("debug", "MessagesViewModel getAllMessages onNext = $it")
-                    messagesLiveData.value = it
-                    errorGetMessagesLiveData.value = null
-                    emptyMessagesLiveData.value = it.isEmpty()
-                }, {
-                    Log.d("debug", "MessagesViewModel getAllMessages error = $it")
-                    errorGetMessagesLiveData.value = it
-                    emptyMessagesLiveData.value = false
-                },{
-                    Log.d("debug", "MessagesViewModel getAllMessages onComplete")
-                })
-                .addTo(compositeDisposable)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .flatMap { list ->
+                Observable.fromIterable(list)
+                    .map { item -> ToMessageUIItemMapper.map(item) }
+                    .toList()
+                    .toObservable()
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { progressbarLiveData.value = true }
+            .doOnNext { progressbarLiveData.value = false }
+            .doOnError { progressbarLiveData.value = false }
+            .subscribe({
+                Log.d("debug", "MessagesViewModel getAllMessages onNext = $it")
+                messagesLiveData.value = it
+                errorGetMessagesLiveData.value = null
+                emptyMessagesLiveData.value = it.isEmpty()
+            }, {
+                Log.d("debug", "MessagesViewModel getAllMessages error = $it")
+                errorGetMessagesLiveData.value = it
+                emptyMessagesLiveData.value = false
+            }, {
+                Log.d("debug", "MessagesViewModel getAllMessages onComplete")
+            })
+            .addTo(compositeDisposable)
     }
 
     fun deleteAllMessages() {
         deleteMessagesUseCase.buildObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { progressbarLiveData.value = true }
-                .doFinally { progressbarLiveData.value = false }
-                .subscribe({
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { progressbarLiveData.value = true }
+            .doFinally { progressbarLiveData.value = false }
+            .subscribe({
 //                    messagesLiveData.value = emptyList()
-                    errorDeleteMessagesLiveData.value = null
-                    Log.d("debug", "MessagesViewModel deleteAllMessages deleted!")
-                }, {
-                    Log.d("debug", "MessagesViewModel deleteAllMessages error = $it")
-                    errorDeleteMessagesLiveData.value = it
-                })
-                .addTo(compositeDisposable)
+                errorDeleteMessagesLiveData.value = null
+                Log.d("debug", "MessagesViewModel deleteAllMessages deleted!")
+            }, {
+                Log.d("debug", "MessagesViewModel deleteAllMessages error = $it")
+                errorDeleteMessagesLiveData.value = it
+            })
+            .addTo(compositeDisposable)
     }
 
     override fun onCleared() {

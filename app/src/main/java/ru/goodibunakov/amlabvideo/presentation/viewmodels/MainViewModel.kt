@@ -5,8 +5,8 @@ import ru.goodibunakov.amlabvideo.domain.usecase.GetChannelPlaylistsUseCase
 import ru.goodibunakov.amlabvideo.domain.usecase.GetNetworkStatusUseCase
 
 class MainViewModel(
-        getChannelPlaylistsUseCase: GetChannelPlaylistsUseCase,
-        getNetworkStatus: GetNetworkStatusUseCase
+    getChannelPlaylistsUseCase: GetChannelPlaylistsUseCase,
+    getNetworkStatus: GetNetworkStatusUseCase
 ) : BaseActivityViewModel(getNetworkStatus, getChannelPlaylistsUseCase) {
 
 
