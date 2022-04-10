@@ -27,7 +27,7 @@ interface ApiRepository {
     fun getPlayLists(): Observable<PlaylistsDTO>
 
     /**
-     * Получение плейтиста
+     * Получение плейлиста
      */
     fun getPlaylistVideos(playlistId: String, pageToken: String? = ""): Observable<VideoDTO>
 
