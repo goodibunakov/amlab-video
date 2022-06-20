@@ -4,10 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
@@ -110,7 +107,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             }
         }
 
-        viewModel.toolbarTitleLiveData.observe(this, { updateToolBarTitle(it) })
+        viewModel.toolbarTitleLiveData.observe(this) { updateToolBarTitle(it) }
 
         viewModel.playlistsUpdatedLiveData.observe(this) {
             showPlaylistUpdated(it)
@@ -157,7 +154,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
             com.mikepenz.materialdrawer.R.string.material_drawer_close
         )
         actionBarDrawerToggle.isDrawerSlideAnimationEnabled = true
-        ViewCompat.setOnApplyWindowInsetsListener(binding.activityMainRoot) { _, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.activityMainRoot) { view, insets ->
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 binding.rootLayout.updatePadding(top = insets.systemWindowInsetTop)
             } else {
@@ -365,6 +362,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         private const val RECOVERY_DIALOG_REQUEST = 1
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RECOVERY_DIALOG_REQUEST) recreate()
