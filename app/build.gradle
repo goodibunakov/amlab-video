@@ -24,7 +24,7 @@ android {
         versionCode 19
         versionName "1.3.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        android.defaultConfig.vectorDrawables.useSupportLibrary = true
+        vectorDrawables.useSupportLibrary = true
         archivesBaseName = "amlab-$versionName($versionCode)"
         multiDexEnabled true
         javaCompileOptions {
@@ -113,9 +113,10 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.6.0'
 
     //Firebase
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.11'
-    implementation 'com.google.firebase:firebase-perf-ktx:20.1.0'
+    implementation platform('com.google.firebase:firebase-bom:30.2.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-perf-ktx'
 
     // Room
     implementation 'androidx.room:room-runtime:2.4.2'
@@ -124,7 +125,7 @@ dependencies {
     kapt 'androidx.room:room-compiler:2.4.2'
 
     //Self-updating string with relative time in TextView
-    implementation 'com.github.perfomer:blitz:1.0.9'
+    implementation 'com.github.perfomer:blitz:1.0.10'
 
     // Play core library
     implementation 'com.google.android.play:core:1.10.3'
