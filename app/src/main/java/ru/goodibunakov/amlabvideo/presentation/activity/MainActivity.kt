@@ -2,6 +2,7 @@ package ru.goodibunakov.amlabvideo.presentation.activity
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -438,9 +439,11 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
 
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
-        newConfig: Configuration?
+        newConfig: Configuration
     ) {
-        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        }
         isPipActive = isInPictureInPictureMode
         sharedViewModel.isInPictureInPictureMode.value = isInPictureInPictureMode
     }
