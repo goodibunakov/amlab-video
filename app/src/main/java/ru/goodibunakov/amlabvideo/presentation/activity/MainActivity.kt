@@ -388,6 +388,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         when {
             binding.activityMainRoot.isDrawerOpen(binding.slider) -> {
