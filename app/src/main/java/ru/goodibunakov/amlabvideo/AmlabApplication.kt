@@ -1,6 +1,6 @@
 package ru.goodibunakov.amlabvideo
 
-import androidx.multidex.MultiDexApplication
+import android.app.Application
 import com.facebook.stetho.Stetho
 import com.onesignal.OneSignal
 import ru.goodibunakov.amlabvideo.api.ApiService
@@ -13,7 +13,7 @@ import ru.goodibunakov.amlabvideo.domain.DatabaseRepository
 import ru.goodibunakov.amlabvideo.domain.usecase.*
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.ViewModelFactory
 
-class AmlabApplication : MultiDexApplication() {
+class AmlabApplication : Application() {
 
     companion object {
         lateinit var apiRepository: ApiRepository
