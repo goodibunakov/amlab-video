@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -59,7 +58,9 @@ class VideoFragment : Fragment(R.layout.fragment_video),
     private lateinit var onFullScreenListener: OnFullScreenListener
     private lateinit var infiniteScrollListener: InfiniteScrollListener
 
-    private lateinit var fragmentType: FragmentType
+    private val fragmentType = arguments?.getInt(EXTRA_TYPE)?.let {
+        FragmentType.fromOrdinal(it)
+    } ?: FragmentType.FROM_WEB
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -68,11 +69,6 @@ class VideoFragment : Fragment(R.layout.fragment_video),
         } catch (e: ClassCastException) {
             throw ClassCastException("${activity.toString()} must implement OnFullScreenListener")
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        fragmentType = arguments?.getSerializable(EXTRA_TYPE) as FragmentType
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -175,7 +171,7 @@ class VideoFragment : Fragment(R.layout.fragment_video),
         lifecycle.addObserver(binding.playerView)
         initPictureInPicture(binding.playerView)
         binding.playerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-            override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
                 youTubePlayerDisposable = viewModel.videoIdSubject
                     .filter { it.isNotEmpty() }
                     .subscribe({
@@ -296,13 +292,21 @@ class VideoFragment : Fragment(R.layout.fragment_video),
 
         fun newInstance(type: FragmentType): VideoFragment {
             return VideoFragment().apply {
-                arguments = bundleOf(EXTRA_TYPE to type)
+                arguments = bundleOf(EXTRA_TYPE to type.ordinal)
             }
         }
     }
 
     enum class FragmentType {
         FROM_WEB,
-        FROM_DB
+        FROM_DB;
+
+        companion object {
+            fun fromOrdinal(ordinal: Int) = when (ordinal) {
+                FROM_WEB.ordinal -> FROM_WEB
+                FROM_DB.ordinal -> FROM_DB
+                else -> throw IllegalArgumentException("Unknown FragmentType")
+            }
+        }
     }
 }
