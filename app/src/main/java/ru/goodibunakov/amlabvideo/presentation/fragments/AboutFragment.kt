@@ -16,8 +16,8 @@ class AboutFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preference_fragment, rootKey)
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
-        return when (preference?.key) {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
+        return when (preference.key) {
             getString(R.string.pref_share_key) -> {
                 val shareIntent = Intent(Intent.ACTION_SEND)
                 shareIntent.type = "text/plain"
@@ -53,13 +53,14 @@ class AboutFragment : PreferenceFragmentCompat() {
     }
 
     private fun sendEmailToDeveloper() {
-        val intent = Intent(Intent.ACTION_SENDTO)
-        intent.data = Uri.parse("mailto:")
-        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("goodibunakov@gmail.com"))
-        intent.putExtra(
-            Intent.EXTRA_SUBJECT,
-            "Amlab Android App ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
-        )
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf("goodibunakov@gmail.com"))
+            putExtra(
+                Intent.EXTRA_SUBJECT,
+                "Amlab Android App ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
+            )
+        }
         try {
             startActivity(Intent.createChooser(intent, "Отправить письмо..."))
         } catch (ex: ActivityNotFoundException) {
