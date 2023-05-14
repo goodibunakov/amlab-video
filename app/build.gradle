@@ -39,9 +39,15 @@ android {
         }
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            buildConfigField "String", "ONE_SIGNAL_APP_ID", "\"$ONE_SIGNAL_APP_ID\""
+        }
         release {
             minifyEnabled false
             shrinkResources false
+            buildConfigField "String", "ONE_SIGNAL_APP_ID", "\"$ONE_SIGNAL_APP_ID\""
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

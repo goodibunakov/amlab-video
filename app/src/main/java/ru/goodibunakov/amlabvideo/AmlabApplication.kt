@@ -46,7 +46,7 @@ class AmlabApplication : Application() {
         OneSignal.unsubscribeWhenNotificationsAreDisabled(true)
         OneSignal.setNotificationOpenedHandler(NotificationOpenedHandler(this))
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
-        OneSignal.setAppId("472232b8-fd21-4270-bf9c-77df1c14da6f")
+        OneSignal.setAppId(BuildConfig.ONE_SIGNAL_APP_ID)
     }
 
     fun getSaveNotificationUseCase() = SaveNotificationUseCase(databaseRepository)
