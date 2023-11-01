@@ -27,7 +27,8 @@ class AmlabApplication : Application() {
         if (BuildConfig.DEBUG) Stetho.initializeWithDefaults(this)
 
         apiRepository = ApiRepositoryImpl(this, ApiService.create(applicationContext))
-        databaseRepository = DatabaseRepositoryImpl(AmlabDatabase.getDatabase(this).dao(), applicationContext)
+        databaseRepository =
+            DatabaseRepositoryImpl(AmlabDatabase.getDatabase(this).dao(), applicationContext)
         viewModelFactory = ViewModelFactory(
             GetChannelPlaylistsUseCase(apiRepository, databaseRepository),
             GetNetworkStatusUseCase(apiRepository),
