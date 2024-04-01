@@ -3,7 +3,7 @@
 buildscript {
     ext.kotlin_version = '1.9.22'
     ext.google_services = '4.3.14'
-    ext.gradle_version = '8.2.2'
+    ext.gradle_version = '8.3.1'
     ext.firebase_crashlytics_gradle_version = '2.5.2'
     ext.firebase_perf_plugin_version = '1.4.1'
 
@@ -42,5 +42,5 @@ allprojects {
 }
 
 tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+    delete rootProject.layout.buildDirectory
 }
