@@ -1,70 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/material_background_color"
-    android:minHeight="@dimen/item_twoline_height">
+    android:foreground="?android:selectableItemBackground">
 
-    <FrameLayout
-        android:id="@+id/lytThumbnail"
-        android:layout_width="@dimen/thumbnail_width"
-        android:layout_height="@dimen/thumbnail_height"
-        android:layout_gravity="center_vertical"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginLeft="@dimen/standard_margin"
-        tools:ignore="RtlHardcoded">
+        android:layout_marginTop="@dimen/standard_margin"
+        android:layout_marginRight="@dimen/standard_margin"
+        android:layout_marginBottom="@dimen/standard_margin">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgThumbnail"
             android:layout_width="@dimen/thumbnail_width"
             android:layout_height="@dimen/thumbnail_height"
             android:scaleType="centerCrop"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/empty_photo" />
 
-        <TextView
-            android:id="@+id/txtDuration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:background="@color/accent_color"
-            android:ellipsize="end"
-            android:padding="@dimen/caption_padding"
-            android:singleLine="true"
-            android:textColor="@color/text_and_icon_color"
-            android:textSize="@dimen/subhead" />
-    </FrameLayout>
+        <!--            <com.google.android.material.textview.MaterialTextView-->
+        <!--                android:id="@+id/txtDuration"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="bottom|right"-->
+        <!--                android:background="@color/toolBarColor"-->
+        <!--                android:ellipsize="end"-->
+        <!--                android:padding="@dimen/caption_padding"-->
+        <!--                android:singleLine="true"-->
+        <!--                android:textSize="@dimen/subhead"-->
+        <!--                tools:background="@color/toolBarColor"-->
+        <!--                tools:text="1:40" />-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/item_padding_with_icon"
-        android:paddingRight="@dimen/standard_margin"
-        tools:ignore="RtlHardcoded">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard_margin"
             android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/primary_text"
-            android:textSize="@dimen/title" />
+            android:maxLines="4"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            app:layout_constraintLeft_toRightOf="@id/imgThumbnail"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imgThumbnail"
+            tools:text="Название длинное и очень интересное видео тыдыщ! df dfg dfg dfg dfg dfg dfg dfgd fgd fgd fgd fgdfg dfg dfg" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtPublishedAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/secondary_text"
-            android:textSize="@dimen/subhead" />
-    </LinearLayout>
+            android:layout_marginBottom="@dimen/standard_margin"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            app:layout_constraintLeft_toLeftOf="@id/txtTitle"
+            app:layout_constraintTop_toBottomOf="@id/txtTitle"
+            tools:text="2020-09-09" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
-        android:layout_gravity="bottom"
-        android:background="@color/divider_color" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/star"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:adjustViewBounds="true"
+        android:layout_gravity="bottom|end"
+        android:background="@drawable/ripple_background"
+        tools:src="@drawable/star_filled" />
+
 </FrameLayout>

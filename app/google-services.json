@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "547384739785",
+    "firebase_url": "https://amlabvideo.firebaseio.com",
+    "project_id": "amlabvideo",
+    "storage_bucket": "amlabvideo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547384739785:android:3bcfe78a0d11d6685f0a18",
+        "android_client_info": {
+          "package_name": "ru.goodibunakov.amlabvideo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "547384739785-2bpcbplb6ej0lf8bigdvs3igbpsvb6pg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8XPLOU4IPt99fJHiDhvNjoywzqpA3JT8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "547384739785-2bpcbplb6ej0lf8bigdvs3igbpsvb6pg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

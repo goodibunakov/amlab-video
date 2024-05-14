@@ -1,50 +1,42 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="android:fitsSystemWindows">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+<!--    https://medium.com/over-engineering/setting-up-a-material-components-theme-for-android-fbf7774da739-->
 
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="colorPrimary">@color/primary_color</item>
-        <item name="colorPrimaryDark">@color/dark_primary_color</item>
-        <item name="colorAccent">@color/accent_color</item>
 
-        <item name="material_drawer_background">@color/drawer_background_color</item>
-        <item name="material_drawer_primary_icon">@color/text_and_icon_color</item>
-        <item name="material_drawer_primary_text">@color/text_and_icon_color</item>
-        <item name="material_drawer_secondary_text">@color/text_and_icon_color</item>
-        <item name="material_drawer_hint_text">@color/accent_color</item>
-        <item name="material_drawer_divider">@color/drawer_divider_color</item>
-        <item name="material_drawer_selected">@color/drawer_item_selected_color</item>
-        <item name="material_drawer_selected_text">@color/accent_color</item>
-        <item name="material_drawer_header_selection_text">@color/text_and_icon_color</item>
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryVariant</item>
+        <item name="colorAccent">@color/colorSecondary</item>
+        <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyleCustom</item>
+        <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyleCustom</item>
+        <item name="android:statusBarColor">@color/statusBarColor</item>
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
+        <item name="windowActionModeOverlay">true</item>
+<!--        <item name="android:windowActivityTransitions">true</item>-->
+<!--        <item name="android:windowEnterTransition">@android:transition/slide_right</item>-->
+<!--        <item name="android:windowExitTransition">@android:transition/slide_left</item>-->
+        <item name="android:windowBackground">@color/windowBackground</item>
 
-        <item name="android:buttonStyle">@style/RaisedButtonStyle</item>
+
+        <!--        <item name="android:buttonStyle">@style/RaisedButtonStyle</item>-->
     </style>
 
-    <style name="AppTheme.Dark" parent="@style/Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="colorAccent">@color/accent_color</item>
-        <item name="android:colorAccent" tools:ignore="NewApi">@color/accent_color</item>
-        <!--<item name="android:listSeparatorTextViewStyle">@style/MPL_PreferenceListHeader</item>-->
-        <item name="colorPrimary">@color/primary_color</item>
-        <item name="colorPrimaryDark">@color/dark_primary_color</item>
-        <item name="actionBarTheme">@style/AppTheme.ActionBarTheme.Light</item>
-        <item name="android:windowBackground">@color/window_background_color</item>
-        <item name="android:textColorPrimary">@color/text_and_icon_color</item>
-        <item name="android:textColorSecondary">@color/accent_color</item>
+    <style name="Widget.MaterialDrawerStyleCustom" parent="Widget.MaterialDrawerStyle">
+        <item name="materialDrawerInsetForeground">#4000</item>
+        <item name="materialDrawerBackground">?colorSurface</item>
+        <item name="materialDrawerPrimaryText">?android:textColorPrimary</item>
+        <item name="materialDrawerPrimaryIcon">?android:textColorSecondary</item>
+        <item name="materialDrawerSecondaryText">?android:textColorSecondary</item>
+        <item name="materialDrawerSecondaryIcon">?android:textColorSecondary</item>
+        <item name="materialDrawerDividerColor">?android:textColorHint</item>
+        <item name="materialDrawerSelectedBackgroundColor">?colorPrimary</item>
     </style>
 
-    <style name="AppTheme.ActionBarTheme.Light" parent="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-    </style>
-
-    <style name="RaisedButtonStyle" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/accent_color</item>
-        <item name="android:textColor">@color/text_and_icon_color</item>
+    <!--define a custom header style-->
+    <style name="Widget.MaterialDrawerHeaderStyleCustom" parent="">
+        <!--        <item name="materialDrawerCompactStyle">true</item>-->
+        <item name="materialDrawerHeaderSelectionText">?colorOnSurface</item>
+        <item name="materialDrawerHeaderSelectionSubtext">?colorOnSurface</item>
     </style>
 
 </resources>

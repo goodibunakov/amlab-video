@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary_color">#607D8B</color>
-    <color name="dark_primary_color">#455A64</color>
-    <color name="text_and_icon_color">#FFFFFF</color>
-    <color name="accent_color">#76ac3b</color>
-    <color name="primary_text">#FFFFFF</color>
-    <color name="secondary_text">#FFFFFF</color>
-    <color name="divider_color">#546E7A</color>
-    <color name="drawer_background_color">#263238</color>
-    <color name="drawer_item_selected_color">#37474F</color>
-    <color name="drawer_divider_color">#455A64</color>
-    <color name="window_background_color">#37474F</color>
-    <color name="material_background_color">#455A64</color>
+    <color name="colorPrimary">#377CCC</color>
+    <color name="colorPrimaryVariant">#2560A5</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#6DA8EC</color>
+    <color name="colorSecondaryVariant">#6DA8EC</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+<!--    <color name="colorSurface">#546E7A</color>-->
+<!--    <color name="colorOnSurface">#263238</color>-->
+<!--    <color name="colorOnBackground">#37474F</color>-->
+    <color name="colorError">#C50909</color>
+    <color name="colorOnError">#FFFFFF</color>
+    <color name="colorSuccess">#0A7A10</color>
+    <color name="colorOnSuccess">#FFFFFF</color>
 
+    <color name="statusBarColor">#CDCDCD</color>
+    <color name="dividerColor">#CDCDCD</color>
+    <color name="iconMenuColor">#757575</color>
+    <color name="toolBarColor">@android:color/white</color>
+    <color name="windowBackground">@android:color/white</color>
 </resources>
