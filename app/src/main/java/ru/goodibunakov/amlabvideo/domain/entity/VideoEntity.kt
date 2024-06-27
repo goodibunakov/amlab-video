@@ -10,8 +10,7 @@ data class VideoEntity(
 ) {
     override fun equals(other: Any?): Boolean {
         other as VideoEntity
-        if (this.videoId == other.videoId) return true
-        return false
+        return this.videoId == other.videoId
     }
 
     override fun hashCode(): Int {
