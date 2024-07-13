@@ -3,6 +3,7 @@ package ru.goodibunakov.amlabvideo.api
 import android.content.Context
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.GsonBuilder
+import com.google.gson.Strictness
 import io.reactivex.Observable
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -121,7 +122,7 @@ interface ApiService {
         private const val CHANNEL_ID = "UC_adZIRDiLC3eLIq24HBmRA"
 
         fun create(context: Context): ApiService {
-            val gson = GsonBuilder().setLenient().create()
+            val gson = GsonBuilder().setStrictness(Strictness.LENIENT).create()
 
             val httpClient = OkHttpClient.Builder()
                 .apply {

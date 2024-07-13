@@ -20,9 +20,9 @@ android {
         applicationId "ru.goodibunakov.amlabvideo"
         namespace 'ru.goodibunakov.amlabvideo'
         minSdkVersion 21
-        targetSdkVersion 34
-        versionCode 32
-        versionName "1.3.19"
+        targetSdkVersion 35
+        versionCode 33
+        versionName "1.3.20"
         archivesBaseName = "amlab-$versionName($versionCode)"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -74,8 +74,8 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.annotation:annotation:1.8.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.3'
     implementation 'androidx.activity:activity-ktx:1.9.0'
     implementation 'androidx.fragment:fragment-ktx:1.8.1'
     implementation 'androidx.work:work-runtime-ktx:2.9.0'
@@ -115,7 +115,7 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.6.0'
 
     //Firebase
-    implementation platform('com.google.firebase:firebase-bom:33.1.1')
+    implementation platform('com.google.firebase:firebase-bom:33.1.2')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
