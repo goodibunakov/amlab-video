@@ -9,6 +9,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.snackbar.Snackbar
 import ru.goodibunakov.amlabvideo.BuildConfig
 import ru.goodibunakov.amlabvideo.R
+import androidx.core.net.toUri
 
 class AboutFragment : PreferenceFragmentCompat() {
 
@@ -54,7 +55,7 @@ class AboutFragment : PreferenceFragmentCompat() {
 
     private fun sendEmailToDeveloper() {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:")
+            data = "mailto:".toUri()
             putExtra(Intent.EXTRA_EMAIL, arrayOf("goodibunakov@gmail.com"))
             putExtra(
                 Intent.EXTRA_SUBJECT,
