@@ -38,19 +38,14 @@ open class BaseActivityViewModel(
             .map { ToPlaylistsModelUIMapper.map(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Log.d("ddd", "getChannelPlaylistsUseCase = $it")
-                playlistsLiveData.value = it
-                error.value = null
-            }, {
-                error.value = it
-                Log.d(
-                    "ddd",
-                    "getChannelPlaylistsUseCase error = ${it.localizedMessage}, ${it.cause}"
-                )
-            }, {
-                Log.d("ddd", "getChannelPlaylistsUseCase complete")
-            })
+            .subscribe(
+                {
+                    playlistsLiveData.value = it
+                    error.value = null
+                }, {
+                    error.value = it
+                }, { }
+            )
             .addTo(compositeDisposable)
     }
 
@@ -59,10 +54,8 @@ open class BaseActivityViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d("debug", "getNetworkStatus in BaseActivityViewModel = $it")
                 networkLiveData.value = it
             }, {
-                Log.d("debug", "getNetworkStatus in BaseActivityViewModel = $it")
             })
             .addTo(compositeDisposable)
     }
@@ -76,10 +69,8 @@ open class BaseActivityViewModel(
             .subscribe({
                 playlistsLiveData.value = it
                 playlistsUpdatedLiveData.value = null
-                Log.d("debug", "BaseActivityViewModel: updatePlaylistsToDatabase onnext $it")
             }, {
                 playlistsUpdatedLiveData.value = it
-                Log.d("debug", "BaseActivityViewModel: updatePlaylistsToDatabase error = $it")
             })
             .addTo(compositeDisposable)
 

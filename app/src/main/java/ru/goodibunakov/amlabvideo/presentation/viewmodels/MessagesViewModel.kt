@@ -45,16 +45,13 @@ class MessagesViewModel(
             .doOnNext { progressbarLiveData.value = false }
             .doOnError { progressbarLiveData.value = false }
             .subscribe({
-                Log.d("debug", "MessagesViewModel getAllMessages onNext = $it")
                 messagesLiveData.value = it
                 errorGetMessagesLiveData.value = null
                 emptyMessagesLiveData.value = it.isEmpty()
             }, {
-                Log.d("debug", "MessagesViewModel getAllMessages error = $it")
                 errorGetMessagesLiveData.value = it
                 emptyMessagesLiveData.value = false
             }, {
-                Log.d("debug", "MessagesViewModel getAllMessages onComplete")
             })
             .addTo(compositeDisposable)
     }
@@ -66,11 +63,8 @@ class MessagesViewModel(
             .doOnSubscribe { progressbarLiveData.value = true }
             .doFinally { progressbarLiveData.value = false }
             .subscribe({
-//                    messagesLiveData.value = emptyList()
                 errorDeleteMessagesLiveData.value = null
-                Log.d("debug", "MessagesViewModel deleteAllMessages deleted!")
             }, {
-                Log.d("debug", "MessagesViewModel deleteAllMessages error = $it")
                 errorDeleteMessagesLiveData.value = it
             })
             .addTo(compositeDisposable)

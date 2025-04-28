@@ -47,14 +47,12 @@ abstract class BaseActivity<T : BaseActivityViewModel> : AppCompatActivity() {
     private fun registerReceiver() {
         if (broadcastReceiver != null) {
             LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver!!, IntentFilter(ACTION_QUOTA_EXCEEDED))
-            Log.d("debug", "BaseActivity registerReceiver")
         }
     }
 
     private fun unregisterReceiver() {
         if (broadcastReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver!!)
-            Log.d("debug", "BaseActivity unregisterReceiver")
         }
     }
 

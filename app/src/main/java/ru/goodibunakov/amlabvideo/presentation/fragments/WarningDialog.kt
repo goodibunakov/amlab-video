@@ -20,6 +20,5 @@ class WarningDialog {
                 if (showCancelButton) setNegativeButton(R.string.dialog_cancel, listener)
             }
         }
-
     }
 }

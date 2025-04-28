@@ -4,13 +4,24 @@ import android.app.Application
 import com.facebook.stetho.Stetho
 import com.onesignal.OneSignal
 import ru.goodibunakov.amlabvideo.api.ApiService
-import ru.goodibunakov.amlabvideo.data.notifications.NotificationOpenedHandler
 import ru.goodibunakov.amlabvideo.data.database.AmlabDatabase
+import ru.goodibunakov.amlabvideo.data.notifications.NotificationOpenedHandler
 import ru.goodibunakov.amlabvideo.data.repositories.ApiRepositoryImpl
 import ru.goodibunakov.amlabvideo.data.repositories.DatabaseRepositoryImpl
 import ru.goodibunakov.amlabvideo.domain.ApiRepository
 import ru.goodibunakov.amlabvideo.domain.DatabaseRepository
-import ru.goodibunakov.amlabvideo.domain.usecase.*
+import ru.goodibunakov.amlabvideo.domain.usecase.DeleteMessagesUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.DeleteStarFromDbUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetAboutChannelUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetAllVideosListUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetChannelPlaylistsUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetMessagesUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetNetworkStatusUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetPlaylistVideosUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetStarsFromDbUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetVideoDetailsUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.SaveNotificationUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.SaveStarToDbUseCase
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.ViewModelFactory
 
 class AmlabApplication : Application() {
@@ -27,8 +38,7 @@ class AmlabApplication : Application() {
         if (BuildConfig.DEBUG) Stetho.initializeWithDefaults(this)
 
         apiRepository = ApiRepositoryImpl(this, ApiService.create(applicationContext))
-        databaseRepository =
-            DatabaseRepositoryImpl(AmlabDatabase.getDatabase(this).dao(), applicationContext)
+        databaseRepository = DatabaseRepositoryImpl(AmlabDatabase.getDatabase(this).dao())
         viewModelFactory = ViewModelFactory(
             GetChannelPlaylistsUseCase(apiRepository, databaseRepository),
             GetNetworkStatusUseCase(apiRepository),

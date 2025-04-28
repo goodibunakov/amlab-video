@@ -12,15 +12,5 @@ class MainViewModel(
 
     val drawerInitializedLiveData = MutableLiveData(false)
 
-    //    private var compositeDisposable = CompositeDisposable()
     val toolbarTitleLiveData = MutableLiveData<String>()
-
-//    init {
-//
-//    }
-
-//    override fun onCleared() {
-//        compositeDisposable.dispose()
-//        super.onCleared()
-//    }
 }

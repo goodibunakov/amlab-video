@@ -76,7 +76,6 @@ class VideoFragmentViewModel(
     }
 
     private fun loadPlaylistItems(playlistId: String) {
-        Log.d("debug", "VideoFragmentViewModel loadPlaylist started. playlistId = $playlistId")
         if (playlistId.contains(MainActivity.APP_MENU_ITEM)) return
         getPlaylistVideosUseCase.set(playlistId)
         getPlaylistVideosUseCase.buildObservable()
@@ -85,27 +84,20 @@ class VideoFragmentViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
                 progressBarVisibilityLiveData.value = true
-                Log.d("debug", "VideoFragmentViewModel getPlaylistVideosUseCase doOnSubscribe")
             }
             .doOnError {
                 progressBarVisibilityLiveData.value = false
-                Log.d("debug", "VideoFragmentViewModel getPlaylistVideosUseCase doOnError")
             }
             .doOnNext {
                 progressBarVisibilityLiveData.value = false
                 canLoadMoreLiveData.value = getPlaylistVideosUseCase.canLoadMore()
-                Log.d("debug", "VideoFragmentViewModel getPlaylistVideosUseCase doOnNext = $it")
             }
             .subscribe({
-                Log.d("debug", "VideoFragmentViewModel loadPlaylist $it")
                 videoIdSubject.onNext(it.firstOrNull()?.videoId ?: "")
                 videosLiveData.value = it
                 error.value = null
             }, {
                 error.value = it
-                Log.d("debug", "loadPlaylist error = ${it.localizedMessage}")
-                Log.d("debug", "loadPlaylist error = $it")
-                Log.d("debug", "loadPlaylist error = ${it.message}")
             })
             .addTo(compositeDisposable)
     }
@@ -120,18 +112,11 @@ class VideoFragmentViewModel(
             .doOnError { recyclerLoadMoreProcess.value = false }
             .subscribe({
                 canLoadMoreLiveData.value = getPlaylistVideosUseCase.canLoadMore()
-                Log.d("ddd", "VideoFragmentViewModel loadMorePlaylist $it")
                 recyclerLoadMoreProcess.value = false
                 videosLiveData.value = it
                 error.value = null
             }, {
                 error.value = it
-                Log.d(
-                    "ddd",
-                    "VideoFragmentViewModel loadMorePlaylist error = ${it.localizedMessage}"
-                )
-                Log.d("ddd", "VideoFragmentViewModel loadMorePlaylist error = $it")
-                Log.d("ddd", "VideoFragmentViewModel loadMorePlaylist error = ${it.message}")
             })
             .addTo(compositeDisposable)
     }
@@ -143,16 +128,13 @@ class VideoFragmentViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
                 progressBarVisibilityLiveData.value = true
-                Log.d("debug", "getAllVideosList doOnSubscribe")
             }
             .doOnError {
                 progressBarVisibilityLiveData.value = false
-                Log.d("debug", "getAllVideosList doOnError = $it")
             }
             .doOnNext {
                 progressBarVisibilityLiveData.value = false
                 canLoadMoreLiveData.value = getAllVideosListUseCase.canLoadMore()
-                Log.d("debug", "getAllVideosList doOnNext")
             }
             .subscribe({
                 videoIdSubject.onNext(it.firstOrNull()?.videoId ?: "")
@@ -196,7 +178,6 @@ class VideoFragmentViewModel(
             .subscribe({
                 videoDetails.value = it
             }, {
-                Log.d("debug", "loadVideoDetails error = ${it.localizedMessage}")
             })
             .addTo(compositeDisposable)
     }
@@ -206,11 +187,6 @@ class VideoFragmentViewModel(
         compositeDisposable.dispose()
         super.onCleared()
     }
-
-//    fun loadItems(playlistId: String) {
-//        Log.d("debug", "VideoFragmentViewModel loadItems")
-//        loadPlaylistItems(playlistId)
-//    }
 
     fun loadMoreItems() {
         loadMorePlaylist()
@@ -231,9 +207,7 @@ class VideoFragmentViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d("debug", "VideoFragmentViewModel saveStarToDb onNext = $it")
             }, {
-                Log.d("debug", "VideoFragmentViewModel saveStarToDb error = $it")
             }, {
                 videoItemStarChangedLiveData.value = videoId
             })
@@ -246,9 +220,7 @@ class VideoFragmentViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d("debug", "VideoFragmentViewModel deleteStarFromDb onNext = $it")
             }, {
-                Log.d("debug", "VideoFragmentViewModel deleteStarFromDb error = $it")
             }, {
                 videoItemStarChangedLiveData.value = videoId
             })

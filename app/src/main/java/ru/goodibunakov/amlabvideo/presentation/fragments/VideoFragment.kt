@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -41,6 +40,7 @@ import ru.goodibunakov.amlabvideo.presentation.recycler_utils.VideoAdapter
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.SharedViewModel
 import ru.goodibunakov.amlabvideo.presentation.viewmodels.VideoFragmentViewModel
 import java.util.*
+import androidx.core.net.toUri
 
 
 class VideoFragment : Fragment(R.layout.fragment_video),
@@ -73,7 +73,6 @@ class VideoFragment : Fragment(R.layout.fragment_video),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("debug", "VideoFragment onViewCreated")
         initPlayerView()
         initRecyclerView()
         observeLiveData()
@@ -81,7 +80,6 @@ class VideoFragment : Fragment(R.layout.fragment_video),
 
     private fun observeLiveData() {
         sharedViewModel.playlistId.observe(viewLifecycleOwner) { playlistId ->
-            Log.d("debug", "VideoFragment playlistId = $playlistId")
             viewModel.loadItems(playlistId, fragmentType)
         }
 
@@ -97,7 +95,6 @@ class VideoFragment : Fragment(R.layout.fragment_video),
         }
 
         viewModel.videoDetails.observe(viewLifecycleOwner) {
-            Log.d("debug", "videoDetails = $it")
             with(binding) {
                 infoTitle.text = it.title
                 infoDetails.text = String.format(
@@ -122,7 +119,6 @@ class VideoFragment : Fragment(R.layout.fragment_video),
         }
 
         viewModel.videoItemStarChangedLiveData.observe(viewLifecycleOwner) {
-            Log.d("debug", "videoItemStarred = $it")
             videoAdapter.notifyItemChanged(it, fragmentType)
         }
 
@@ -157,7 +153,7 @@ class VideoFragment : Fragment(R.layout.fragment_video),
                     .setPositiveButton(R.string.rate_popup_ask_ok) { _, _ ->
                         val rateReviewIntent = Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse(getString(R.string.googleplay_url))
+                            getString(R.string.googleplay_url).toUri()
                         )
                         startActivity(rateReviewIntent)
                     }
@@ -259,7 +255,6 @@ class VideoFragment : Fragment(R.layout.fragment_video),
     }
 
     override fun onItemClick(videoItem: VideoUIModel) {
-        Log.d("debug", "clicked $videoItem")
         if (videoItem.videoId != viewModel.videoIdSubject.value) viewModel.videoIdSubject.onNext(
             videoItem.videoId
         )

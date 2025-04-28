@@ -38,22 +38,18 @@ class VideoAdapter(
     }
 
     fun addItems(list: List<VideoUIModel>) {
-        Log.d("ddd", "size1 = ${items.size}")
         items.addAll(list)
-        Log.d("ddd", "size2 = ${items.size}")
         notifyItemRangeInserted(itemCount, list.size)
     }
 
     fun addNull() {
         items.add(null)
         notifyItemInserted(items.size - 1)
-        Log.d("ddd", "addNull = ${items.size}")
     }
 
     fun removeNull() {
         items.removeAt(items.size - 1)
         notifyItemRemoved(items.size)
-        Log.d("ddd", "removeNull = ${items.size}")
     }
 
     override fun getItemCount(): Int {
@@ -69,9 +65,7 @@ class VideoAdapter(
     }
 
     fun notifyItemChanged(videoId: String, fragmentType: VideoFragment.FragmentType) {
-        Log.d("debug", "videoId = $videoId")
         val clickedItem = items.firstOrNull { it?.videoId == videoId }
-        Log.d("debug", "clickedItem = $clickedItem")
         when (fragmentType) {
             VideoFragment.FragmentType.FROM_WEB -> {
                 clickedItem?.let {

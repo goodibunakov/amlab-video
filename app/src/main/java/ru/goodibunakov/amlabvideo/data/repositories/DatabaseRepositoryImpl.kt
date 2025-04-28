@@ -1,6 +1,5 @@
 package ru.goodibunakov.amlabvideo.data.repositories
 
-import android.content.Context
 import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Maybe
@@ -14,8 +13,7 @@ import ru.goodibunakov.amlabvideo.data.model.MessageItem
 import ru.goodibunakov.amlabvideo.data.model.VideoItemModel
 import ru.goodibunakov.amlabvideo.domain.DatabaseRepository
 
-class DatabaseRepositoryImpl(private val dao: Dao, private val context: Context) :
-    DatabaseRepository {
+class DatabaseRepositoryImpl(private val dao: Dao) : DatabaseRepository {
 
     override fun insertPlaylists(playlistsDTO: PlaylistsDTO): Completable {
         return dao.insertPlaylists(ToDatabaseModelMapper.map(playlistsDTO))

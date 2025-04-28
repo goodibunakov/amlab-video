@@ -130,7 +130,7 @@ dependencies {
     implementation 'com.github.perfomer:blitz:1.0.10'
 
     // Play core library
-    implementation 'com.google.android.play:core:1.10.3'
+    implementation 'com.google.android.play:review-ktx:2.0.2'
 
     //OneSignal
     //noinspection GradleDependency

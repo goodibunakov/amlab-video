@@ -19,7 +19,7 @@ class SaveStarToDbUseCase(
             itemById = apiRepository.getItemById(it)
         }
         return if (itemById != null) {
-            databaseRepository.saveStar(itemById!!)
+            databaseRepository.saveStar(itemById)
                 .toObservable()
         } else {
             Observable.error(Throwable("No such item"))

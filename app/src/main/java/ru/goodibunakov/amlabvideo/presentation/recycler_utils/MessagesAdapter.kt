@@ -34,7 +34,6 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>
     }
 
     fun addItems(list: List<MessageUIItem>) {
-        Log.d("debug", "MessagesAdapter addItems = $list")
         if (list.isNotEmpty()) {
             val newItems = list.dropLast(messageList.size)
             messageList.addAll(0, newItems)

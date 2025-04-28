@@ -33,7 +33,7 @@ class ApiRepositoryImpl(
     init {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
-        val isConnected = networkInfo?.isConnected ?: false
+        val isConnected = networkInfo?.isConnected == true
         networkConnected.onNext(if (isConnected) ConnectedStatus.YES else ConnectedStatus.NO)
 
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
