@@ -1,5 +1,6 @@
 package ru.goodibunakov.amlabvideo.presentation.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
@@ -388,6 +389,7 @@ class MainActivity : BaseActivity<MainViewModel>(), OnFullScreenListener {
         }
     }
 
+    @SuppressLint("GestureBackNavigation")
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         when {

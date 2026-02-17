@@ -1,6 +1,5 @@
 package ru.goodibunakov.amlabvideo.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,7 +15,7 @@ import ru.goodibunakov.amlabvideo.presentation.model.PlaylistsModelUI
 
 open class BaseActivityViewModel(
     private val getNetworkStatus: GetNetworkStatusUseCase,
-    private val getChannelPlaylistsUseCase: GetChannelPlaylistsUseCase
+    private val getChannelPlaylists: GetChannelPlaylistsUseCase
 ) : ViewModel() {
 
     val networkLiveData = MutableLiveData<ConnectedStatus>()
@@ -34,7 +33,7 @@ open class BaseActivityViewModel(
     }
 
     private fun getChannelPlaylistsSubscribe() {
-        getChannelPlaylistsUseCase.buildObservable()
+        getChannelPlaylists.buildObservable()
             .map { ToPlaylistsModelUIMapper.map(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -61,7 +60,7 @@ open class BaseActivityViewModel(
     }
 
     fun updatePlaylistsToDatabase() {
-        getChannelPlaylistsUseCase.updatePlaylistsToDatabase()
+        getChannelPlaylists.updatePlaylistsToDatabase()
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.newThread())
             .map { ToPlaylistsModelUIMapper.map(it) }

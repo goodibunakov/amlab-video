@@ -11,6 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.goodibunakov.amlabvideo.api.dto.channel_details.BrandingDTO
@@ -152,7 +153,7 @@ interface ApiService {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
-            return retrofit.create(ApiService::class.java)
+            return retrofit.create()
         }
     }
 }

@@ -1,6 +1,5 @@
 package ru.goodibunakov.amlabvideo.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -9,7 +8,12 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import ru.goodibunakov.amlabvideo.domain.usecase.*
+import ru.goodibunakov.amlabvideo.domain.usecase.DeleteStarFromDbUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetAllVideosListUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetPlaylistVideosUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetStarsFromDbUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.GetVideoDetailsUseCase
+import ru.goodibunakov.amlabvideo.domain.usecase.SaveStarToDbUseCase
 import ru.goodibunakov.amlabvideo.presentation.activity.MainActivity
 import ru.goodibunakov.amlabvideo.presentation.fragments.VideoFragment
 import ru.goodibunakov.amlabvideo.presentation.mappers.ToVideoDetailsModelUIMapper
@@ -18,12 +22,12 @@ import ru.goodibunakov.amlabvideo.presentation.model.VideoDetailsUI
 import ru.goodibunakov.amlabvideo.presentation.model.VideoUIModel
 
 class VideoFragmentViewModel(
-    private val getPlaylistVideosUseCase: GetPlaylistVideosUseCase,
-    private val getVideoDetailsUseCase: GetVideoDetailsUseCase,
-    private val getAllVideosListUseCase: GetAllVideosListUseCase,
-    private val saveStarToDbUseCase: SaveStarToDbUseCase,
-    private val deleteStarFromDbUseCase: DeleteStarFromDbUseCase,
-    private val getStarsFromDbUseCase: GetStarsFromDbUseCase
+    private val getPlaylistVideos: GetPlaylistVideosUseCase,
+    private val getVideoDetails: GetVideoDetailsUseCase,
+    private val getAllVideosList: GetAllVideosListUseCase,
+    private val saveStarToDb: SaveStarToDbUseCase,
+    private val deleteStarFromDb: DeleteStarFromDbUseCase,
+    private val getStarsFromDb: GetStarsFromDbUseCase
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -60,7 +64,7 @@ class VideoFragmentViewModel(
     }
 
     private fun loadPlaylistItemsFromDb() {
-        getStarsFromDbUseCase.buildObservable()
+        getStarsFromDb.buildObservable()
             .map { ToVideoModelUIMapper.map(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -77,8 +81,8 @@ class VideoFragmentViewModel(
 
     private fun loadPlaylistItems(playlistId: String) {
         if (playlistId.contains(MainActivity.APP_MENU_ITEM)) return
-        getPlaylistVideosUseCase.set(playlistId)
-        getPlaylistVideosUseCase.buildObservable()
+        getPlaylistVideos.set(playlistId)
+        getPlaylistVideos.buildObservable()
             .map { ToVideoModelUIMapper.map(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -90,7 +94,7 @@ class VideoFragmentViewModel(
             }
             .doOnNext {
                 progressBarVisibilityLiveData.value = false
-                canLoadMoreLiveData.value = getPlaylistVideosUseCase.canLoadMore()
+                canLoadMoreLiveData.value = getPlaylistVideos.canLoadMore()
             }
             .subscribe({
                 videoIdSubject.onNext(it.firstOrNull()?.videoId ?: "")
@@ -103,15 +107,15 @@ class VideoFragmentViewModel(
     }
 
     private fun loadMorePlaylist() {
-        if (!getPlaylistVideosUseCase.canLoadMore()) return
-        getPlaylistVideosUseCase.buildObservable()
+        if (!getPlaylistVideos.canLoadMore()) return
+        getPlaylistVideos.buildObservable()
             .map { ToVideoModelUIMapper.map(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { recyclerLoadMoreProcess.value = true }
             .doOnError { recyclerLoadMoreProcess.value = false }
             .subscribe({
-                canLoadMoreLiveData.value = getPlaylistVideosUseCase.canLoadMore()
+                canLoadMoreLiveData.value = getPlaylistVideos.canLoadMore()
                 recyclerLoadMoreProcess.value = false
                 videosLiveData.value = it
                 error.value = null
@@ -122,7 +126,7 @@ class VideoFragmentViewModel(
     }
 
     private fun loadAllVideosList() {
-        getAllVideosListUseCase.buildObservable()
+        getAllVideosList.buildObservable()
             .map { ToVideoModelUIMapper.map(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -134,7 +138,7 @@ class VideoFragmentViewModel(
             }
             .doOnNext {
                 progressBarVisibilityLiveData.value = false
-                canLoadMoreLiveData.value = getAllVideosListUseCase.canLoadMore()
+                canLoadMoreLiveData.value = getAllVideosList.canLoadMore()
             }
             .subscribe({
                 videoIdSubject.onNext(it.firstOrNull()?.videoId ?: "")
@@ -147,8 +151,8 @@ class VideoFragmentViewModel(
     }
 
     private fun loadMoreAllVideosList() {
-        if (!getAllVideosListUseCase.canLoadMore()) return
-        getAllVideosListUseCase.getMoreAllVideosList()
+        if (!getAllVideosList.canLoadMore()) return
+        getAllVideosList.getMoreAllVideosList()
             .map { ToVideoModelUIMapper.map(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -156,7 +160,7 @@ class VideoFragmentViewModel(
             .doOnNext { recyclerLoadMoreProcess.value = false }
             .doOnError { recyclerLoadMoreProcess.value = false }
             .subscribe({
-                canLoadMoreLiveData.value = getAllVideosListUseCase.canLoadMore()
+                canLoadMoreLiveData.value = getAllVideosList.canLoadMore()
                 videosLiveData.value = it
                 error.value = null
             }, {
@@ -170,8 +174,8 @@ class VideoFragmentViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .flatMap { id ->
-                getVideoDetailsUseCase.set(id)
-                getVideoDetailsUseCase.buildObservable()
+                getVideoDetails.set(id)
+                getVideoDetails.buildObservable()
             }
             .map { ToVideoDetailsModelUIMapper.map(it) }
             .observeOn(AndroidSchedulers.mainThread())
@@ -202,8 +206,8 @@ class VideoFragmentViewModel(
     }
 
     private fun saveStarToDb(videoId: String) {
-        saveStarToDbUseCase.set(videoId)
-        saveStarToDbUseCase.buildObservable()
+        saveStarToDb.set(videoId)
+        saveStarToDb.buildObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -215,8 +219,8 @@ class VideoFragmentViewModel(
     }
 
     private fun deleteStarFromDb(videoId: String) {
-        deleteStarFromDbUseCase.set(videoId)
-        deleteStarFromDbUseCase.buildObservable()
+        deleteStarFromDb.set(videoId)
+        deleteStarFromDb.buildObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

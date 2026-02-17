@@ -1,6 +1,5 @@
 package ru.goodibunakov.amlabvideo.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.Observable
@@ -14,8 +13,8 @@ import ru.goodibunakov.amlabvideo.presentation.mappers.ToMessageUIItemMapper
 import ru.goodibunakov.amlabvideo.presentation.model.MessageUIItem
 
 class MessagesViewModel(
-    private val getMessagesUseCase: GetMessagesUseCase,
-    private val deleteMessagesUseCase: DeleteMessagesUseCase
+    private val getMessages: GetMessagesUseCase,
+    private val deleteMessages: DeleteMessagesUseCase
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -31,7 +30,7 @@ class MessagesViewModel(
 
 
     private fun getAllMessages() {
-        getMessagesUseCase.buildObservable()
+        getMessages.buildObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .flatMap { list ->
@@ -57,7 +56,7 @@ class MessagesViewModel(
     }
 
     fun deleteAllMessages() {
-        deleteMessagesUseCase.buildObservable()
+        deleteMessages.buildObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { progressbarLiveData.value = true }

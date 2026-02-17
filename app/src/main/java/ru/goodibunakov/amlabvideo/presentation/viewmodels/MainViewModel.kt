@@ -5,9 +5,9 @@ import ru.goodibunakov.amlabvideo.domain.usecase.GetChannelPlaylistsUseCase
 import ru.goodibunakov.amlabvideo.domain.usecase.GetNetworkStatusUseCase
 
 class MainViewModel(
-    getChannelPlaylistsUseCase: GetChannelPlaylistsUseCase,
+    getChannelPlaylists: GetChannelPlaylistsUseCase,
     getNetworkStatus: GetNetworkStatusUseCase
-) : BaseActivityViewModel(getNetworkStatus, getChannelPlaylistsUseCase) {
+) : BaseActivityViewModel(getNetworkStatus, getChannelPlaylists) {
 
 
     val drawerInitializedLiveData = MutableLiveData(false)

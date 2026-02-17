@@ -4,6 +4,6 @@ import ru.goodibunakov.amlabvideo.domain.usecase.GetChannelPlaylistsUseCase
 import ru.goodibunakov.amlabvideo.domain.usecase.GetNetworkStatusUseCase
 
 class SplashViewModel(
-    getChannelPlaylistsUseCase: GetChannelPlaylistsUseCase,
+    getChannelPlaylists: GetChannelPlaylistsUseCase,
     getNetworkStatus: GetNetworkStatusUseCase
-) : BaseActivityViewModel(getNetworkStatus, getChannelPlaylistsUseCase)
+) : BaseActivityViewModel(getNetworkStatus, getChannelPlaylists)

@@ -1,6 +1,5 @@
 package ru.goodibunakov.amlabvideo.presentation.recycler_utils
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +19,9 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessagesViewHolder {
-        val itemView =
-            ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemView = ItemMessageBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
         return MessagesViewHolder(itemView)
     }
 
