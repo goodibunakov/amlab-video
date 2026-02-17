@@ -9,13 +9,13 @@ import ru.goodibunakov.amlabvideo.domain.usecase.GetAboutChannelUseCase
 import ru.goodibunakov.amlabvideo.presentation.mappers.ToAboutChannelUIMapper
 import ru.goodibunakov.amlabvideo.presentation.model.AboutChannelUIModel
 
-class AboutChannelViewModel(getAboutChannelUseCase: GetAboutChannelUseCase) : ViewModel() {
+class AboutChannelViewModel(getAboutChannel: GetAboutChannelUseCase) : ViewModel() {
 
     val liveData = MutableLiveData<AboutChannelUIModel?>()
     val progressBarVisibilityLiveData = MutableLiveData<Boolean>()
     val error = MutableLiveData<Throwable?>().apply { this.value = null }
 
-    private var disposable: Disposable = getAboutChannelUseCase.buildObservable()
+    private var disposable: Disposable = getAboutChannel.buildObservable()
         .subscribeOn(Schedulers.io())
         .map { ToAboutChannelUIMapper.map(it) }
         .observeOn(AndroidSchedulers.mainThread())

@@ -32,7 +32,7 @@ class AboutFragment : PreferenceFragmentCompat() {
             }
             getString(R.string.pref_rate_review_key) -> {
                 val rateReviewIntent = Intent(Intent.ACTION_VIEW)
-                rateReviewIntent.data = Uri.parse(getString(R.string.googleplay_url))
+                rateReviewIntent.data = getString(R.string.googleplay_url).toUri()
                 startActivity(rateReviewIntent)
                 true
             }
