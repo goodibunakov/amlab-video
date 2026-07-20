@@ -1,8 +1,7 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         namespace 'com.perfomer.blitz'
         minSdkVersion 23
@@ -18,12 +17,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    lint {
-        targetSdk 36
-    }
-    testOptions {
-        targetSdk 36
     }
 }
 

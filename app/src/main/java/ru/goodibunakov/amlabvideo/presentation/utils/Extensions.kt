@@ -17,7 +17,7 @@ fun <T> MutableLiveData<T>.setValidatedValue(newValue: T) {
 fun View.zoomIn(duration: Long = 1000L): Completable {
     val animationSubject = CompletableSubject.create()
     return animationSubject.doOnSubscribe {
-        ViewCompat.animate(this)
+        animate()
             .setDuration(duration)
             .scaleXBy(.2f)
             .scaleYBy(.2f)
